@@ -1,0 +1,7 @@
+﻿({
+	mainConfigFile: '../config.js',
+    include: 'scalejs.layout-cssgrid',
+    exclude: [
+        'scalejs!core'
+    ]
+})

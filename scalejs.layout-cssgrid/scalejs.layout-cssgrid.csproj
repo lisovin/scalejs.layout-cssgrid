@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{CBB3D24D-A50D-45B2-9F11-0907BF96DF42}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <OutputPath>build</OutputPath>
+    <JSLintSkip>\Scripts\|\scalejs.layout-cssgrid\cssParser.js</JSLintSkip>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Properties\build.rjs" />
+    <Content Include="Properties\scalejs.layout-cssgrid.nuspec" />
+    <Content Include="scalejs.layout-cssgrid.js" />
+    <Content Include="scalejs.layout-cssgrid\boxSizeCalculator.js" />
+    <Content Include="scalejs.layout-cssgrid\consts.js" />
+    <Content Include="scalejs.layout-cssgrid\cssGridLayout.js" />
+    <Content Include="Scripts\cssParser.js" />
+    <Content Include="scalejs.layout-cssgrid\enums.js" />
+    <Content Include="scalejs.layout-cssgrid\gridLayout.js" />
+    <Content Include="scalejs.layout-cssgrid\intrinsicSizeCalculator.js" />
+    <Content Include="scalejs.layout-cssgrid\layoutMeasure.js" />
+    <Content Include="scalejs.layout-cssgrid\objects.js" />
+    <Content Include="scalejs.layout-cssgrid\propertyParser.js" />
+    <Content Include="scalejs.layout-cssgrid\trackManager.js" />
+    <Content Include="scalejs.layout-cssgrid\utils.base.js" />
+    <Content Include="scalejs.layout-cssgrid\utils.css.js" />
+    <Content Include="scalejs.layout-cssgrid\utils.js" />
+    <Content Include="scalejs.layout-cssgrid\utils.sheetLoader.js" />
+    <Content Include="Scripts\CSS.supports.js" />
+    <Content Include="Scripts\domReady.js" />
+    <Content Include="Scripts\es5-shim.js" />
+    <Content Include="Scripts\es5-shim.min.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\scalejs-0.2.7.29.js" />
+    <Content Include="Scripts\scalejs-0.2.7.29.min.js" />
+    <Content Include="Scripts\text.js" />
+    <Content Include="tools\install.ps1" />
+    <Content Include="tools\uninstall.ps1" />
+    <Content Include="config.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <PropertyGroup>
+    <ScalejsProjectType>Extension</ScalejsProjectType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>scalejs.layout_cssgrid</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
+  <Import Project="$(SolutionDir)\.scalejs\Scalejs.targets" />
+</Project>
