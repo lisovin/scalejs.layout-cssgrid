@@ -151,6 +151,7 @@ define([
                 margins = {},
                 padding = {},
                 borders = {},
+                oldDisplay = gridElement.style.display,
                 //innerHTML,
                 //s,
                 width,
@@ -190,6 +191,7 @@ define([
             // TODO: ensure we do the right thing for floats.
             // need to remove the content to ensure we get the right height
             gridElementParent.insertBefore(dummy, gridElement);
+            gridElement.style.display = 'none';
             width = getCssValue(dummy, WIDTH);
             floated = getCssValue(gridElement, 'float');
             if (width === zero) { width = AUTO; }
@@ -205,6 +207,7 @@ define([
                 useAlternateFractionalSizingForRows = true;
             }
             // remove the dummy
+            gridElement.style.display = oldDisplay;
             gridElementParent.removeChild(dummy);
 
             // build the straw man for getting dimensions
