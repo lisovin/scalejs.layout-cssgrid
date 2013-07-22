@@ -15,6 +15,7 @@ define([
         makeUniqueClass: css.makeUniqueClass,
         getCssValue: css.getCssValue,
         addClass: css.addClass,
-        embedCss: css.embedCss
+        embedCss: css.embedCss,
+        clearEmbeddedCss: css.clearEmbeddedCss
     };
 });

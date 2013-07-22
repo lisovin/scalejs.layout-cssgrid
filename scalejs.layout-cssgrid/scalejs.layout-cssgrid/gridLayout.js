@@ -80,6 +80,7 @@ define([
         makeUniqueClass = utils.makeUniqueClass,
         addClass = utils.addClass,
         embedCss = utils.embedCss,
+        clearEmbeddedCss = utils.clearEmbeddedCss,
         div = document.createElement('div');
 
 
@@ -990,6 +991,8 @@ define([
                     borderWidthsEnum[size] = parseInt(el.offsetWidth, 10) - width;
                 }
             }
+
+            document.body.removeChild(el);
         }
 
         function getPosition(item) {
@@ -1062,10 +1065,12 @@ define([
 
             items.forEach(function (item) {
                 var details = item.styles,
+                    className = item.itemElement.className,
                     newclass = makeUniqueClass(),
                     position,
                     dimensions;
 
+                item.itemElement.className = className.replace(/grid-\d*\s?/g, '');
                 addClass(item.itemElement, newclass);
                 position = getPosition(item);
                 dimensions = getDimensions(item);
@@ -1100,6 +1105,9 @@ define([
             embedCss(styles, media);
         }
 
+        function prepare() {
+            clearEmbeddedCss(media);
+        }
 
         function setup() {
             var gridCols = properties[GRIDCOLUMNS] || NONE,
@@ -1129,8 +1137,6 @@ define([
 
             //verifyGridItemSizes();
             //verifyGridItemPositions(gridObject);
-
-            layout();
         }
 
         function verifyGridItemLengths(verifyingColumnBreadths) {
@@ -1264,7 +1270,9 @@ define([
             verifyGridItemTrackPositions(gridObject, false);
         }*/
 
+        prepare();
         setup();
+        layout();
 
         return {
             verifyGridItemLengths: verifyGridItemLengths

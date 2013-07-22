@@ -3,7 +3,7 @@ define(function () {
     'use strict';
 
     return {
-        GRIDLAYOUT  : 'grid',
+        GRIDLAYOUT  : 'css-grid-layout',
         STRING      : 'string',
         PROPERTY	: 'property',
         MOZ			: '-moz-',

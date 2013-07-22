@@ -1,4 +1,4 @@
-/*global define, require, document, console */
+/*global define, require, document, console, window */
 define([
     'scalejs!core',
     './utils.sheetLoader',
@@ -89,6 +89,10 @@ define([
 
             messageBus.receive('css-grid-layout', function () {
                 console.log('--->css grid layout: doLayout');
+                doLayout();
+            });
+
+            window.addEventListener('resize', function () {
                 doLayout();
             });
         });

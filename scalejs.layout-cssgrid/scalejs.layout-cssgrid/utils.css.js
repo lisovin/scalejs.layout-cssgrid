@@ -128,6 +128,21 @@ define([
         return style;
     }
 
+    function clearEmbeddedCss(media) {
+        var id, style;
+
+        media = media || ALL;
+
+        id = GRIDLAYOUT + HYPHEN + media;
+
+        style = document.getElementById(id);
+        if (style) {
+            while (style.childNodes.length > 0) {
+                style.removeChild(style.childNodes[0]);
+            }
+        }
+    }
+
     /**
        * embeds styles to the appropriate media
        *
@@ -185,6 +200,7 @@ define([
         makeUniqueClass: makeUniqueClass,
         getCssValue: getCssValue,
         addClass: addClass,
-        embedCss: embedCss
+        embedCss: embedCss,
+        clearEmbeddedCss: clearEmbeddedCss
     };
 });
