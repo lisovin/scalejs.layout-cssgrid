@@ -30,6 +30,7 @@ define([
         RELATIVE = consts.RELATIVE,
         STATIC = consts.STATIC,
         PERIOD = consts.PERIOD,
+        GRIDLAYOUT = consts.GRIDLAYOUT,
         GRIDCOLUMNS = consts.GRIDCOLUMNS,
         GRIDROWS = consts.GRIDROWS,
         GRIDCOLUMN = consts.GRIDCOLUMN,
@@ -1067,10 +1068,12 @@ define([
                 var details = item.styles,
                     className = item.itemElement.className,
                     newclass = makeUniqueClass(),
+                    re,
                     position,
                     dimensions;
 
-                item.itemElement.className = className.replace(/grid-\d*\s?/g, '');
+                re = new RegExp(GRIDLAYOUT + '-\\d*\\s?', 'g');
+                item.itemElement.className = className.replace(re, '');
                 addClass(item.itemElement, newclass);
                 position = getPosition(item);
                 dimensions = getDimensions(item);
