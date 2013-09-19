@@ -55,9 +55,9 @@ define([
 		    FONTWEIGHT = FONT + 'weight',
 		    DIRECTION = 'direction';
 
-	    if (!defined(containerWidth) &&
-				containerWidth !== null) {
-	        cssText += WIDTH + COLON + containerWidth.getPixelValueString() + PX + SEMICOL;
+	    if (defined(containerWidth) &&
+			    containerWidth !== null) {
+	        cssText += WIDTH + COLON + containerWidth.getPixelValue() + PX + SEMICOL;
 	    } else {
 	        switch (calculatorOperation) {
 	        case calculatorOperation.minWidth:
@@ -76,7 +76,7 @@ define([
 
 	    if (defined(containerHeight) &&
 				containerHeight !== null) {
-	        cssText += HEIGHT + COLON + containerHeight.getPixelValueString() + PX + SEMICOL;
+	        cssText += HEIGHT + COLON + containerHeight.getPixelValue() + PX + SEMICOL;
 	    } else {
 	        switch (calculatorOperation) {
 	        case calculatorOperation.minWidth:
@@ -154,7 +154,7 @@ define([
 	}
 
 	function calcMinHeight(element, usedWidth) {
-	    if (defined(usedWidth) ||
+	    if (!defined(usedWidth) ||
                 usedWidth === null) {
 	        throw new Error('No `usedWidth` specified.');
 	    }

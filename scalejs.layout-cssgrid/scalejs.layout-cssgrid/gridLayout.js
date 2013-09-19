@@ -1108,11 +1108,11 @@ define([
             styles += selector + OPEN_CURLY + gridstyles + CLOSE_CURLY;
 
             // console.log(styles);
-            embedCss(styles, media);
+            embedCss(styles, media, element.id);
         }
 
         function prepare() {
-            clearEmbeddedCss(media);
+            clearEmbeddedCss(media, element.id);
         }
 
         function setup() {

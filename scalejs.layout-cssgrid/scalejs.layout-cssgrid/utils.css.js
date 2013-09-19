@@ -128,12 +128,13 @@ define([
         return style;
     }
 
-    function clearEmbeddedCss(media) {
+    function clearEmbeddedCss(media, suffix) {
         var id, style;
 
+        suffix = suffix ? '-' + suffix : '';
         media = media || ALL;
 
-        id = GRIDLAYOUT + HYPHEN + media;
+        id = GRIDLAYOUT + HYPHEN + media + suffix;
 
         style = document.getElementById(id);
         if (style) {
@@ -152,17 +153,18 @@ define([
        * 
        * @return obj - the STYLE element
        */
-    function embedCss(styles, media) {
+    function embedCss(styles, media, suffix) {
         // determine the medium
         media = media || ALL;
+        suffix = suffix ? '-' + suffix : '';
         // determine the id
-        var id = GRIDLAYOUT + HYPHEN + media, style;
+        var id = GRIDLAYOUT + HYPHEN + media + suffix, style;
         // find or create the embedded stylesheet
-        if (!in_object(media, embedded_css)) {
+        if (!in_object(media + suffix, embedded_css)) {
             // make the new style element
             style = newStyleElement(media, id);
             // store the medium
-            embedded_css.push(media);
+            embedded_css.push(media + suffix);
         } else {
             style = document.getElementById(id);
         }
@@ -173,6 +175,7 @@ define([
         // return the style element
         return style;
     }
+
 
     /**
        * eCSStender::getCSSValue()
