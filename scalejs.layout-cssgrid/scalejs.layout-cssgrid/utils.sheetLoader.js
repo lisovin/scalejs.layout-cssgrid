@@ -1,4 +1,4 @@
-/*global define, require, document, window */
+/*global define, require, document, window, ActiveXObject, XMLHttpRequest*/
 define([
     './utils.base',
     'cssParser',
@@ -11,6 +11,29 @@ define([
 
     var toArray = base.toArray;
 
+    function load(url, callback) {
+        function getRequest() {
+            if (window.ActiveXObject) {
+                return new ActiveXObject('Microsoft.XMLHTTP');
+            }
+
+            if (window.XMLHttpRequest) {
+                return new XMLHttpRequest();
+            }
+        }
+
+        var request = getRequest();
+        if (request) {
+            request.onreadystatechange = function () {
+                if (request.readyState === 4) {
+                    callback(request.responseText);
+                }
+            };
+        }
+        request.open("GET", url, true);
+        request.send();
+    }
+
     function loadStyleSheet(url, loadedStyleSheets, onLoaded) {
         if (loadedStyleSheets.hasOwnProperty(url)) {
             return;
@@ -18,7 +41,7 @@ define([
 
         loadedStyleSheets[url] = null;
 
-        require(['text!' + url], function (stylesheet) {
+        load(url, function (stylesheet) {
             var parsed = cssParser.parse(stylesheet);
 
             loadedStyleSheets[url] = parsed;
