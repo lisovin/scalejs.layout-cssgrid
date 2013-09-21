@@ -1087,6 +1087,9 @@ define([
                 styles += WIDTH + COLON + dimensions.width + PX + SEMICOL;
                 styles += HEIGHT + COLON + dimensions.height + PX + SEMICOL;
                 styles += CLOSE_CURLY;
+
+                // position should be determined by styles in css, not by style attribute on the item
+                item.itemElement.style.position = null;
             });
 
             if (getCssValue(gridElement, POSITION) === STATIC) {

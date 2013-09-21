@@ -1,17 +1,25 @@
 /*global define*/
 define([
+    'scalejs!core',
     'CSS.supports',
     './scalejs.layout-cssgrid/cssGridLayout',
     'scalejs.reactive'
 ], function (
+    core,
     css,
-    polyfill
+    cssGridLayout
 ) {
     'use strict';
 
     //console.log('is -ms-grid supported? ' + (css.supports('display', '-ms-grid') || false));
     if (!css.supports('display', '-ms-grid')) {
-        polyfill();
+        cssGridLayout.polyfill();
     }
+
+    core.registerExtension({
+        layout: {
+            cssGrid: cssGridLayout
+        }
+    });
 });
 

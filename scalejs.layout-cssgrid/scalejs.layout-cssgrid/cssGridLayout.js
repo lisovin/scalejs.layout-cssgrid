@@ -1,4 +1,4 @@
-/*global define, require, document, console, window */
+/*global define, require, document, console, window, clearTimeout, setTimeout */
 define([
     'scalejs!core',
     './utils.sheetLoader',
@@ -11,9 +11,26 @@ define([
     'use strict';
 
     var cssGridRules,
-        cssGridSelectors;
+        cssGridSelectors,
+        layoutTimeoutId,
+        listeners = [];
 
-    function doLayout() {
+    function onLayoutDone(callback) {
+        core.array.addOne(listeners, callback);
+
+        return function () {
+            core.array.removeOne(listeners, callback);
+        };
+    }
+
+    function notifyLayoutDone(gridElement, selector) {
+        listeners.forEach(function (l) {
+            l(gridElement, selector);
+        });
+    }
+
+    /*jslint unparam:true*/
+    function doLayout(element) {
         cssGridSelectors.forEach(function (grid) {
             var selector = grid.selector,
                 gridElement,
@@ -86,12 +103,17 @@ define([
             //console.log(selector, properties, grid_items);
 
             gridLayout(gridElement, selector, properties, 'screen', grid_items);
+
+            notifyLayoutDone(gridElement, selector);
         });
     }
 
-    return function polyfill() {
-        var messageBus = core.reactive.messageBus;
+    function layout() {
+        clearTimeout(layoutTimeoutId);
+        layoutTimeoutId = setTimeout(doLayout, 100);
+    }
 
+    function polyfill() {
         utils.loadAllStyleSheets(function (stylesheets) {
             //console.log('-->all stylesheets loaded', stylesheets);
             cssGridRules = Object.keys(stylesheets)
@@ -135,16 +157,17 @@ define([
             });
             //console.log('css grids', grids);
 
-            doLayout();
-
-            messageBus.receive('css-grid-layout', function () {
-                //console.log('--->css grid layout: doLayout');
-                doLayout();
-            });
+            layout();
 
             window.addEventListener('resize', function () {
-                doLayout();
+                layout();
             });
         });
+    }
+
+    return {
+        polyfill: polyfill,
+        layout: layout,
+        onLayoutDone: onLayoutDone
     };
 });
