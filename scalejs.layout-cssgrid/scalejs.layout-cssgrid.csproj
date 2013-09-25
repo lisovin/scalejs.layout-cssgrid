@@ -14,6 +14,7 @@
     <Content Include="scalejs.layout-cssgrid.js" />
     <Content Include="scalejs.layout-cssgrid\boxSizeCalculator.js" />
     <Content Include="scalejs.layout-cssgrid\consts.js" />
+    <Content Include="scalejs.layout-cssgrid\utils.profiler.js" />
     <Content Include="scalejs.layout-cssgrid\cssGridLayout.js" />
     <Content Include="Scripts\almond.js" />
     <Content Include="Scripts\cssParser.js" />
@@ -41,7 +42,9 @@
     <Content Include="config.js" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

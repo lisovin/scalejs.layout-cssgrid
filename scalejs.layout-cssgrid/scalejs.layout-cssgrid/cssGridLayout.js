@@ -2,11 +2,13 @@
 define([
     'scalejs!core',
     './utils.sheetLoader',
-    './gridLayout'
+    './gridLayout',
+    './utils.profiler'
 ], function (
     core,
     utils,
-    gridLayout
+    gridLayout,
+    profiler
 ) {
     'use strict';
 
@@ -32,6 +34,7 @@ define([
     /*jslint unparam:true*/
     function doLayout(element) {
         cssGridSelectors.forEach(function (grid) {
+            profiler.start();
             var selector = grid.selector,
                 gridElement,
                 properties = grid.properties,
@@ -103,6 +106,7 @@ define([
             //console.log(selector, properties, grid_items);
 
             gridLayout(gridElement, selector, properties, 'screen', grid_items);
+            profiler.stop();
 
             notifyLayoutDone(gridElement, selector);
         });

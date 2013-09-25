@@ -39,6 +39,9 @@ define([
 	function prepare(element, calculatorOperation, containerWidth, containerHeight) {
 	    if (intrinsicSizeCalculatorElement === null) {
 	        intrinsicSizeCalculatorElement = div.cloneNode(true);
+	        if (div.cssGridLayoutData !== undefined) {
+	            intrinsicSizeCalculatorElement.cssGridLayoutData = div.cssGridLayoutData;
+	        }
 	        intrinsicSizeCalculatorElement.id = "intrinsicSizeCalculator";
 	    }
 
@@ -123,6 +126,9 @@ define([
 
 	function cloneAndAppendToCalculator(element) {
 	    var clone = element.cloneNode(true);
+	    if (element.cssGridLayoutData !== undefined) {
+	        clone.cssGridLayoutData = element.cssGridLayoutData;
+	    }
 	    // Float it so that the box won't constrain itself to the parent's size.
 	    clone.style.cssText = clone.style.cssText + SEMICOL + "float:left";
 	    intrinsicSizeCalculatorElement.appendChild(clone);

@@ -588,6 +588,19 @@ define('scalejs.layout-cssgrid/utils.css',[
         return style;
     }
 
+    function data(element, property, value) {
+        if (element.cssGridLayoutData === undefined) {
+            element.cssGridLayoutData = {};
+        }
+
+        if (typeof value === 'function') {
+            element.cssGridLayoutData[property] = value();
+        } else if (value !== undefined) {
+            element.cssGridLayoutData[property] = value;
+        }
+
+        return element.cssGridLayoutData[property];
+    }
 
     /**
        * eCSStender::getCSSValue()
@@ -599,13 +612,22 @@ define('scalejs.layout-cssgrid/utils.css',[
        * @return str - the value
        */
     function getCssValue(el, prop) {
-        var computed = window.getComputedStyle;
+        var value = data(el, prop),
+            computed;
+
+        if (value !== undefined) {
+            return value;
+        }
+
+        computed = window.getComputedStyle;
         if (el.currentStyle) {
-            return el.currentStyle[camelize(prop)];
+            value = el.currentStyle[camelize(prop)];
+            return data(el, prop, value);
         }
 
         if (computed) {
-            return computed(el, null).getPropertyValue(prop);
+            value = computed(el, null).getPropertyValue(prop);
+            return data(el, prop, value);
         }
 
         return false;
@@ -616,16 +638,104 @@ define('scalejs.layout-cssgrid/utils.css',[
         getCssValue: getCssValue,
         addClass: addClass,
         embedCss: embedCss,
-        clearEmbeddedCss: clearEmbeddedCss
+        clearEmbeddedCss: clearEmbeddedCss,
+        data: data
     };
+});
+/*global define, document, window, console */
+define('scalejs.layout-cssgrid/utils.profiler',[],function () {
+    
+
+    var profile,
+        activeProfiles,
+        self;
+
+    function reset() {
+        profile = {
+            name: 'Profiler',
+            profiles: []
+        };
+        activeProfiles = [profile];
+    }
+
+    function caller(n) {
+        n = n || 0;
+        var err = new Error(),
+            caller_line = err.stack.split("\n")[3 + n],
+            index = caller_line.indexOf("at "),
+            clean = caller_line.slice(index + 2, caller_line.length);
+
+        return clean;
+    }
+
+    function start(n) {
+        var name = caller(n),
+            profile = {
+                name: name,
+                start: new Date().getTime(),
+                profiles: []
+            };
+        activeProfiles[activeProfiles.length - 1].profiles.push(profile);
+        activeProfiles.push(profile);
+    }
+
+    function prepend(indent) {
+        var arr = [];
+        arr.length = indent + 1;
+        return "\n" + arr.join(' ');
+    }
+
+    function stop() {
+        function loop(profile, indent) {
+            var delta = profile.start && profile.finish
+                    ? ': ' + (profile.finish - profile.start)
+                    : '',
+                current = prepend(indent) + profile.name + delta;
+            profile.profiles.forEach(function (sw) {
+                current += loop(sw, indent + 2);
+            });
+            return current;
+        }
+
+        var profile = activeProfiles.pop(),
+            report;
+
+        profile.finish = new Date().getTime();
+
+        if (activeProfiles.length === 1) {
+            report = loop(activeProfiles[0], 0);
+            reset();
+
+            console.debug(report);
+        }
+    }
+
+    function item() {
+        stop();
+        start(1);
+    }
+
+    reset();
+
+    self = {
+        start: start,
+        item: item,
+        stop: stop
+    };
+
+    window.profiler = self;
+
+    return self;
 });
 /*global define, document, window */
 define('scalejs.layout-cssgrid/utils',[
     './utils.base',
-    './utils.css'
+    './utils.css',
+    './utils.profiler'
 ], function (
     base,
-    css
+    css,
+    profiler
 ) {
     
 
@@ -637,7 +747,8 @@ define('scalejs.layout-cssgrid/utils',[
         getCssValue: css.getCssValue,
         addClass: css.addClass,
         embedCss: css.embedCss,
-        clearEmbeddedCss: css.clearEmbeddedCss
+        clearEmbeddedCss: css.clearEmbeddedCss,
+        profiler: profiler
     };
 });
 /*global define, document */
@@ -1608,6 +1719,9 @@ define('scalejs.layout-cssgrid/intrinsicSizeCalculator',[
 	function prepare(element, calculatorOperation, containerWidth, containerHeight) {
 	    if (intrinsicSizeCalculatorElement === null) {
 	        intrinsicSizeCalculatorElement = div.cloneNode(true);
+	        if (div.cssGridLayoutData !== undefined) {
+	            intrinsicSizeCalculatorElement.cssGridLayoutData = div.cssGridLayoutData;
+	        }
 	        intrinsicSizeCalculatorElement.id = "intrinsicSizeCalculator";
 	    }
 
@@ -1692,6 +1806,9 @@ define('scalejs.layout-cssgrid/intrinsicSizeCalculator',[
 
 	function cloneAndAppendToCalculator(element) {
 	    var clone = element.cloneNode(true);
+	    if (element.cssGridLayoutData !== undefined) {
+	        clone.cssGridLayoutData = element.cssGridLayoutData;
+	    }
 	    // Float it so that the box won't constrain itself to the parent's size.
 	    clone.style.cssText = clone.style.cssText + SEMICOL + "float:left";
 	    intrinsicSizeCalculatorElement.appendChild(clone);
@@ -1925,11 +2042,27 @@ define('scalejs.layout-cssgrid/gridLayout',[
         }
 
         function verticalScrollbarWidth() {
-            return window.innerWidth - document.documentElement.clientWidth;
+            if (window.cssGridLayoutData === undefined) {
+                window.cssGridLayoutData = {};
+            }
+
+            if (window.cssGridLayoutData.scrollbarWidth === undefined) {
+                window.cssGridLayoutData.scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            }
+
+            return window.cssGridLayoutData.scrollbarWidth;
         }
 
         function horizontalScrollbarHeight() {
-            return window.innerHeight - document.documentElement.clientHeight;
+            if (window.cssGridLayoutData === undefined) {
+                window.cssGridLayoutData = {};
+            }
+
+            if (window.cssGridLayoutData.scrollbarHeight === undefined) {
+                window.cssGridLayoutData.scrollbarHeight = window.innerHeight - document.documentElement.clientHeight;
+            }
+
+            return window.cssGridLayoutData.scrollbarHeight;
         }
 
         function shouldSwapWidthAndHeight() {
@@ -1982,6 +2115,9 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 widthAdjustmentMeasure,
                 heightAdjustmentMeasure;
 
+            if (gridElement.cssGridLayoutData !== undefined) {
+                dummy.cssGridLayoutData = gridElement.cssGridLayoutData;
+            }
             // we need to get grid props from the passed styles
             isInlineGrid = gridProperties.display === INLINEGRID ? true : false;
 
@@ -2235,6 +2371,9 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 + (computingColumns ? GRIDCOLUMN : GRIDROW)
                 + COLON + trackNumber + SEMICOL;
 
+            if (div.cssGridLayoutData !== undefined) {
+                dummyItem.cssGridLayoutData = div.cssGridLayoutData;
+            }
             dummyItem.style.cssText = cssText;
 
             dummyItem = gridElement.appendChild(dummyItem);
@@ -2793,6 +2932,10 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 width,
                 size;
 
+            if (div.cssGridLayoutData !== undefined) {
+                el.cssGridLayoutData = div.cssGridLayoutData;
+            }
+
             document.body.appendChild(el);
             el.style.width = '100px';
             width = parseInt(el.offsetWidth, 10);
@@ -3100,11 +3243,13 @@ define('scalejs.layout-cssgrid/gridLayout',[
 define('scalejs.layout-cssgrid/cssGridLayout',[
     'scalejs!core',
     './utils.sheetLoader',
-    './gridLayout'
+    './gridLayout',
+    './utils.profiler'
 ], function (
     core,
     utils,
-    gridLayout
+    gridLayout,
+    profiler
 ) {
     
 
@@ -3130,6 +3275,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
     /*jslint unparam:true*/
     function doLayout(element) {
         cssGridSelectors.forEach(function (grid) {
+            profiler.start();
             var selector = grid.selector,
                 gridElement,
                 properties = grid.properties,
@@ -3201,6 +3347,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             //console.log(selector, properties, grid_items);
 
             gridLayout(gridElement, selector, properties, 'screen', grid_items);
+            profiler.stop();
 
             notifyLayoutDone(gridElement, selector);
         });

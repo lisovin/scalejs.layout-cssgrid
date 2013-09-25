@@ -1,10 +1,12 @@
 /*global define, document, window */
 define([
     './utils.base',
-    './utils.css'
+    './utils.css',
+    './utils.profiler'
 ], function (
     base,
-    css
+    css,
+    profiler
 ) {
     'use strict';
 
@@ -16,6 +18,7 @@ define([
         getCssValue: css.getCssValue,
         addClass: css.addClass,
         embedCss: css.embedCss,
-        clearEmbeddedCss: css.clearEmbeddedCss
+        clearEmbeddedCss: css.clearEmbeddedCss,
+        profiler: profiler
     };
 });

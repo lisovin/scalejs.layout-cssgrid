@@ -117,11 +117,27 @@ define([
         }
 
         function verticalScrollbarWidth() {
-            return window.innerWidth - document.documentElement.clientWidth;
+            if (window.cssGridLayoutData === undefined) {
+                window.cssGridLayoutData = {};
+            }
+
+            if (window.cssGridLayoutData.scrollbarWidth === undefined) {
+                window.cssGridLayoutData.scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            }
+
+            return window.cssGridLayoutData.scrollbarWidth;
         }
 
         function horizontalScrollbarHeight() {
-            return window.innerHeight - document.documentElement.clientHeight;
+            if (window.cssGridLayoutData === undefined) {
+                window.cssGridLayoutData = {};
+            }
+
+            if (window.cssGridLayoutData.scrollbarHeight === undefined) {
+                window.cssGridLayoutData.scrollbarHeight = window.innerHeight - document.documentElement.clientHeight;
+            }
+
+            return window.cssGridLayoutData.scrollbarHeight;
         }
 
         function shouldSwapWidthAndHeight() {
@@ -174,6 +190,9 @@ define([
                 widthAdjustmentMeasure,
                 heightAdjustmentMeasure;
 
+            if (gridElement.cssGridLayoutData !== undefined) {
+                dummy.cssGridLayoutData = gridElement.cssGridLayoutData;
+            }
             // we need to get grid props from the passed styles
             isInlineGrid = gridProperties.display === INLINEGRID ? true : false;
 
@@ -427,6 +446,9 @@ define([
                 + (computingColumns ? GRIDCOLUMN : GRIDROW)
                 + COLON + trackNumber + SEMICOL;
 
+            if (div.cssGridLayoutData !== undefined) {
+                dummyItem.cssGridLayoutData = div.cssGridLayoutData;
+            }
             dummyItem.style.cssText = cssText;
 
             dummyItem = gridElement.appendChild(dummyItem);
@@ -984,6 +1006,10 @@ define([
                 border = BORDER + HYPHEN + RIGHT,
                 width,
                 size;
+
+            if (div.cssGridLayoutData !== undefined) {
+                el.cssGridLayoutData = div.cssGridLayoutData;
+            }
 
             document.body.appendChild(el);
             el.style.width = '100px';

@@ -176,6 +176,19 @@ define([
         return style;
     }
 
+    function data(element, property, value) {
+        if (element.cssGridLayoutData === undefined) {
+            element.cssGridLayoutData = {};
+        }
+
+        if (typeof value === 'function') {
+            element.cssGridLayoutData[property] = value();
+        } else if (value !== undefined) {
+            element.cssGridLayoutData[property] = value;
+        }
+
+        return element.cssGridLayoutData[property];
+    }
 
     /**
        * eCSStender::getCSSValue()
@@ -187,13 +200,22 @@ define([
        * @return str - the value
        */
     function getCssValue(el, prop) {
-        var computed = window.getComputedStyle;
+        var value = data(el, prop),
+            computed;
+
+        if (value !== undefined) {
+            return value;
+        }
+
+        computed = window.getComputedStyle;
         if (el.currentStyle) {
-            return el.currentStyle[camelize(prop)];
+            value = el.currentStyle[camelize(prop)];
+            return data(el, prop, value);
         }
 
         if (computed) {
-            return computed(el, null).getPropertyValue(prop);
+            value = computed(el, null).getPropertyValue(prop);
+            return data(el, prop, value);
         }
 
         return false;
@@ -204,6 +226,7 @@ define([
         getCssValue: getCssValue,
         addClass: addClass,
         embedCss: embedCss,
-        clearEmbeddedCss: clearEmbeddedCss
+        clearEmbeddedCss: clearEmbeddedCss,
+        data: data
     };
 });
