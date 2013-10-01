@@ -2,19 +2,16 @@
 define([
     'scalejs!core',
     './utils.sheetLoader',
-    './gridLayout',
-    './utils.profiler'
+    './gridLayout'
 ], function (
     core,
-    utils,
-    gridLayout,
-    profiler
+    sheetLoader,
+    gridLayout
 ) {
     'use strict';
 
     var cssGridRules,
         cssGridSelectors,
-        layoutTimeoutId,
         listeners = [];
 
     function onLayoutDone(callback) {
@@ -34,7 +31,6 @@ define([
     /*jslint unparam:true*/
     function doLayout(element) {
         cssGridSelectors.forEach(function (grid) {
-            profiler.start();
             var selector = grid.selector,
                 gridElement,
                 properties = grid.properties,
@@ -103,23 +99,16 @@ define([
                 })
                 .filter(function (item) { return item; });
 
-            //console.log(selector, properties, grid_items);
-
             gridLayout(gridElement, selector, properties, 'screen', grid_items);
-            profiler.stop();
 
             notifyLayoutDone(gridElement, selector);
         });
     }
 
-    function layout() {
-        clearTimeout(layoutTimeoutId);
-        layoutTimeoutId = setTimeout(doLayout, 100);
-    }
-
     function polyfill() {
-        utils.loadAllStyleSheets(function (stylesheets) {
-            //console.log('-->all stylesheets loaded', stylesheets);
+        sheetLoader.loadAllStyleSheets(function (stylesheets) {
+            if (cssGridRules) { return; }
+
             cssGridRules = Object.keys(stylesheets)
                 .reduce(function (acc, url) {
                     var sheet = stylesheets[url];
@@ -154,24 +143,23 @@ define([
                     return e;
                 });
 
-            //console.log('css grid rule', gridRules);
-
             cssGridSelectors = cssGridRules.filter(function (rule) {
                 return rule.properties.display === 'grid';
             });
-            //console.log('css grids', grids);
-
-            layout();
 
             window.addEventListener('resize', function () {
-                layout();
+                doLayout();
             });
         });
     }
 
+    function invalidate() {
+        setTimeout(doLayout, 0);
+    }
+
     return {
         polyfill: polyfill,
-        layout: layout,
+        invalidate: invalidate,
         onLayoutDone: onLayoutDone
     };
 });

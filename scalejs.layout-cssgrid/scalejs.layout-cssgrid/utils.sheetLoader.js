@@ -1,38 +1,15 @@
-/*global define, require, document, window, ActiveXObject, XMLHttpRequest*/
+/*global define, require, document, console*/
 define([
-    './utils.base',
-    'cssParser',
-    'domReady'
+    'cssparser',
+    './utils'
 ], function (
-    base,
-    cssParser
+    cssParser,
+    utils
 ) {
     'use strict';
 
-    var toArray = base.toArray;
-
-    function load(url, callback) {
-        function getRequest() {
-            if (window.ActiveXObject) {
-                return new ActiveXObject('Microsoft.XMLHTTP');
-            }
-
-            if (window.XMLHttpRequest) {
-                return new XMLHttpRequest();
-            }
-        }
-
-        var request = getRequest();
-        if (request) {
-            request.onreadystatechange = function () {
-                if (request.readyState === 4) {
-                    callback(request.responseText);
-                }
-            };
-        }
-        request.open("GET", url, true);
-        request.send();
-    }
+    var toArray = utils.toArray,
+        getUrl  = utils.getUrl;
 
     function loadStyleSheet(url, loadedStyleSheets, onLoaded) {
         if (loadedStyleSheets.hasOwnProperty(url)) {
@@ -41,13 +18,13 @@ define([
 
         loadedStyleSheets[url] = null;
 
-        load(url, function (stylesheet) {
+        getUrl(url, function (stylesheet) {
             var parsed = cssParser.parse(stylesheet);
 
             loadedStyleSheets[url] = parsed;
 
             (parsed.imports || []).forEach(function (cssImport) {
-                loadStyleSheet(cssImport['import'], loadedStyleSheets, onLoaded);
+                loadStyleSheet(cssImport['import'].replace(/['"]/g, ''), loadedStyleSheets, onLoaded);
             });
 
             onLoaded();
@@ -76,6 +53,10 @@ define([
                 }
             });
     }
+
+    Object.getPrototypeOf(cssParser).parseError = function (error, details) {
+        console.log(error, details);
+    };
 
     return {
         loadAllStyleSheets: loadAllStyleSheets

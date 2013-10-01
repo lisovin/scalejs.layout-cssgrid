@@ -2,8 +2,7 @@
 define([
     'scalejs!core',
     'CSS.supports',
-    './scalejs.layout-cssgrid/cssGridLayout',
-    'scalejs.reactive'
+    './scalejs.layout-cssgrid/cssGridLayout'
 ], function (
     core,
     css,
@@ -18,7 +17,8 @@ define([
 
     core.registerExtension({
         layout: {
-            cssGrid: cssGridLayout
+            invalidate: cssGridLayout.invalidate,
+            onLayoutDone: cssGridLayout.onLayoutDone
         }
     });
 });

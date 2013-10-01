@@ -5,3 +5,5 @@
 /scalejs.layout-cssgrid/obj
 /scalejs.layout-cssgrid/scalejs.layout-cssgrid.csproj.user
 /.nuget/*.exe
+
+/scalejs.layout-cssgrid/js

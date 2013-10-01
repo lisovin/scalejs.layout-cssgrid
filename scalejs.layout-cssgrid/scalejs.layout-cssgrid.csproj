@@ -4,7 +4,7 @@
     <ProjectGuid>{CBB3D24D-A50D-45B2-9F11-0907BF96DF42}</ProjectGuid>
     <OutputType>Library</OutputType>
     <OutputPath>js</OutputPath>
-    <JSLintSkip>\Scripts\|\scalejs.layout-cssgrid\cssParser.js</JSLintSkip>
+    <JSLintSkip>\Scripts\|\scalejs.layout-cssgrid\cssParser.js|\scalejs.layout-cssgrid\gridTracksParser.js|\scalejs.layout-cssgrid\cssparser.js</JSLintSkip>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -12,25 +12,15 @@
     <Content Include="Properties\build.rjs" />
     <Content Include="Properties\scalejs.layout-cssgrid.nuspec" />
     <Content Include="scalejs.layout-cssgrid.js" />
-    <Content Include="scalejs.layout-cssgrid\boxSizeCalculator.js" />
-    <Content Include="scalejs.layout-cssgrid\consts.js" />
+    <Content Include="scalejs.layout-cssgrid\utils.js" />
+    <Content Include="scalejs.layout-cssgrid\cssparser.js" />
+    <Content Include="scalejs.layout-cssgrid\gridTracksParser.js" />
     <Content Include="scalejs.layout-cssgrid\utils.profiler.js" />
     <Content Include="scalejs.layout-cssgrid\cssGridLayout.js" />
     <Content Include="Scripts\almond.js" />
-    <Content Include="Scripts\cssParser.js" />
-    <Content Include="scalejs.layout-cssgrid\enums.js" />
     <Content Include="scalejs.layout-cssgrid\gridLayout.js" />
-    <Content Include="scalejs.layout-cssgrid\intrinsicSizeCalculator.js" />
-    <Content Include="scalejs.layout-cssgrid\layoutMeasure.js" />
-    <Content Include="scalejs.layout-cssgrid\objects.js" />
-    <Content Include="scalejs.layout-cssgrid\propertyParser.js" />
-    <Content Include="scalejs.layout-cssgrid\trackManager.js" />
-    <Content Include="scalejs.layout-cssgrid\utils.base.js" />
-    <Content Include="scalejs.layout-cssgrid\utils.css.js" />
-    <Content Include="scalejs.layout-cssgrid\utils.js" />
     <Content Include="scalejs.layout-cssgrid\utils.sheetLoader.js" />
     <Content Include="Scripts\CSS.supports.js" />
-    <Content Include="Scripts\domReady.js" />
     <Content Include="Scripts\r.js" />
     <Content Include="Scripts\require.js" />
     <Content Include="Scripts\scalejs-0.3.0.1.js" />
@@ -45,6 +35,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="scalejs.layout-cssgrid\css.l" />
+    <None Include="scalejs.layout-cssgrid\cssparser.y" />
+    <None Include="scalejs.layout-cssgrid\gridTracksParser.jison" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
