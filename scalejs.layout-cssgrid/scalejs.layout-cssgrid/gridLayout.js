@@ -159,7 +159,7 @@ define([
     }
 
     /*jslint unparam:true*/
-    return function gridLayout(gridElement, selector, properties, media, gridItems) {
+    return function gridLayout(gridElement, properties, media, gridItems) {
         var columnTracks,
             rowTracks,
             mappedItems;
