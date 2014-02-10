@@ -164,19 +164,20 @@ selector_list
   ;
 selector
   : simple_selector								-> $1
-  | selector combinator simple_selector			-> $1 + $2 + $3
+  | selector combinator simple_selector			-> $1 + $2 + $3;
   ;
 combinator
   : '+' wempty					-> $1
   | '>' wempty					-> $1
+  | whitespace					-> $1
   | /* empty */					-> ""
   ;
 simple_selector
-  : simple_selector_atom_list wempty					-> $1
-  | element_name simple_selector_atom_list wempty		-> $1 + $2
+  : simple_selector_atom_list	-> $1
+  | element_name simple_selector_atom_list		-> $1 + $2
   ;
 simple_selector_atom_list
-  : simple_selector_atom								-> $1
+  : simple_selector_atom						-> $1
   | simple_selector_atom_list simple_selector_atom		-> $1 + $2
   |														-> ""
   ;

@@ -1,18 +1,22 @@
 /*global define*/
 define([
     'scalejs!core',
-    'CSS.supports',
-    './scalejs.layout-cssgrid/cssGridLayout'
+    './scalejs.layout-cssgrid/cssGridLayout',
+    'CSS.supports'
 ], function (
     core,
-    css,
-    cssGridLayout
+    cssGridLayout,
+    css
 ) {
     'use strict';
 
     //console.log('is -ms-grid supported? ' + (css.supports('display', '-ms-grid') || false));
     if (!css.supports('display', '-ms-grid')) {
-        cssGridLayout.polyfill();
+        //register resize here
+        window.addEventListener('resize', function () {
+            cssGridLayout.doLayout();
+        });
+
     }
 
     core.registerExtension({

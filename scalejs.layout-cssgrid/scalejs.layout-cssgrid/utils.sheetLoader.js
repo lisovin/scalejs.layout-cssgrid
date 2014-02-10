@@ -1,4 +1,5 @@
 /*global define, require, document, console*/
+/*jslint regexp: true */
 define([
     'cssparser',
     './utils'
@@ -32,7 +33,46 @@ define([
     }
 
     function loadAllStyleSheets(onLoaded) {
-        var loadedStyleSheets = {};
+        var loadedStyleSheets = {},
+            styleSheets = toArray(document.styleSheets),
+            hrefExists,
+            allHtml = document.documentElement.innerHTML,
+            removeComments = /<!--(.|\n|\r)*-->/gm,
+            getStyles = /<style.*?>((.|\n|\r)*?)<\/style>/gm,
+            headerStyles = [],
+            match;
+
+        // collects styles from html
+
+        // clean out comments to remove commented out styles
+        allHtml.replace(removeComments, '');
+
+        // extract contents of style tags
+        while (true) {
+            match = getStyles.exec(allHtml);
+            if (!match) {
+                break;
+            }
+
+            headerStyles.push(match[1]);
+        }
+
+        headerStyles.forEach(function (styleText, i) {
+            var parsed;
+
+            parsed = cssParser.parse(styleText);
+
+            loadedStyleSheets['head' + i] = parsed;
+        });
+
+        // if no styleSheets have href, call onLoaded
+        hrefExists = styleSheets.some(function (s) {
+            return s.href;
+        });
+
+        if (!hrefExists) {
+            onLoaded(loadedStyleSheets);
+        }
 
         toArray(document.styleSheets)
             .forEach(function (sheet) {

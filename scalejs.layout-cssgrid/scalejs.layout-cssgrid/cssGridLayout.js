@@ -2,16 +2,23 @@
 define([
     'scalejs!core',
     './utils.sheetLoader',
-    './gridLayout'
+    './gridLayout',
+    './utils',
+    'CSS.supports',
+    'scalejs.linq-linqjs'
 ], function (
     core,
     sheetLoader,
-    gridLayout
+    gridLayout,
+    utils,
+    css
 ) {
     'use strict';
 
     var cssGridRules,
         cssGridSelectors,
+        copy = core.object.copy,
+        merge = core.object.merge,
         listeners = [];
 
     function onLayoutDone(callback) {
@@ -22,93 +29,216 @@ define([
         };
     }
 
-    function notifyLayoutDone(gridElement, selector) {
+    function notifyLayoutDone(gridElement) {
         listeners.forEach(function (l) {
-            l(gridElement, selector);
+            l(gridElement);
         });
     }
 
     /*jslint unparam:true*/
-    function doLayout(element) {
-        cssGridSelectors.forEach(function (grid) {
-            var selector = grid.selector,
-                gridElement,
-                properties = grid.properties,
-                grid_items,
-                gridStyle;
+    function doLayout() {
+        var gridElements,
+            defaultGridProperties = {
+                'display': 'grid',
+                'grid-rows': 'auto',
+                'grid-columns': 'auto'
+            },
+            defaultGridItemProperties = {
+                'grid-row': '1',
+                'grid-row-align': 'stretch',
+                'grid-row-span': '1',
+                'grid-column': '1',
+                'grid-column-align': 'stretch',
+                'grid-column-span': '1'
+            };
 
-            gridElement = document.getElementById(grid.selector.substring(1));
-            if (gridElement === null) { return; }
 
-            gridStyle = gridElement.getAttribute("style");
-            if (gridStyle !== null) {
-                gridStyle.split('; ').forEach(function (property) {
-                    var tokens = property.split(':'),
-                        value;
+        function createOverride(f, propertyNames) {
+            var result = {};
 
-                    if (tokens.length === 2) {
-                        property = tokens[0].trim();
-                        value = tokens[1].trim();
-
-                        if (property.indexOf('-ms-grid') === 0) {
-                            properties[property.substring(4)] = value;
-                        }
+            propertyNames
+                .forEach(function (p) {
+                    var v = f(p);
+                    if (v !== undefined) {
+                        result[p] = f(p);
                     }
                 });
+
+            return result;
+        }
+
+        
+        function createCssGridOverride(gridElement, propertyNames) {
+            // save rules that match the gridElement (parent grid rules only)
+            matchedRules = cssGridSelectors
+                .filter(function (rule) {
+                    return utils.toArray(document.querySelectorAll(rule.selector))
+                        .any(function (match) {
+                            return gridElement === match;
+                        });
+                });
+
+            override = createOverride(function (property) {
+                var rulesWithProperty = matchedRules
+                    // list of rules with itemProperty defined
+                    .filter(function (matchedRule) {
+                        return (matchedRule.properties[property] !== undefined);
+                    });
+
+                // warning about css conflicts
+                if (rulesWithProperty.length > 1) {
+                    console.log('WARNING: gridElement ', gridElement, ' matched to multiple rules with property "' + property + '".' +
+                                'Will use the rule ', rulesWithProperty[0]);
+                }
+
+                if (rulesWithProperty.length > 0) {
+                    return rulesWithProperty[0].properties[property];
+                }
+            }, propertyNames);
+
+            return override;
+        }
+
+        function createCssGridItemOverride(gridItemElement, propertyNames) {
+            // for each grid rule, save it if it matches the element
+            matchedItemRules = cssGridRules
+                // filter out parent rules (rules present in cssGridSelectors)
+                .filter(function (rule) {
+                    return !cssGridSelectors.any(function (gridSelector) {
+                        return gridSelector === rule;
+                    });
+                })
+                // filter to rules that match gridItemElement
+                .filter(function (rule) {
+                    var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
+                    return matchedElements.any(function (match) {
+                        return gridItemElement === match;
+                    });
+                });
+
+
+            override = createOverride(function (itemProperty) {
+                var rulesWithProperty = matchedItemRules
+                    // list of rules with itemProperty defined
+                    .filter(function (matchedItemRule) {
+                        return (matchedItemRule.properties[itemProperty] !== undefined);
+                    });
+
+                // warning about css conflicts
+                if (rulesWithProperty.length > 1) {
+                    console.log('WARNING: gridItemElement ' + gridItemElement + ' matched to multiple rules with property "' + itemProperty + '".' +
+                                'Will use the rule ', rulesWithProperty[0]);
+                }
+
+                if (rulesWithProperty.length > 0) {
+                    return rulesWithProperty[0].properties[itemProperty];
+                }
+            }, propertyNames);
+
+            return override;
+        }
+
+        function createDataGridOverride(gridElement, gridPropertyNames) {
+            override = createOverride(function (property) {
+                if (gridElement.hasAttribute('data-ms-' + property)) {
+                    return gridElement.getAttribute('data-ms-' + property);
+                }
+            }, gridPropertyNames);
+
+            return override;
+        }
+
+        function createStyleGridOverride(gridElement) {
+            // extract grid properties from inline style, add to gridProperties
+            var gridElementStyle = gridElement.getAttribute("style"),
+                override = {};
+
+            if (!gridElementStyle) {
+                return;
             }
-            Object.keys(properties).forEach(function (key) {
-                gridElement.setAttribute('data-ms-' + key, properties[key]);
+
+            gridElementStyle.split('; ').forEach(function (styleProperty) {
+                var tokens = styleProperty.split(':'),
+                    propertyName,
+                    propertyValue;
+
+                if (tokens.length === 2) {
+                    propertyName = tokens[0].trim();
+                    propertyValue = tokens[1].trim();
+
+                    if (propertyName.indexOf('-ms-grid') === 0) {
+                        override[propertyName.substring(4)] = propertyValue;
+                    }
+                }
             });
 
-            grid_items = cssGridRules
-                .filter(function (item) { return item !== grid; })
-                .map(function (item) {
-                    var grid_item = {},
-                        style,
-                        gridItemElement;
+            // store style attrib values as attibutes of element
+            Object.keys(override)
+                // for each grid-related property of gridElement
+                .forEach(function (propertyKey) {
+                    // store value as attribute
+                    gridElement.setAttribute('data-ms-' + propertyKey, override[propertyKey]);
+                });
 
-                    gridItemElement = document.getElementById(item.selector.substring(1));
-                    if (gridItemElement === null || gridItemElement.parentNode !== gridElement) {
-                        return;
-                    }
+            return override;
+        }
 
-                    grid_item.element = gridItemElement;
-                    grid_item.details = item;
 
-                    style = grid_item.element.getAttribute("style");
-                    if (style !== null) {
-                        style.split(';').forEach(function (property) {
-                            var tokens = property.split(':'),
-                                value;
+       // get the list of unique grids (a grid can be matched to more than one style rule therefore distinct)
+        gridElements = cssGridSelectors
+            .selectMany(function (gridSelector) {
+                return document.querySelectorAll(gridSelector.selector);
+            })
+            .distinct()
+            .toArray();
 
-                            if (tokens.length === 2) {
-                                property = tokens[0].trim();
-                                value = tokens[1].trim();
+        // for each grid parent, properties from each source (style>data attribute>css<defaults)
+        gridElements
+            .forEach(function (gridElement) {
+                var cssGridProperties,
+                    dataGridProperties,
+                    styleGridProperties,
+                    gridProperties,
+                    gridItemData = [],
 
-                                if (property.indexOf('-ms-grid') === 0) {
-                                    grid_item.details.properties[property.substring(4)] = value;
-                                }
-                            }
+                cssGridProperties = createCssGridOverride(gridElement, Object.keys(defaultGridProperties));
+                dataGridProperties = createDataGridOverride(gridElement, Object.keys(defaultGridProperties));
+                styleGridProperties = createStyleGridOverride(gridElement);
+
+                gridProperties = merge(defaultGridProperties, cssGridProperties, dataGridProperties, styleGridProperties);
+
+                // for all children of gridElement, merge properties from each source (style > data attribute > css > defaults)
+                utils.toArray(gridElement.children)
+                    .forEach(function (gridItemElement) {
+                        var cssGridItemProperties,
+                            dataGridItemProperties,
+                            styleGridItemProperties,
+                            gridItemProperties,
+
+                        cssGridItemProperties = createCssGridItemOverride(gridItemElement, Object.keys(defaultGridItemProperties));
+                        dataGridItemProperties = createDataGridOverride(gridItemElement, Object.keys(defaultGridItemProperties));
+                        styleGridItemProperties = createStyleGridOverride(gridItemElement);
+
+                        gridItemProperties = merge(defaultGridItemProperties, cssGridItemProperties, dataGridItemProperties, styleGridItemProperties);
+
+                        gridItemData.push({
+                            element: gridItemElement,
+                            details: { properties: gridItemProperties }
                         });
-                    }
-
-                    Object.keys(grid_item.details.properties).forEach(function (key) {
-                        grid_item.element.setAttribute('data-ms-' + key, grid_item.details.properties[key]);
                     });
-                    return grid_item;
-                })
-                .filter(function (item) { return item; });
 
-            gridLayout(gridElement, selector, properties, 'screen', grid_items);
 
-            notifyLayoutDone(gridElement, selector);
-        });
+                gridLayout(gridElement, gridProperties, 'screen', gridItemData);
+
+                notifyLayoutDone(gridElement);
+            });
+
     }
 
-    function polyfill() {
-        sheetLoader.loadAllStyleSheets(function (stylesheets) {
-            if (cssGridRules) { return; }
 
+    function parseAllStyles(onLoaded) {
+        sheetLoader.loadAllStyleSheets(function (stylesheets) {
+            
             cssGridRules = Object.keys(stylesheets)
                 .reduce(function (acc, url) {
                     var sheet = stylesheets[url];
@@ -146,19 +276,27 @@ define([
             cssGridSelectors = cssGridRules.filter(function (rule) {
                 return rule.properties.display === 'grid';
             });
-
-            window.addEventListener('resize', function () {
-                doLayout();
-            });
-        });
+            
+            onLoaded();
+        })
     }
 
-    function invalidate() {
-        setTimeout(doLayout, 0);
+    function invalidate(reparse) {
+        if (!css.supports('display', '-ms-grid')) {
+            if (reparse === true) {
+                setTimeout(function () {
+                    parseAllStyles(function () {
+                        doLayout();
+                    });
+                }, 0);
+            } else {
+                setTimeout(doLayout, 0);
+            }
+        }
     }
 
     return {
-        polyfill: polyfill,
+        doLayout: doLayout,
         invalidate: invalidate,
         onLayoutDone: onLayoutDone
     };

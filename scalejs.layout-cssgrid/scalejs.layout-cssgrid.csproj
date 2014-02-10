@@ -10,7 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Properties\build.rjs" />
-    <Content Include="Properties\scalejs.layout-cssgrid.nuspec" />
+    <Content Include="Properties\scalejs.layout-cssgrid.nuspec">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="scalejs.layout-cssgrid.js" />
     <Content Include="scalejs.layout-cssgrid\utils.js" />
     <Content Include="scalejs.layout-cssgrid\cssparser.js" />
