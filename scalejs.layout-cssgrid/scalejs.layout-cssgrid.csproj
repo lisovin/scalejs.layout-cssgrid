@@ -34,6 +34,7 @@
     <Content Include="config.js" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="JSLintNet.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

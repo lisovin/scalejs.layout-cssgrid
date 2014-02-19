@@ -3,11 +3,13 @@
 define([
     'scalejs!core',
     './scalejs.layout-cssgrid/cssGridLayout',
-    'CSS.supports'
+    'CSS.supports',
+    './scalejs.layout-cssgrid/utils'
 ], function (
     core,
     cssGridLayout,
-    css
+    css,
+    utils
 ) {
     'use strict';
 
@@ -18,7 +20,10 @@ define([
     if (!css.supports('display', '-ms-grid')) {
         //register resize here
         window.addEventListener('resize', function () {
-            cssGridLayout.doLayout();
+            setTimeout(function () {
+                cssGridLayout.doLayout();
+            }, 0);
+
         });
 
         exposed_invalidate = cssGridLayout.invalidate;
@@ -36,7 +41,11 @@ define([
     core.registerExtension({
         layout: {
             invalidate: exposed_invalidate,
-            onLayoutDone: cssGridLayout.onLayoutDone
+            onLayoutDone: cssGridLayout.onLayoutDone,
+            utils: {
+                safeSetStyle: utils.safeSetStyle,
+                safeGetStyle: utils.safeGetStyle
+            }
         }
     });
 });
