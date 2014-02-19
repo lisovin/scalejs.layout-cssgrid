@@ -17,7 +17,6 @@ define([
 
     var cssGridRules,
         cssGridSelectors,
-        copy = core.object.copy,
         merge = core.object.merge,
         listeners = [];
 
@@ -67,16 +66,16 @@ define([
             return result;
         }
 
-        
         function createCssGridOverride(gridElement, propertyNames) {
             // save rules that match the gridElement (parent grid rules only)
-            matchedRules = cssGridSelectors
-                .filter(function (rule) {
-                    return utils.toArray(document.querySelectorAll(rule.selector))
-                        .any(function (match) {
-                            return gridElement === match;
-                        });
-                });
+            var override,
+                matchedRules = cssGridSelectors
+                    .filter(function (rule) {
+                        return utils.toArray(document.querySelectorAll(rule.selector))
+                            .any(function (match) {
+                                return gridElement === match;
+                            });
+                    });
 
             override = createOverride(function (property) {
                 var rulesWithProperty = matchedRules
@@ -101,20 +100,21 @@ define([
 
         function createCssGridItemOverride(gridItemElement, propertyNames) {
             // for each grid rule, save it if it matches the element
-            matchedItemRules = cssGridRules
-                // filter out parent rules (rules present in cssGridSelectors)
-                .filter(function (rule) {
-                    return !cssGridSelectors.any(function (gridSelector) {
-                        return gridSelector === rule;
+            var override,
+                matchedItemRules = cssGridRules
+                    // filter out parent rules (rules present in cssGridSelectors)
+                    .filter(function (rule) {
+                        return !cssGridSelectors.any(function (gridSelector) {
+                            return gridSelector === rule;
+                        });
+                    })
+                    // filter to rules that match gridItemElement
+                    .filter(function (rule) {
+                        var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
+                        return matchedElements.any(function (match) {
+                            return gridItemElement === match;
+                        });
                     });
-                })
-                // filter to rules that match gridItemElement
-                .filter(function (rule) {
-                    var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
-                    return matchedElements.any(function (match) {
-                        return gridItemElement === match;
-                    });
-                });
 
 
             override = createOverride(function (itemProperty) {
@@ -139,7 +139,7 @@ define([
         }
 
         function createDataGridOverride(gridElement, gridPropertyNames) {
-            override = createOverride(function (property) {
+            var override = createOverride(function (property) {
                 if (gridElement.hasAttribute('data-ms-' + property)) {
                     return gridElement.getAttribute('data-ms-' + property);
                 }
@@ -199,7 +199,7 @@ define([
                     dataGridProperties,
                     styleGridProperties,
                     gridProperties,
-                    gridItemData = [],
+                    gridItemData = [];
 
                 cssGridProperties = createCssGridOverride(gridElement, Object.keys(defaultGridProperties));
                 dataGridProperties = createDataGridOverride(gridElement, Object.keys(defaultGridProperties));
@@ -213,7 +213,7 @@ define([
                         var cssGridItemProperties,
                             dataGridItemProperties,
                             styleGridItemProperties,
-                            gridItemProperties,
+                            gridItemProperties;
 
                         cssGridItemProperties = createCssGridItemOverride(gridItemElement, Object.keys(defaultGridItemProperties));
                         dataGridItemProperties = createDataGridOverride(gridItemElement, Object.keys(defaultGridItemProperties));
@@ -238,7 +238,7 @@ define([
 
     function parseAllStyles(onLoaded) {
         sheetLoader.loadAllStyleSheets(function (stylesheets) {
-            
+
             cssGridRules = Object.keys(stylesheets)
                 .reduce(function (acc, url) {
                     var sheet = stylesheets[url];
@@ -276,28 +276,27 @@ define([
             cssGridSelectors = cssGridRules.filter(function (rule) {
                 return rule.properties.display === 'grid';
             });
-            
+
             onLoaded();
-        })
+        });
     }
 
     function invalidate(reparse) {
-        if (!css.supports('display', '-ms-grid')) {
-            if (reparse === true) {
-                setTimeout(function () {
-                    parseAllStyles(function () {
-                        doLayout();
-                    });
-                }, 0);
-            } else {
-                setTimeout(doLayout, 0);
-            }
+        if (reparse === true) {
+            setTimeout(function () {
+                parseAllStyles(function () {
+                    doLayout();
+                });
+            }, 0);
+        } else {
+            setTimeout(doLayout, 0);
         }
     }
 
     return {
         doLayout: doLayout,
         invalidate: invalidate,
-        onLayoutDone: onLayoutDone
+        onLayoutDone: onLayoutDone,
+        notifyLayoutDone: notifyLayoutDone
     };
 });

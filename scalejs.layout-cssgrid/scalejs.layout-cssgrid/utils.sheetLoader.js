@@ -93,10 +93,10 @@ define([
                 }
             });
     }
-
+    /* Removed due to conflict with fabric code using 'in' with object prototype.
     Object.getPrototypeOf(cssParser).parseError = function (error, details) {
         console.log(error, details);
-    };
+    };*/
 
     return {
         loadAllStyleSheets: loadAllStyleSheets
