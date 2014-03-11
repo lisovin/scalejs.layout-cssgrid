@@ -3669,7 +3669,9 @@ define('scalejs.layout-cssgrid/gridLayout',[
         var columnTracks,
             rowTracks,
             mappedItems,
-            prevParentPos;
+            prevParentPos,
+            calculatedColumns,
+            calculatedRows;
 
         columnTracks = gridTracksParser.parse(properties[GRIDCOLUMNS]);
         rowTracks = gridTracksParser.parse(properties[GRIDROWS]);
@@ -3679,6 +3681,16 @@ define('scalejs.layout-cssgrid/gridLayout',[
         sizeTracks(columnTracks, gridElement.offsetWidth, WIDTH);
         sizeTracks(rowTracks, gridElement.offsetHeight, HEIGHT);
         //console.log(width, height);
+
+        //give calculated track sizes to grid parent
+        calculatedColumns = columnTracks.select(function (columnTrack) {
+            return columnTrack.pixels + 'px';
+        }).toArray().join(' ');
+        gridElement.setAttribute('data-grid-calculated-columns', calculatedColumns);
+        calculatedRows = rowTracks.select(function (rowTrack) {
+            return rowTrack.pixels + 'px';
+        }).toArray().join(' ');
+        gridElement.setAttribute('data-grid-calculated-rows', calculatedRows);
 
         prevParentPos = utils.safeGetStyle(gridElement, 'position');
         if (prevParentPos === 'relative' || prevParentPos === 'absolute') {
