@@ -1,7 +1,8 @@
-/*global define, document, window */
+/*global define, document, window, console */
 define([
     './gridTracksParser',
-    './utils'
+    './utils',
+    'scalejs.linq-linqjs'
 ], function (
     gridTracksParser,
     utils
@@ -105,13 +106,13 @@ define([
 
     function autoTracks(tracks, dimension) {
         return tracks
-             .filter(function (track) { return track.type === KEYWORD && track.size === AUTO && track.items; })
-             .reduce(function (size, track) {
+            .filter(function (track) { return track.type === KEYWORD && track.size === AUTO && track.items; })
+            .reduce(function (size, track) {
                 var noFrItems,
-                    noFrItem,
                     trackSize,
                     offsetProperty = 'offset' + (dimension === WIDTH ? 'Width' : 'Height'),
-                    tracksProperty = (dimension === WIDTH ? 'column' : 'row') + 'Tracks';
+                    tracksProperty = (dimension === WIDTH ? 'column' : 'row') + 'Tracks',
+                    trackSizes;
                 // find first item that has no FR rows.
                 // Then use it's size to determine track size.
                 noFrItems = track.items.filter(function (item) {
@@ -120,7 +121,8 @@ define([
                     }, true);
                 });
 
-                noFrItem = noFrItems[0];
+                /* MATCHES FIRST ELEMENT IN AUTO TRACK
+                noFrItem = noFrItems[0]; 
                 if (noFrItem) {
                     //trackSize = getMeasureValue(noFrItem.element, dimension) + frameSize(noFrItem.element, dimension);
                     trackSize = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)) + frameSize(noFrItem.element, dimension);
@@ -131,6 +133,30 @@ define([
                     // set it to 0 so that reduce would properly calculate
                     track.pixels = 0;
                     track.pixels = noFrItem[tracksProperty].reduce(function (r, tr) { return r - tr.pixels; }, trackSize);
+                } else {
+                    track.pixels = 0;
+                }*/
+
+                trackSizes = noFrItems
+                    .select(function (noFrItem) {
+                        var ceil = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)),
+                            frameSz = frameSize(noFrItem.element, dimension),
+                            track_pixels;
+                        trackSize = ceil + frameSz;
+                        if (isNaN(trackSize)) {
+                            noFrItem.element.style[dimension] = '';
+                            trackSize = noFrItem.element[offsetProperty];
+                        }
+                            // set it to 0 so that reduce would properly calculate
+                        track_pixels = 0;
+                        track_pixels = noFrItem[tracksProperty].reduce(function (r, tr) { return r - ((tr.pixels !== undefined) ? (tr.pixels) : (0)); }, trackSize);
+
+                        return track_pixels;
+
+                    }).toArray();
+
+                if (trackSizes !== undefined && trackSizes.length > 0) {
+                    track.pixels = trackSizes.max();
                 } else {
                     track.pixels = 0;
                 }
@@ -147,7 +173,8 @@ define([
         totalFRs = frs.reduce(function (sum, track) { return sum + track.size; }, 0);
 
         frs.forEach(function (track) {
-            track.pixels = size * track.size / totalFRs;
+            var planned_size = size * track.size / totalFRs;
+            track.pixels = Math.max(0, planned_size);
         });
     }
 
@@ -162,7 +189,10 @@ define([
     return function gridLayout(gridElement, properties, media, gridItems) {
         var columnTracks,
             rowTracks,
-            mappedItems;
+            mappedItems,
+            prevParentPos,
+            calculatedColumns,
+            calculatedRows;
 
         columnTracks = gridTracksParser.parse(properties[GRIDCOLUMNS]);
         rowTracks = gridTracksParser.parse(properties[GRIDROWS]);
@@ -173,6 +203,23 @@ define([
         sizeTracks(rowTracks, gridElement.offsetHeight, HEIGHT);
         //console.log(width, height);
 
+        //give calculated track sizes to grid parent
+        calculatedColumns = columnTracks.select(function (columnTrack) {
+            return columnTrack.pixels + 'px';
+        }).toArray().join(' ');
+        gridElement.setAttribute('data-grid-calculated-columns', calculatedColumns);
+        calculatedRows = rowTracks.select(function (rowTrack) {
+            return rowTrack.pixels + 'px';
+        }).toArray().join(' ');
+        gridElement.setAttribute('data-grid-calculated-rows', calculatedRows);
+
+        prevParentPos = utils.safeGetStyle(gridElement, 'position');
+        if (prevParentPos === 'relative' || prevParentPos === 'absolute') {
+            utils.safeSetStyle(gridElement, 'position', 'absolute');
+        } else {
+            utils.safeSetStyle(gridElement, 'position', 'relative');
+        }
+
         //gridElement.style.position = 'relative';
         //console.log('--->' + properties[GRIDROWS]);
         //console.log(gridTracksParser.parse(properties[GRIDROWS]));
@@ -182,50 +229,84 @@ define([
                 height,
                 left,
                 top,
-                parentLeft = 0,
-                parentTop = 0;
+                trackWidth,
+                trackHeight,
+                trackLeft,
+                trackTop,
+                itemWidth,
+                itemHeight;
 
-            item.element.style.position = 'absolute';
+            utils.safeSetStyle(item.element, 'position', 'absolute');
 
-            width = columnTracks
+            trackWidth = columnTracks
                 .filter(function (track) { return track.index >= item.column && track.index < item.column + item.columnSpan; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
-            height = rowTracks
+            trackHeight = rowTracks
                 .filter(function (track) { return track.index >= item.row && track.index < item.row + item.rowSpan; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
-            left = columnTracks
+            trackLeft = columnTracks
                 .filter(function (track) { return track.index < item.column; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
-            top = rowTracks
+            trackTop = rowTracks
                 .filter(function (track) { return track.index < item.row; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
-            if (item.element.parentNode) {
-                parentLeft = parseInt(item.element.parentNode.left, 10);
-                if (isNaN(parentLeft)) {
-                    parentLeft = 0;
-                }
+
+            itemWidth = parseInt(item.element.style.width, 10);
+            itemHeight = parseInt(item.element.style.height, 10);
+
+
+            if (item.styles.properties['grid-row-align'] === 'stretch') {
+                height = trackHeight;
+                top = trackTop;
+            } else if (item.styles.properties['grid-row-align'] === 'start') {
+                height = itemHeight;
+                top = trackTop;
+            } else if (item.styles.properties['grid-row-align'] === 'end') {
+                height = itemHeight;
+                top = trackTop + trackHeight - height;
+            } else if (item.styles.properties['grid-row-align'] === 'center') {
+                height = itemHeight;
+                top = trackTop + (trackHeight - height) / 2;
+            } else {
+                console.log('invalid -ms-grid-row-align property for ', item);
             }
 
-            if (item.element.parentNode) {
-                parentTop = parseInt(item.element.parentNode.top, 10);
-                if (isNaN(parentTop)) {
-                    parentTop = 0;
-                }
+            if (item.styles.properties['grid-column-align'] === 'stretch') {
+                width = trackWidth;
+                left = trackLeft;
+            } else if (item.styles.properties['grid-column-align'] === 'start') {
+                width = itemWidth;
+                left = trackLeft;
+            } else if (item.styles.properties['grid-column-align'] === 'end') {
+                width = itemWidth;
+                left = trackLeft + trackWidth - width;
+            } else if (item.styles.properties['grid-column-align'] === 'center') {
+                width = itemWidth;
+                left = trackLeft + (trackWidth - width) / 2;
+            } else {
+                console.log('invalid -ms-grid-column-align property for ', item);
             }
 
             width -= frameSize(item.element, WIDTH);
             height -= frameSize(item.element, HEIGHT);
 
+            /*
+            //width -= frameSize(item.element, WIDTH);
+            //height -= frameSize(item.element, HEIGHT);
+            left -= frameSize(item.element, WIDTH);
+            top -= frameSize(item.element, HEIGHT);
+            */
+
             //console.log(item.element.id, width, height);
 
-            item.element.style.width = width + PX;
-            item.element.style.height = height + PX;
-            item.element.style.left = left + parentLeft + PX;
-            item.element.style.top = top + parentTop + PX;
+            utils.safeSetStyle(item.element, 'width', width + PX);
+            utils.safeSetStyle(item.element, 'height', height + PX);
+            utils.safeSetStyle(item.element, 'left', left + PX);
+            utils.safeSetStyle(item.element, 'top', top + PX);
         });
     };
 });

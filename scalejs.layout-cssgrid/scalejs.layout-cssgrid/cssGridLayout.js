@@ -17,7 +17,6 @@ define([
 
     var cssGridRules,
         cssGridSelectors,
-        copy = core.object.copy,
         merge = core.object.merge,
         listeners = [];
 
@@ -36,7 +35,9 @@ define([
     }
 
     /*jslint unparam:true*/
-    function doLayout() {
+    function doLayout(containerNode) {
+        //if nothing is passed, does layout for whole page. Otherwise, only redoes layout for containerNode and children of containerNode
+
         var gridElements,
             defaultGridProperties = {
                 'display': 'grid',
@@ -67,16 +68,16 @@ define([
             return result;
         }
 
-        
         function createCssGridOverride(gridElement, propertyNames) {
             // save rules that match the gridElement (parent grid rules only)
-            matchedRules = cssGridSelectors
-                .filter(function (rule) {
-                    return utils.toArray(document.querySelectorAll(rule.selector))
-                        .any(function (match) {
-                            return gridElement === match;
-                        });
-                });
+            var override,
+                matchedRules = cssGridSelectors
+                    .filter(function (rule) {
+                        return utils.toArray(document.querySelectorAll(rule.selector))
+                            .any(function (match) {
+                                return gridElement === match;
+                            });
+                    });
 
             override = createOverride(function (property) {
                 var rulesWithProperty = matchedRules
@@ -101,20 +102,22 @@ define([
 
         function createCssGridItemOverride(gridItemElement, propertyNames) {
             // for each grid rule, save it if it matches the element
-            matchedItemRules = cssGridRules
-                // filter out parent rules (rules present in cssGridSelectors)
-                .filter(function (rule) {
-                    return !cssGridSelectors.any(function (gridSelector) {
-                        return gridSelector === rule;
+            var override,
+                matchedItemRules = cssGridRules
+                    /*
+                    // filter out parent rules (rules present in cssGridSelectors)
+                    .filter(function (rule) {
+                        return !cssGridSelectors.any(function (gridSelector) {
+                            return gridSelector === rule;
+                        });
+                    })*/
+                    // filter to rules that match gridItemElement
+                    .filter(function (rule) {
+                        var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
+                        return matchedElements.any(function (match) {
+                            return gridItemElement === match;
+                        });
                     });
-                })
-                // filter to rules that match gridItemElement
-                .filter(function (rule) {
-                    var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
-                    return matchedElements.any(function (match) {
-                        return gridItemElement === match;
-                    });
-                });
 
 
             override = createOverride(function (itemProperty) {
@@ -134,16 +137,6 @@ define([
                     return rulesWithProperty[0].properties[itemProperty];
                 }
             }, propertyNames);
-
-            return override;
-        }
-
-        function createDataGridOverride(gridElement, gridPropertyNames) {
-            override = createOverride(function (property) {
-                if (gridElement.hasAttribute('data-ms-' + property)) {
-                    return gridElement.getAttribute('data-ms-' + property);
-                }
-            }, gridPropertyNames);
 
             return override;
         }
@@ -172,54 +165,56 @@ define([
                 }
             });
 
-            // store style attrib values as attibutes of element
-            Object.keys(override)
-                // for each grid-related property of gridElement
-                .forEach(function (propertyKey) {
-                    // store value as attribute
-                    gridElement.setAttribute('data-ms-' + propertyKey, override[propertyKey]);
-                });
-
             return override;
         }
 
 
        // get the list of unique grids (a grid can be matched to more than one style rule therefore distinct)
-        gridElements = cssGridSelectors
+        gridElements = cssGridSelectors // if this is undefined, you need to call invalidate with reparse: true for the first time
             .selectMany(function (gridSelector) {
-                return document.querySelectorAll(gridSelector.selector);
+                //if a containerNode
+                var container = containerNode || document.body;
+                return container.parentNode.querySelectorAll(gridSelector.selector);
             })
             .distinct()
             .toArray();
+
+
 
         // for each grid parent, properties from each source (style>data attribute>css<defaults)
         gridElements
             .forEach(function (gridElement) {
                 var cssGridProperties,
-                    dataGridProperties,
                     styleGridProperties,
                     gridProperties,
-                    gridItemData = [],
+                    gridItemData = [];
 
                 cssGridProperties = createCssGridOverride(gridElement, Object.keys(defaultGridProperties));
-                dataGridProperties = createDataGridOverride(gridElement, Object.keys(defaultGridProperties));
                 styleGridProperties = createStyleGridOverride(gridElement);
 
-                gridProperties = merge(defaultGridProperties, cssGridProperties, dataGridProperties, styleGridProperties);
+                gridProperties = merge(defaultGridProperties, cssGridProperties, styleGridProperties);
+
+                //copy whatever your final rules are to the style attribute of the grid parent so they can be modified by a splitter
+                utils.safeSetStyle(gridElement, '-ms-grid-rows', gridProperties['grid-rows']);
+                utils.safeSetStyle(gridElement, '-ms-grid-columns', gridProperties['grid-columns']);
+
 
                 // for all children of gridElement, merge properties from each source (style > data attribute > css > defaults)
                 utils.toArray(gridElement.children)
                     .forEach(function (gridItemElement) {
                         var cssGridItemProperties,
-                            dataGridItemProperties,
                             styleGridItemProperties,
-                            gridItemProperties,
+                            gridItemProperties;
 
                         cssGridItemProperties = createCssGridItemOverride(gridItemElement, Object.keys(defaultGridItemProperties));
-                        dataGridItemProperties = createDataGridOverride(gridItemElement, Object.keys(defaultGridItemProperties));
                         styleGridItemProperties = createStyleGridOverride(gridItemElement);
 
-                        gridItemProperties = merge(defaultGridItemProperties, cssGridItemProperties, dataGridItemProperties, styleGridItemProperties);
+                        gridItemProperties = merge(defaultGridItemProperties, cssGridItemProperties, styleGridItemProperties);
+
+                        //copy whatever your final rules are to the style attribute of the grid parent so they can be modified by a splitter
+                        utils.safeSetStyle(gridItemElement, '-ms-grid-row', gridItemProperties['grid-row']);
+                        utils.safeSetStyle(gridItemElement, '-ms-grid-column', gridItemProperties['grid-column']);
+
 
                         gridItemData.push({
                             element: gridItemElement,
@@ -238,7 +233,7 @@ define([
 
     function parseAllStyles(onLoaded) {
         sheetLoader.loadAllStyleSheets(function (stylesheets) {
-            
+
             cssGridRules = Object.keys(stylesheets)
                 .reduce(function (acc, url) {
                     var sheet = stylesheets[url];
@@ -276,28 +271,40 @@ define([
             cssGridSelectors = cssGridRules.filter(function (rule) {
                 return rule.properties.display === 'grid';
             });
-            
+
             onLoaded();
-        })
+        });
     }
 
-    function invalidate(reparse) {
-        if (!css.supports('display', '-ms-grid')) {
-            if (reparse === true) {
-                setTimeout(function () {
-                    parseAllStyles(function () {
-                        doLayout();
-                    });
-                }, 0);
-            } else {
-                setTimeout(doLayout, 0);
-            }
+    function invalidate(options) {
+        var thing,
+            On;
+
+        if (options && options.container) {
+            On = options.container;
+        } else {
+            On = undefined;
         }
+
+        if (options && options.reparse && (options.reparse === true)) {
+            thing = function (on) {
+                parseAllStyles(function () {
+                    doLayout(on);
+                });
+            };
+        } else {
+            thing = function (on) {
+                doLayout(on);
+            };
+        }
+
+        thing(On);
     }
 
     return {
         doLayout: doLayout,
         invalidate: invalidate,
-        onLayoutDone: onLayoutDone
+        onLayoutDone: onLayoutDone,
+        notifyLayoutDone: notifyLayoutDone
     };
 });

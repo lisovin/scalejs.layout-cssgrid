@@ -20,7 +20,15 @@ define([
         loadedStyleSheets[url] = null;
 
         getUrl(url, function (stylesheet) {
-            var parsed = cssParser.parse(stylesheet);
+            var parsed;
+
+            if (stylesheet.length === 0) {
+                parsed = {
+                    rulelist: []
+                };
+            } else {
+                parsed = cssParser.parse(stylesheet);
+            }
 
             loadedStyleSheets[url] = parsed;
 
@@ -60,7 +68,13 @@ define([
         headerStyles.forEach(function (styleText, i) {
             var parsed;
 
-            parsed = cssParser.parse(styleText);
+            if (styleText.length === 0) {
+                parsed = {
+                    rulelist: []
+                };
+            } else {
+                parsed = cssParser.parse(styleText);
+            }
 
             loadedStyleSheets['head' + i] = parsed;
         });
@@ -93,10 +107,10 @@ define([
                 }
             });
     }
-
+    /* Removed due to conflict with fabric code using 'in' with object prototype.
     Object.getPrototypeOf(cssParser).parseError = function (error, details) {
         console.log(error, details);
-    };
+    };*/
 
     return {
         loadAllStyleSheets: loadAllStyleSheets
