@@ -213,8 +213,8 @@ define([
         }).toArray().join(' ');
         gridElement.setAttribute('data-grid-calculated-rows', calculatedRows);
 
-        prevParentPos = utils.safeGetStyle(gridElement, 'position');
-        if (prevParentPos === 'relative' || prevParentPos === 'absolute') {
+        gridElement.setAttribute('data-grid-parent', 'true');
+        if (gridElement.hasAttribute('data-grid-child')) {
             utils.safeSetStyle(gridElement, 'position', 'absolute');
         } else {
             utils.safeSetStyle(gridElement, 'position', 'relative');
@@ -236,6 +236,7 @@ define([
                 itemWidth,
                 itemHeight;
 
+            item.element.setAttribute('data-grid-child', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
 
             trackWidth = columnTracks

@@ -53,8 +53,8 @@
     <Content Include="Scripts\scalejs.functional-0.2.9.8.js" />
     <Content Include="Scripts\scalejs.functional-0.2.9.8.min.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.56.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.59.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.59.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.63.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.63.min.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.min.js" />
     <Content Include="Scripts\scalejs.mvvm-0.3.4.4.js" />
@@ -76,7 +76,9 @@
     <Content Include="test\gridPosition.test.js" />
     <Content Include="config.js" />
     <Content Include="Properties\build.rjs" />
-    <Content Include="Properties\layout-cssgrid-polyfill.nuspec" />
+    <Content Include="Properties\layout-cssgrid-polyfill.nuspec">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

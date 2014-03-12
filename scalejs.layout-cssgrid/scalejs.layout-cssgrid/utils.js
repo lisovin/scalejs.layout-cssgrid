@@ -62,6 +62,42 @@ define(function () {
         return styleObj[name];
     }
 
+    function getTrackSize(element, rowOrColumn, gridIndex) {
+        //gridIndex is 1-based counting
+        var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
+            trackSizes = trackRule.split(' ');
+
+        if (trackSizes.length <= gridIndex - 1) {
+            return ('grid does not have that many ' + rowOrColumn + 's');
+        } else {
+            return trackSizes[gridIndex - 1];
+        }
+    }
+    function getCalculatedTrackSize(element, rowOrColumn, gridIndex) {
+        //gridIndex is 1-based counting
+        var calculatedTracks = element.attributes['data-grid-calculated-' + rowOrColumn + 's'].textContent,
+            calculatedSizes = calculatedTracks.split(' ');
+
+        if (calculatedSizes.length <= gridIndex - 1) {
+            return ('grid does not have that many ' + rowOrColumn + 's');
+        } else {
+            return calculatedSizes[gridIndex - 1];
+        }
+    }
+    function setTrackSize(element, rowOrColumn, gridIndex, size) {
+        var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
+            trackSizes = trackRule.split(' ');
+        
+        if (trackSizes.length <= gridIndex - 1) {
+            return ('grid does not have a ' + rowOrColumn + ' with that index');
+        } else {
+            trackSizes[gridIndex - 1] = size;
+        }
+
+        safeSetStyle(element, '-ms-grid-' + rowOrColumn + 's', trackSizes.join(' '));
+    }
+
+
     function camelize(str) {
         var regex = /(-[a-z])/g,
             func = function (bit) {
@@ -134,6 +170,9 @@ define(function () {
         toArray: toArray,
         getUrl: getUrl,
         safeSetStyle: safeSetStyle,
-        safeGetStyle: safeGetStyle
+        safeGetStyle: safeGetStyle,
+        getTrackSize: getTrackSize,
+        getCalculatedTrackSize: getCalculatedTrackSize, 
+        setTrackSize: setTrackSize
     };
 });

@@ -63,6 +63,42 @@ define('scalejs.layout-cssgrid/utils',[],function () {
         return styleObj[name];
     }
 
+    function getTrackSize(element, rowOrColumn, gridIndex) {
+        //gridIndex is 1-based counting
+        var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
+            trackSizes = trackRule.split(' ');
+
+        if (trackSizes.length <= gridIndex - 1) {
+            return ('grid does not have that many ' + rowOrColumn + 's');
+        } else {
+            return trackSizes[gridIndex - 1];
+        }
+    }
+    function getCalculatedTrackSize(element, rowOrColumn, gridIndex) {
+        //gridIndex is 1-based counting
+        var calculatedTracks = element.attributes['data-grid-calculated-' + rowOrColumn + 's'].textContent,
+            calculatedSizes = calculatedTracks.split(' ');
+
+        if (calculatedSizes.length <= gridIndex - 1) {
+            return ('grid does not have that many ' + rowOrColumn + 's');
+        } else {
+            return calculatedSizes[gridIndex - 1];
+        }
+    }
+    function setTrackSize(element, rowOrColumn, gridIndex, size) {
+        var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
+            trackSizes = trackRule.split(' ');
+        
+        if (trackSizes.length <= gridIndex - 1) {
+            return ('grid does not have a ' + rowOrColumn + ' with that index');
+        } else {
+            trackSizes[gridIndex - 1] = size;
+        }
+
+        safeSetStyle(element, '-ms-grid-' + rowOrColumn + 's', trackSizes.join(' '));
+    }
+
+
     function camelize(str) {
         var regex = /(-[a-z])/g,
             func = function (bit) {
@@ -135,7 +171,10 @@ define('scalejs.layout-cssgrid/utils',[],function () {
         toArray: toArray,
         getUrl: getUrl,
         safeSetStyle: safeSetStyle,
-        safeGetStyle: safeGetStyle
+        safeGetStyle: safeGetStyle,
+        getTrackSize: getTrackSize,
+        getCalculatedTrackSize: getCalculatedTrackSize, 
+        setTrackSize: setTrackSize
     };
 });
 /*global define, require, document, console*/
@@ -996,8 +1035,8 @@ define('scalejs.layout-cssgrid/gridLayout',[
         }).toArray().join(' ');
         gridElement.setAttribute('data-grid-calculated-rows', calculatedRows);
 
-        prevParentPos = utils.safeGetStyle(gridElement, 'position');
-        if (prevParentPos === 'relative' || prevParentPos === 'absolute') {
+        gridElement.setAttribute('data-grid-parent', 'true');
+        if (gridElement.hasAttribute('data-grid-child')) {
             utils.safeSetStyle(gridElement, 'position', 'absolute');
         } else {
             utils.safeSetStyle(gridElement, 'position', 'relative');
@@ -1019,6 +1058,7 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 itemWidth,
                 itemHeight;
 
+            item.element.setAttribute('data-grid-leaf', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
 
             trackWidth = columnTracks
@@ -1450,7 +1490,10 @@ define('scalejs.layout-cssgrid',[
             onLayoutDone: cssGridLayout.onLayoutDone,
             utils: {
                 safeSetStyle: utils.safeSetStyle,
-                safeGetStyle: utils.safeGetStyle
+                safeGetStyle: utils.safeGetStyle,
+                getTrackSize: utils.getTrackSize,
+                getCalculatedTrackSize: utils.getCalculatedTrackSize,
+                setTrackSize: utils.setTrackSize
             }
         }
     });

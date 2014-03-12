@@ -44,7 +44,10 @@ define([
             onLayoutDone: cssGridLayout.onLayoutDone,
             utils: {
                 safeSetStyle: utils.safeSetStyle,
-                safeGetStyle: utils.safeGetStyle
+                safeGetStyle: utils.safeGetStyle,
+                getTrackSize: utils.getTrackSize,
+                getCalculatedTrackSize: utils.getCalculatedTrackSize,
+                setTrackSize: utils.setTrackSize
             }
         }
     });
