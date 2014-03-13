@@ -3846,8 +3846,8 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
 ) {
     
 
-    var cssGridRules,
-        cssGridSelectors,
+    var cssGridRules = [],
+        cssGridSelectors = [],
         merge = core.object.merge,
         listeners = [];
 
@@ -3999,6 +3999,9 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             return override;
         }
 
+        if (cssGridSelectors.length === 0) {
+            console.log('Invalidating layout with no rules loaded. Call invalidate with { reparse: true } to lay some grids out.');
+        }
 
        // get the list of unique grids (a grid can be matched to more than one style rule therefore distinct)
         gridElements = cssGridSelectors // if this is undefined, you need to call invalidate with reparse: true for the first time
