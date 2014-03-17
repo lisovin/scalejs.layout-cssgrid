@@ -65,7 +65,14 @@ define(function () {
     function getTrackSize(element, rowOrColumn, gridIndex) {
         //gridIndex is 1-based counting
         var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
-            trackSizes = trackRule.split(' ');
+            trackSizes;
+
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
 
         if (trackSizes.length <= gridIndex - 1) {
             return ('grid does not have that many ' + rowOrColumn + 's');
@@ -76,7 +83,15 @@ define(function () {
     function getCalculatedTrackSize(element, rowOrColumn, gridIndex) {
         //gridIndex is 1-based counting
         var calculatedTracks = element.attributes['data-grid-calculated-' + rowOrColumn + 's'].textContent,
-            calculatedSizes = calculatedTracks.split(' ');
+            calculatedSizes;
+
+        if (calculatedTracks === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        calculatedSizes = calculatedTracks.split(' ');
+
 
         if (calculatedSizes.length <= gridIndex - 1) {
             return ('grid does not have that many ' + rowOrColumn + 's');
@@ -86,7 +101,14 @@ define(function () {
     }
     function setTrackSize(element, rowOrColumn, gridIndex, size) {
         var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
-            trackSizes = trackRule.split(' ');
+            trackSizes;
+
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
         
         if (trackSizes.length <= gridIndex - 1) {
             return ('grid does not have a ' + rowOrColumn + ' with that index');
