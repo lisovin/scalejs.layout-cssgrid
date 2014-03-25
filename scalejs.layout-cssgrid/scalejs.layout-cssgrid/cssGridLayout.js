@@ -288,7 +288,17 @@ define([
             container = undefined;
         }
 
-        doLayout(container);
+        if (options && options.immediate) {
+
+            doLayout(container);
+
+        } else {
+
+            setTimeout(function () {
+                doLayout(container);
+            }, 0);
+
+        }
     }
     function parseGridStyles(callback) {
         parseAllStyles(function () {
