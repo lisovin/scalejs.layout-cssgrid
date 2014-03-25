@@ -191,8 +191,8 @@ define([
             rowTracks,
             mappedItems,
             prevParentPos,
-            calculatedColumns,
-            calculatedRows;
+            computedColumns,
+            computedRows;
 
         columnTracks = gridTracksParser.parse(properties[GRIDCOLUMNS]);
         rowTracks = gridTracksParser.parse(properties[GRIDROWS]);
@@ -203,15 +203,15 @@ define([
         sizeTracks(rowTracks, gridElement.offsetHeight, HEIGHT);
         //console.log(width, height);
 
-        //give calculated track sizes to grid parent
-        calculatedColumns = columnTracks.select(function (columnTrack) {
+        //give computed track sizes to grid parent
+        computedColumns = columnTracks.select(function (columnTrack) {
             return columnTrack.pixels + 'px';
         }).toArray().join(' ');
-        gridElement.setAttribute('data-grid-calculated-columns', calculatedColumns);
-        calculatedRows = rowTracks.select(function (rowTrack) {
+        gridElement.setAttribute('data-grid-computed-columns', computedColumns);
+        computedRows = rowTracks.select(function (rowTrack) {
             return rowTrack.pixels + 'px';
         }).toArray().join(' ');
-        gridElement.setAttribute('data-grid-calculated-rows', calculatedRows);
+        gridElement.setAttribute('data-grid-computed-rows', computedRows);
 
         gridElement.setAttribute('data-grid-parent', 'true');
         if (gridElement.hasAttribute('data-grid-child')) {

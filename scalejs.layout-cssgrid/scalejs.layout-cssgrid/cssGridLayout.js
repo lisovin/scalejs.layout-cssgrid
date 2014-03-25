@@ -169,7 +169,7 @@ define([
         }
 
         if (cssGridSelectors.length === 0) {
-            console.log('Invalidating layout with no rules loaded. Call invalidate with { reparse: true } to lay some grids out.');
+            console.log('Invalidating layout with no rules loaded. Call parseGridStyles(callback) to load styles into the extension.');
         }
 
        // get the list of unique grids (a grid can be matched to more than one style rule therefore distinct)
@@ -280,32 +280,25 @@ define([
     }
 
     function invalidate(options) {
-        var thing,
-            On;
+        var container;
 
         if (options && options.container) {
-            On = options.container;
+            container = options.container;
         } else {
-            On = undefined;
+            container = undefined;
         }
 
-        if (options && options.reparse && (options.reparse === true)) {
-            thing = function (on) {
-                parseAllStyles(function () {
-                    doLayout(on);
-                });
-            };
-        } else {
-            thing = function (on) {
-                doLayout(on);
-            };
-        }
-
-        thing(On);
+        doLayout(container);
+    }
+    function parseGridStyles(callback) {
+        parseAllStyles(function () {
+            callback();
+        });
     }
 
     return {
         doLayout: doLayout,
+        parseGridStyles: parseGridStyles,
         invalidate: invalidate,
         onLayoutDone: onLayoutDone,
         notifyLayoutDone: notifyLayoutDone

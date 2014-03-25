@@ -20,14 +20,27 @@ define([
         loadedStyleSheets[url] = null;
 
         getUrl(url, function (stylesheet) {
-            var parsed;
-
-            if (stylesheet.length === 0) {
-                parsed = {
+            var parsed = {
                     rulelist: []
-                };
+                },
+                matches,
+                getGridStyles = /\/\*GridLayoutStart\*\/((.|\n|\r)*?)\/\*GridLayoutEnd\*\//gm,
+                parsedMatch;
+
+            if (stylesheet.trim().length !== 0) {
+                matches = stylesheet.match(getGridStyles);
+                if (matches !== undefined && matches !== null) {
+                    matches.forEach(function (cssChunk, j) {
+                        cssChunk = cssChunk.replace('/*GridLayoutStart*/', '');
+                        cssChunk = cssChunk.replace('/*GridLayoutEnd*/', '');
+                        if (cssChunk.trim().length !== 0) {
+
+                            parsedMatch = cssParser.parse(cssChunk);
+                            parsed.rulelist = parsed.rulelist.concat(parsedMatch.rulelist);
+                        }
+                    });
+                }
             } else {
-                parsed = cssParser.parse(stylesheet);
             }
 
             loadedStyleSheets[url] = parsed;
@@ -47,6 +60,7 @@ define([
             allHtml = document.documentElement.innerHTML,
             removeComments = /<!--(.|\n|\r)*-->/gm,
             getStyles = /<style.*?>((.|\n|\r)*?)<\/style>/gm,
+            getGridStyles = /\/\*GridLayoutStart\*\/((.|\n|\r)*?)\/\*GridLayoutEnd\*\//gm,
             headerStyles = [],
             match;
 
@@ -66,17 +80,24 @@ define([
         }
 
         headerStyles.forEach(function (styleText, i) {
-            var parsed;
+            var parsed,
+                matches;
 
-            if (styleText.length === 0) {
-                parsed = {
-                    rulelist: []
-                };
-            } else {
-                parsed = cssParser.parse(styleText);
+            if (styleText.trim().length !== 0) {
+                matches = styleText.match(getGridStyles);
+                if (matches !== undefined && matches !== null) {
+                    matches.forEach(function (cssChunk, j) {
+                        cssChunk = cssChunk.replace('/*GridLayoutStart*/', '');
+                        cssChunk = cssChunk.replace('/*GridLayoutEnd*/', '');
+                        if (cssChunk.trim().length !== 0) {
+
+                            parsed = cssParser.parse(cssChunk);
+                            loadedStyleSheets['head' + i + '_' + j] = parsed;
+                        }
+                    });
+                }
             }
 
-            loadedStyleSheets['head' + i] = parsed;
         });
 
         // if no styleSheets have href, call onLoaded

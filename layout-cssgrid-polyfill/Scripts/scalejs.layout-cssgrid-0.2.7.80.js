@@ -66,7 +66,14 @@ define('scalejs.layout-cssgrid/utils',[],function () {
     function getTrackSize(element, rowOrColumn, gridIndex) {
         //gridIndex is 1-based counting
         var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
-            trackSizes = trackRule.split(' ');
+            trackSizes;
+
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
 
         if (trackSizes.length <= gridIndex - 1) {
             return ('grid does not have that many ' + rowOrColumn + 's');
@@ -74,20 +81,35 @@ define('scalejs.layout-cssgrid/utils',[],function () {
             return trackSizes[gridIndex - 1];
         }
     }
-    function getCalculatedTrackSize(element, rowOrColumn, gridIndex) {
+    function getComputedTrackSize(element, rowOrColumn, gridIndex) {
         //gridIndex is 1-based counting
-        var calculatedTracks = element.attributes['data-grid-calculated-' + rowOrColumn + 's'].textContent,
-            calculatedSizes = calculatedTracks.split(' ');
+        var trackRule = element.attributes['data-grid-computed-' + rowOrColumn + 's'].textContent,
+            trackSizes;
 
-        if (calculatedSizes.length <= gridIndex - 1) {
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
+
+
+        if (trackSizes.length <= gridIndex - 1) {
             return ('grid does not have that many ' + rowOrColumn + 's');
         } else {
-            return calculatedSizes[gridIndex - 1];
+            return trackSizes[gridIndex - 1];
         }
     }
     function setTrackSize(element, rowOrColumn, gridIndex, size) {
         var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
-            trackSizes = trackRule.split(' ');
+            trackSizes;
+
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
         
         if (trackSizes.length <= gridIndex - 1) {
             return ('grid does not have a ' + rowOrColumn + ' with that index');
@@ -173,7 +195,7 @@ define('scalejs.layout-cssgrid/utils',[],function () {
         safeSetStyle: safeSetStyle,
         safeGetStyle: safeGetStyle,
         getTrackSize: getTrackSize,
-        getCalculatedTrackSize: getCalculatedTrackSize, 
+        getComputedTrackSize: getComputedTrackSize, 
         setTrackSize: setTrackSize
     };
 });
@@ -199,14 +221,27 @@ define('scalejs.layout-cssgrid/utils.sheetLoader',[
         loadedStyleSheets[url] = null;
 
         getUrl(url, function (stylesheet) {
-            var parsed;
-
-            if (stylesheet.length === 0) {
-                parsed = {
+            var parsed = {
                     rulelist: []
-                };
+                },
+                matches,
+                getGridStyles = /\/\*GridLayoutStart\*\/((.|\n|\r)*?)\/\*GridLayoutEnd\*\//gm,
+                parsedMatch;
+
+            if (stylesheet.trim().length !== 0) {
+                matches = stylesheet.match(getGridStyles);
+                if (matches !== undefined && matches !== null) {
+                    matches.forEach(function (cssChunk, j) {
+                        cssChunk = cssChunk.replace('/*GridLayoutStart*/', '');
+                        cssChunk = cssChunk.replace('/*GridLayoutEnd*/', '');
+                        if (cssChunk.trim().length !== 0) {
+
+                            parsedMatch = cssParser.parse(cssChunk);
+                            parsed.rulelist.concat(parsedMatch);
+                        }
+                    });
+                }
             } else {
-                parsed = cssParser.parse(stylesheet);
             }
 
             loadedStyleSheets[url] = parsed;
@@ -226,6 +261,7 @@ define('scalejs.layout-cssgrid/utils.sheetLoader',[
             allHtml = document.documentElement.innerHTML,
             removeComments = /<!--(.|\n|\r)*-->/gm,
             getStyles = /<style.*?>((.|\n|\r)*?)<\/style>/gm,
+            getGridStyles = /\/\*GridLayoutStart\*\/((.|\n|\r)*?)\/\*GridLayoutEnd\*\//gm,
             headerStyles = [],
             match;
 
@@ -245,17 +281,24 @@ define('scalejs.layout-cssgrid/utils.sheetLoader',[
         }
 
         headerStyles.forEach(function (styleText, i) {
-            var parsed;
+            var parsed,
+                matches;
 
-            if (styleText.length === 0) {
-                parsed = {
-                    rulelist: []
-                };
-            } else {
-                parsed = cssParser.parse(styleText);
+            if (styleText.trim().length !== 0) {
+                matches = styleText.match(getGridStyles);
+                if (matches !== undefined && matches !== null) {
+                    matches.forEach(function (cssChunk, j) {
+                        cssChunk = cssChunk.replace('/*GridLayoutStart*/', '');
+                        cssChunk = cssChunk.replace('/*GridLayoutEnd*/', '');
+                        if (cssChunk.trim().length !== 0) {
+
+                            parsed = cssParser.parse(cssChunk);
+                            loadedStyleSheets['head' + i + '_' + j] = parsed;
+                        }
+                    });
+                }
             }
 
-            loadedStyleSheets['head' + i] = parsed;
         });
 
         // if no styleSheets have href, call onLoaded
@@ -1013,8 +1056,8 @@ define('scalejs.layout-cssgrid/gridLayout',[
             rowTracks,
             mappedItems,
             prevParentPos,
-            calculatedColumns,
-            calculatedRows;
+            computedColumns,
+            computedRows;
 
         columnTracks = gridTracksParser.parse(properties[GRIDCOLUMNS]);
         rowTracks = gridTracksParser.parse(properties[GRIDROWS]);
@@ -1025,15 +1068,15 @@ define('scalejs.layout-cssgrid/gridLayout',[
         sizeTracks(rowTracks, gridElement.offsetHeight, HEIGHT);
         //console.log(width, height);
 
-        //give calculated track sizes to grid parent
-        calculatedColumns = columnTracks.select(function (columnTrack) {
+        //give computed track sizes to grid parent
+        computedColumns = columnTracks.select(function (columnTrack) {
             return columnTrack.pixels + 'px';
         }).toArray().join(' ');
-        gridElement.setAttribute('data-grid-calculated-columns', calculatedColumns);
-        calculatedRows = rowTracks.select(function (rowTrack) {
+        gridElement.setAttribute('data-grid-computed-columns', computedColumns);
+        computedRows = rowTracks.select(function (rowTrack) {
             return rowTrack.pixels + 'px';
         }).toArray().join(' ');
-        gridElement.setAttribute('data-grid-calculated-rows', calculatedRows);
+        gridElement.setAttribute('data-grid-computed-rows', computedRows);
 
         gridElement.setAttribute('data-grid-parent', 'true');
         if (gridElement.hasAttribute('data-grid-child')) {
@@ -1415,28 +1458,21 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
     }
 
     function invalidate(options) {
-        var thing,
-            On;
+        var container;
 
         if (options && options.container) {
-            On = options.container;
+            container = options.container;
         } else {
-            On = undefined;
+            container = undefined;
         }
 
         if (options && options.reparse && (options.reparse === true)) {
-            thing = function (on) {
-                parseAllStyles(function () {
-                    doLayout(on);
-                });
-            };
+            parseAllStyles(function () {
+                doLayout(container);
+            });
         } else {
-            thing = function (on) {
-                doLayout(on);
-            };
+            doLayout(container);
         }
-
-        thing(On);
     }
 
     return {

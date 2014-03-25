@@ -80,23 +80,23 @@ define(function () {
             return trackSizes[gridIndex - 1];
         }
     }
-    function getCalculatedTrackSize(element, rowOrColumn, gridIndex) {
+    function getComputedTrackSize(element, rowOrColumn, gridIndex) {
         //gridIndex is 1-based counting
-        var calculatedTracks = element.attributes['data-grid-calculated-' + rowOrColumn + 's'].textContent,
-            calculatedSizes;
+        var trackRule = element.attributes['data-grid-computed-' + rowOrColumn + 's'].textContent,
+            trackSizes;
 
-        if (calculatedTracks === undefined) {
+        if (trackRule === undefined) {
             console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
             return;
         }
 
-        calculatedSizes = calculatedTracks.split(' ');
+        trackSizes = trackRule.split(' ');
 
 
-        if (calculatedSizes.length <= gridIndex - 1) {
+        if (trackSizes.length <= gridIndex - 1) {
             return ('grid does not have that many ' + rowOrColumn + 's');
         } else {
-            return calculatedSizes[gridIndex - 1];
+            return trackSizes[gridIndex - 1];
         }
     }
     function setTrackSize(element, rowOrColumn, gridIndex, size) {
@@ -194,7 +194,7 @@ define(function () {
         safeSetStyle: safeSetStyle,
         safeGetStyle: safeGetStyle,
         getTrackSize: getTrackSize,
-        getCalculatedTrackSize: getCalculatedTrackSize, 
+        getComputedTrackSize: getComputedTrackSize, 
         setTrackSize: setTrackSize
     };
 });
