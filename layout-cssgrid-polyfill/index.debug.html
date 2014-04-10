@@ -15,39 +15,19 @@
             }
 
             /*GridLayoutStart*/
-            .outer-grid {
+            .grid {
                 display: -ms-grid;
-                -ms-grid-rows: 200px 321px;
-                -ms-grid-columns: 300px 123px;
+                -ms-grid-rows: auto 1fr;
+                -ms-grid-columns: 1fr;
+                height: 400px;
+                width: 400px;
             }
-            .inner-grid {
-                height: 100%;
-                width: 100%;
-                display: -ms-grid;
-                -ms-grid-rows: 1fr 1fr;
-                -ms-grid-columns: 1fr 1fr;
+            .header {
+                -ms-grid-row: 1;
             }
-
-
-            .row-1 {-ms-grid-row: 1;}
-            .row-2 {-ms-grid-row: 2;}
-            .row-3 {-ms-grid-row: 3;}
-            .row-4 {-ms-grid-row: 4;}
-            .column-1 {-ms-grid-column: 1;}
-            .column-2 {-ms-grid-column: 2;}
-            .column-3 {-ms-grid-column: 3;}
-            .column-4 {-ms-grid-column: 4;}
-            .row-span-1 {-ms-grid-row-span: 1;}
-            .row-span-2 {-ms-grid-row-span: 2;}
-            .row-span-3 {-ms-grid-row-span: 3;}
-            .row-span-4 {-ms-grid-row-span: 4;}
-            .col-span-1 {-ms-grid-column-span: 1;}
-            .col-span-2 {-ms-grid-column-span: 2;}
-            .col-span-3 {-ms-grid-column-span: 3;}
-            .col-span-4 {-ms-grid-column-span: 4;}
-            /*GridLayoutEnd*/
-
-            /*GridLayoutStart*/
+            .other {
+                -ms-grid-row: 2;
+            }
             /*GridLayoutEnd*/
 
             .background-r {
@@ -67,16 +47,9 @@
     </head>
     <body>
 
-        <div id="asdf" class="outer-grid" style="background: grey">
-            <div class="row-2 column-1 inner-grid">
-                <div class="row-1 column-1 background-b"></div>
-                <div class="row-1 column-2 background-g"></div>
-            </div>
-            <div class="row-1 column-2 inner-grid">
-                <div class="row-1 column-1 background-b"></div>
-                <div class="row-1 column-2 background-g"></div>
-            </div>
-
+        <div class="grid" style="background: grey">
+            <h1 id="asdf" class="header background-b">asd</h1>
+            <div class="other background-r"></div>
         </div>
     </body>
 </html>

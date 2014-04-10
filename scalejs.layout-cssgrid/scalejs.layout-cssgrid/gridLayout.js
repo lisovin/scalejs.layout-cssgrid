@@ -138,6 +138,10 @@ define([
                 }*/
 
                 trackSizes = noFrItems
+                    .filter(function (noFrItem) {
+                        var display = window.getComputedStyle(noFrItem.element).display;
+                        return display !== 'none';
+                    })
                     .select(function (noFrItem) {
                         var ceil = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)),
                             frameSz = frameSize(noFrItem.element, dimension),
@@ -145,7 +149,9 @@ define([
                         trackSize = ceil + frameSz;
                         if (isNaN(trackSize)) {
                             noFrItem.element.style[dimension] = '';
-                            trackSize = noFrItem.element[offsetProperty];
+                            ceil = noFrItem.element[offsetProperty];
+                            frameSz = frameSize(noFrItem.element, dimension);
+                            trackSize = ceil + frameSz;
                         }
                             // set it to 0 so that reduce would properly calculate
                         track_pixels = 0;
@@ -192,7 +198,9 @@ define([
             mappedItems,
             prevParentPos,
             computedColumns,
-            computedRows;
+            computedRows,
+            sumGridWidth,
+            sumGridHeight;
 
         columnTracks = gridTracksParser.parse(properties[GRIDCOLUMNS]);
         rowTracks = gridTracksParser.parse(properties[GRIDROWS]);
@@ -213,6 +221,25 @@ define([
         }).toArray().join(' ');
         gridElement.setAttribute('data-grid-computed-rows', computedRows);
 
+        /* WIP expand grid based on content. hard to allow resizing and expanded parent.
+        if (utils.safeGetStyle(gridElement, 'width') === undefined) {
+            sumGridWidth = columnTracks.select(function (columnTrack) {
+                return columnTrack.pixels;
+            }).toArray().reduce(function (a, b) {
+                return a + b;
+            }, 0);
+            utils.safeSetStyle(gridElement, 'width', sumGridWidth + PX);
+        }
+        if (utils.safeGetStyle(gridElement, 'height') === undefined) {
+            sumGridHeight = rowTracks.select(function (rowTrack) {
+                return rowTrack.pixels;
+            }).toArray().reduce(function (a, b) {
+                return a + b;
+            }, 0);
+            utils.safeSetStyle(gridElement, 'height', sumGridHeight + PX);
+        }*/
+
+
         gridElement.setAttribute('data-grid-parent', 'true');
         if (gridElement.hasAttribute('data-grid-child')) {
             utils.safeSetStyle(gridElement, 'position', 'absolute');
@@ -224,6 +251,7 @@ define([
         //console.log('--->' + properties[GRIDROWS]);
         //console.log(gridTracksParser.parse(properties[GRIDROWS]));
         //console.log('-->gridLayout', gridElement, properties, grid_items);
+
         mappedItems.forEach(function (item) {
             var width,
                 height,
@@ -294,15 +322,6 @@ define([
 
             width -= frameSize(item.element, WIDTH);
             height -= frameSize(item.element, HEIGHT);
-
-            /*
-            //width -= frameSize(item.element, WIDTH);
-            //height -= frameSize(item.element, HEIGHT);
-            left -= frameSize(item.element, WIDTH);
-            top -= frameSize(item.element, HEIGHT);
-            */
-
-            //console.log(item.element.id, width, height);
 
             utils.safeSetStyle(item.element, 'width', width + PX);
             utils.safeSetStyle(item.element, 'height', height + PX);

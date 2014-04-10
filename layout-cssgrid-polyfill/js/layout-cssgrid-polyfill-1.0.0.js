@@ -2933,7 +2933,7 @@ define('scalejs.layout-cssgrid/utils.sheetLoader',[
                         if (cssChunk.trim().length !== 0) {
 
                             parsedMatch = cssParser.parse(cssChunk);
-                            parsed.rulelist.concat(parsedMatch);
+                            parsed.rulelist = parsed.rulelist.concat(parsedMatch.rulelist);
                         }
                     });
                 }
@@ -3699,6 +3699,10 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 }*/
 
                 trackSizes = noFrItems
+                    .filter(function (noFrItem) {
+                        var display = window.getComputedStyle(noFrItem.element).display;
+                        return display !== 'none';
+                    })
                     .select(function (noFrItem) {
                         var ceil = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)),
                             frameSz = frameSize(noFrItem.element, dimension),
@@ -3706,7 +3710,9 @@ define('scalejs.layout-cssgrid/gridLayout',[
                         trackSize = ceil + frameSz;
                         if (isNaN(trackSize)) {
                             noFrItem.element.style[dimension] = '';
-                            trackSize = noFrItem.element[offsetProperty];
+                            ceil = noFrItem.element[offsetProperty];
+                            frameSz = frameSize(noFrItem.element, dimension);
+                            trackSize = ceil + frameSz;
                         }
                             // set it to 0 so that reduce would properly calculate
                         track_pixels = 0;
@@ -3753,7 +3759,9 @@ define('scalejs.layout-cssgrid/gridLayout',[
             mappedItems,
             prevParentPos,
             computedColumns,
-            computedRows;
+            computedRows,
+            sumGridWidth,
+            sumGridHeight;
 
         columnTracks = gridTracksParser.parse(properties[GRIDCOLUMNS]);
         rowTracks = gridTracksParser.parse(properties[GRIDROWS]);
@@ -3774,6 +3782,25 @@ define('scalejs.layout-cssgrid/gridLayout',[
         }).toArray().join(' ');
         gridElement.setAttribute('data-grid-computed-rows', computedRows);
 
+        /* WIP expand grid based on content. hard to allow resizing and expanded parent.
+        if (utils.safeGetStyle(gridElement, 'width') === undefined) {
+            sumGridWidth = columnTracks.select(function (columnTrack) {
+                return columnTrack.pixels;
+            }).toArray().reduce(function (a, b) {
+                return a + b;
+            }, 0);
+            utils.safeSetStyle(gridElement, 'width', sumGridWidth + PX);
+        }
+        if (utils.safeGetStyle(gridElement, 'height') === undefined) {
+            sumGridHeight = rowTracks.select(function (rowTrack) {
+                return rowTrack.pixels;
+            }).toArray().reduce(function (a, b) {
+                return a + b;
+            }, 0);
+            utils.safeSetStyle(gridElement, 'height', sumGridHeight + PX);
+        }*/
+
+
         gridElement.setAttribute('data-grid-parent', 'true');
         if (gridElement.hasAttribute('data-grid-child')) {
             utils.safeSetStyle(gridElement, 'position', 'absolute');
@@ -3785,6 +3812,7 @@ define('scalejs.layout-cssgrid/gridLayout',[
         //console.log('--->' + properties[GRIDROWS]);
         //console.log(gridTracksParser.parse(properties[GRIDROWS]));
         //console.log('-->gridLayout', gridElement, properties, grid_items);
+
         mappedItems.forEach(function (item) {
             var width,
                 height,
@@ -3855,15 +3883,6 @@ define('scalejs.layout-cssgrid/gridLayout',[
 
             width -= frameSize(item.element, WIDTH);
             height -= frameSize(item.element, HEIGHT);
-
-            /*
-            //width -= frameSize(item.element, WIDTH);
-            //height -= frameSize(item.element, HEIGHT);
-            left -= frameSize(item.element, WIDTH);
-            top -= frameSize(item.element, HEIGHT);
-            */
-
-            //console.log(item.element.id, width, height);
 
             utils.safeSetStyle(item.element, 'width', width + PX);
             utils.safeSetStyle(item.element, 'height', height + PX);
@@ -4043,7 +4062,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
         }
 
         if (cssGridSelectors.length === 0) {
-            console.log('Invalidating layout with no rules loaded. Call invalidate with { reparse: true } to lay some grids out.');
+            console.log('Invalidating layout with no rules loaded. Call parseGridStyles(callback) to load styles into the extension.');
         }
 
        // get the list of unique grids (a grid can be matched to more than one style rule therefore distinct)
@@ -4162,17 +4181,27 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             container = undefined;
         }
 
-        if (options && options.reparse && (options.reparse === true)) {
-            parseAllStyles(function () {
-                doLayout(container);
-            });
-        } else {
+        if (options && options.immediate) {
+
             doLayout(container);
+
+        } else {
+
+            setTimeout(function () {
+                doLayout(container);
+            }, 0);
+
         }
+    }
+    function parseGridStyles(callback) {
+        parseAllStyles(function () {
+            callback();
+        });
     }
 
     return {
         doLayout: doLayout,
+        parseGridStyles: parseGridStyles,
         invalidate: invalidate,
         onLayoutDone: onLayoutDone,
         notifyLayoutDone: notifyLayoutDone
@@ -4194,7 +4223,8 @@ define('scalejs.layout-cssgrid',[
 ) {
     
 
-    var exposed_invalidate;
+    var exposed_invalidate,
+        exposed_parseGridStyles;
 
 
     //console.log('is -ms-grid supported? ' + (css.supports('display', '-ms-grid') || false));
@@ -4208,6 +4238,7 @@ define('scalejs.layout-cssgrid',[
         });
 
         exposed_invalidate = cssGridLayout.invalidate;
+        exposed_parseGridStyles = cssGridLayout.parseGridStyles;
 
     } else {
         window.addEventListener('resize', function () {
@@ -4217,11 +4248,15 @@ define('scalejs.layout-cssgrid',[
         exposed_invalidate = function () {
             cssGridLayout.notifyLayoutDone();
         };
+        exposed_parseGridStyles = function (callback) {
+            callback();
+        }
     }
 
     core.registerExtension({
         layout: {
             invalidate: exposed_invalidate,
+            parseGridStyles: exposed_parseGridStyles,
             onLayoutDone: cssGridLayout.onLayoutDone,
             utils: {
                 safeSetStyle: utils.safeSetStyle,
@@ -4252,9 +4287,11 @@ require([
     };
 
     domReady(function () {
-        core.layout.invalidate({
-            reparse: true
-        });
+        core.layout.parseGridStyles(function () {
+            core.layout.invalidate({
+                reparse: true
+            });
+        })
     });
 });
 

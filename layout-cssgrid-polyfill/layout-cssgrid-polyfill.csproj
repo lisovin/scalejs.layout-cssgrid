@@ -18,11 +18,6 @@
     <StartArguments>/site:layout-cssgrid-polyfill</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="app\main\bindings\mainBindings.js" />
-    <Content Include="app\main\mainModule.js" />
-    <Content Include="app\main\styles\main.css" />
-    <Content Include="app\main\viewmodels\mainViewModel.js" />
-    <Content Include="app\main\views\main.html" />
     <Content Include="css\jasmine.css" />
     <Content Include="README.txt" />
     <Content Include="index.debug.html" />
@@ -55,7 +50,8 @@
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.56.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.80.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.81.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.81.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.95.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.95.min.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.min.js" />
     <Content Include="Scripts\scalejs.mvvm-0.3.4.4.js" />

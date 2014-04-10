@@ -15,9 +15,11 @@ require([
     };
 
     domReady(function () {
-        core.layout.invalidate({
-            reparse: true
-        });
+        core.layout.parseGridStyles(function () {
+            core.layout.invalidate({
+                reparse: true
+            });
+        })
     });
 });
 
