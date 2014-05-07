@@ -13,12 +13,9 @@ require([
         invalidate: core.layout.invalidate,
         onLayoutDone: core.layout.onLayoutDone
     };
-
     domReady(function () {
         core.layout.parseGridStyles(function () {
-            core.layout.invalidate({
-                reparse: true
-            });
+            core.layout.invalidate();
         })
     });
 });

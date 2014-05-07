@@ -3710,7 +3710,9 @@ define('scalejs.layout-cssgrid/gridLayout',[
                         trackSize = ceil + frameSz;
                         if (isNaN(trackSize)) {
                             noFrItem.element.style[dimension] = '';
-                            trackSize = noFrItem.element[offsetProperty];
+                            ceil = noFrItem.element[offsetProperty];
+                            frameSz = frameSize(noFrItem.element, dimension);
+                            trackSize = ceil + frameSz;
                         }
                             // set it to 0 so that reduce would properly calculate
                         track_pixels = 0;
@@ -3820,8 +3822,12 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 trackHeight,
                 trackLeft,
                 trackTop,
+                itemComputedStyle,
                 itemWidth,
-                itemHeight;
+                itemHeight,
+                itemMargins,
+                frameWidth,
+                frameHeight;
 
             item.element.setAttribute('data-grid-child', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
@@ -3842,20 +3848,25 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 .filter(function (track) { return track.index < item.row; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
-
-            itemWidth = parseInt(item.element.style.width, 10);
-            itemHeight = parseInt(item.element.style.height, 10);
-
+            itemComputedStyle = window.getComputedStyle(item.element);
+            itemWidth = parseInt(itemComputedStyle.width, 10);
+            itemHeight = parseInt(itemComputedStyle.height, 10);
+            itemMargins = {
+                top: parseInt(itemComputedStyle['margin-top'], 10),
+                right: parseInt(itemComputedStyle['margin-right'], 10),
+                bottom: parseInt(itemComputedStyle['margin-bottom'], 10),
+                left: parseInt(itemComputedStyle['margin-left'], 10)
+            };
 
             if (item.styles.properties['grid-row-align'] === 'stretch') {
                 height = trackHeight;
                 top = trackTop;
             } else if (item.styles.properties['grid-row-align'] === 'start') {
                 height = itemHeight;
-                top = trackTop;
+                top = trackTop + itemMargins.top;
             } else if (item.styles.properties['grid-row-align'] === 'end') {
                 height = itemHeight;
-                top = trackTop + trackHeight - height;
+                top = trackTop + trackHeight - height - (itemMargins.bottom + itemMargins.top);
             } else if (item.styles.properties['grid-row-align'] === 'center') {
                 height = itemHeight;
                 top = trackTop + (trackHeight - height) / 2;
@@ -3868,10 +3879,10 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 left = trackLeft;
             } else if (item.styles.properties['grid-column-align'] === 'start') {
                 width = itemWidth;
-                left = trackLeft;
+                left = trackLeft + itemMargins.left;
             } else if (item.styles.properties['grid-column-align'] === 'end') {
                 width = itemWidth;
-                left = trackLeft + trackWidth - width;
+                left = trackLeft + trackWidth - width - (itemMargins.right + itemMargins.left);
             } else if (item.styles.properties['grid-column-align'] === 'center') {
                 width = itemWidth;
                 left = trackLeft + (trackWidth - width) / 2;
@@ -3879,8 +3890,11 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 console.log('invalid -ms-grid-column-align property for ', item);
             }
 
-            width -= frameSize(item.element, WIDTH);
-            height -= frameSize(item.element, HEIGHT);
+            //frameWidth = frameSize(item.element, WIDTH);
+            //frameHeight = frameSize(item.element, HEIGHT);
+            //width -= frameWidth;
+            //height -= frameHeight;
+
 
             utils.safeSetStyle(item.element, 'width', width + PX);
             utils.safeSetStyle(item.element, 'height', height + PX);
@@ -4073,7 +4087,15 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             .distinct()
             .toArray();
 
-
+        // order by depth in document so parents get calculated before children
+        function docDepth(e) {
+            if (e.parentElement === document.body) {
+                return 1;
+            } else {
+                return 1 + docDepth(e.parentElement);
+            }
+        }
+        gridElements = gridElements.orderBy(docDepth).toArray();
 
         // for each grid parent, properties from each source (style>data attribute>css<defaults)
         gridElements
@@ -4283,12 +4305,9 @@ require([
         invalidate: core.layout.invalidate,
         onLayoutDone: core.layout.onLayoutDone
     };
-
     domReady(function () {
         core.layout.parseGridStyles(function () {
-            core.layout.invalidate({
-                reparse: true
-            });
+            core.layout.invalidate();
         })
     });
 });

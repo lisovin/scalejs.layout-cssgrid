@@ -182,7 +182,15 @@ define([
             .distinct()
             .toArray();
 
-
+        // order by depth in document so parents get calculated before children
+        function docDepth(e) {
+            if (e.parentElement === document.body) {
+                return 1;
+            } else {
+                return 1 + docDepth(e.parentElement);
+            }
+        }
+        gridElements = gridElements.orderBy(docDepth).toArray();
 
         // for each grid parent, properties from each source (style>data attribute>css<defaults)
         gridElements

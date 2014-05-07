@@ -47,11 +47,12 @@
     <Content Include="Scripts\scalejs-0.3.3.min.js" />
     <Content Include="Scripts\scalejs.functional-0.2.9.8.js" />
     <Content Include="Scripts\scalejs.functional-0.2.9.8.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.100.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.101.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.101.min.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.56.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.80.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.81.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.95.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.95.min.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.min.js" />
     <Content Include="Scripts\scalejs.mvvm-0.3.4.4.js" />

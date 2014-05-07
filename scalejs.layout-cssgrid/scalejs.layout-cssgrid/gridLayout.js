@@ -261,8 +261,12 @@ define([
                 trackHeight,
                 trackLeft,
                 trackTop,
+                itemComputedStyle,
                 itemWidth,
-                itemHeight;
+                itemHeight,
+                itemFrame,
+                parentPadding,
+                parentComputedStyle;
 
             item.element.setAttribute('data-grid-child', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
@@ -283,20 +287,38 @@ define([
                 .filter(function (track) { return track.index < item.row; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
-
-            itemWidth = parseInt(item.element.style.width, 10);
-            itemHeight = parseInt(item.element.style.height, 10);
-
+            itemComputedStyle = window.getComputedStyle(item.element);
+            itemWidth = parseInt(itemComputedStyle.width, 10);
+            itemHeight = parseInt(itemComputedStyle.height, 10);
+            itemFrame = {
+                top: (parseInt(itemComputedStyle['margin-top'], 10) || 0) + (parseInt(itemComputedStyle['border-top-width'], 10) || 0),
+                right: (parseInt(itemComputedStyle['margin-right'], 10) || 0) + (parseInt(itemComputedStyle['border-right-width'], 10) || 0),
+                bottom: (parseInt(itemComputedStyle['margin-bottom'], 10) || 0) + (parseInt(itemComputedStyle['border-bottom-width'], 10) || 0),
+                left: (parseInt(itemComputedStyle['margin-left'], 10) || 0) + (parseInt(itemComputedStyle['border-left-width'], 10) || 0)
+            };
+            itemPadding = {
+                top: (parseInt(itemComputedStyle['padding-top'], 10) || 0),
+                right: (parseInt(itemComputedStyle['padding-right'], 10) || 0),
+                bottom: (parseInt(itemComputedStyle['padding-bottom'], 10) || 0),
+                left: (parseInt(itemComputedStyle['padding-left'], 10) || 0)
+            };
+            parentComputedStyle = window.getComputedStyle(gridElement);
+            parentPadding = {
+                top: (parseInt(parentComputedStyle['padding-top'], 10) || 0),
+                right: (parseInt(parentComputedStyle['padding-right'], 10) || 0),
+                bottom: (parseInt(parentComputedStyle['padding-bottom'], 10) || 0),
+                left: (parseInt(parentComputedStyle['padding-left'], 10) || 0)
+            };
 
             if (item.styles.properties['grid-row-align'] === 'stretch') {
-                height = trackHeight;
+                height = trackHeight - (itemFrame.top + itemFrame.bottom);
                 top = trackTop;
             } else if (item.styles.properties['grid-row-align'] === 'start') {
                 height = itemHeight;
-                top = trackTop;
+                top = trackTop + itemFrame.top;
             } else if (item.styles.properties['grid-row-align'] === 'end') {
                 height = itemHeight;
-                top = trackTop + trackHeight - height;
+                top = trackTop + trackHeight - height - (itemFrame.bottom + itemFrame.top);
             } else if (item.styles.properties['grid-row-align'] === 'center') {
                 height = itemHeight;
                 top = trackTop + (trackHeight - height) / 2;
@@ -305,14 +327,14 @@ define([
             }
 
             if (item.styles.properties['grid-column-align'] === 'stretch') {
-                width = trackWidth;
+                width = trackWidth - (itemFrame.left + itemFrame.right);
                 left = trackLeft;
             } else if (item.styles.properties['grid-column-align'] === 'start') {
                 width = itemWidth;
-                left = trackLeft;
+                left = trackLeft + itemFrame.left;
             } else if (item.styles.properties['grid-column-align'] === 'end') {
                 width = itemWidth;
-                left = trackLeft + trackWidth - width;
+                left = trackLeft + trackWidth - width - (itemFrame.right + itemFrame.left);
             } else if (item.styles.properties['grid-column-align'] === 'center') {
                 width = itemWidth;
                 left = trackLeft + (trackWidth - width) / 2;
@@ -320,8 +342,10 @@ define([
                 console.log('invalid -ms-grid-column-align property for ', item);
             }
 
-            width -= frameSize(item.element, WIDTH);
-            height -= frameSize(item.element, HEIGHT);
+            left += parentPadding.left;
+            width -= parentPadding.left + parentPadding.right;
+            top += parentPadding.top;
+            width -= parentPadding.top + parentPadding.bottom;
 
             utils.safeSetStyle(item.element, 'width', width + PX);
             utils.safeSetStyle(item.element, 'height', height + PX);

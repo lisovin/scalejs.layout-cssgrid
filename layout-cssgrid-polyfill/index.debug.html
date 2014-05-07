@@ -17,17 +17,26 @@
             /*GridLayoutStart*/
             .grid {
                 display: -ms-grid;
-                -ms-grid-rows: auto 1fr;
-                -ms-grid-columns: 1fr;
-                height: 400px;
-                width: 400px;
+                -ms-grid-rows: 150px 150px 150px;
+                -ms-grid-columns: 150px 150px 150px;
             }
-            .header {
+            .box {
+            }
+            .e1 {
                 -ms-grid-row: 1;
+                -ms-grid-column: 1;
+                margin:10px;
             }
-            .other {
+            .e2 {
                 -ms-grid-row: 2;
+                -ms-grid-column: 2;
+                padding: 10px;
             }
+            .e3 {
+                -ms-grid-row: 3;
+                -ms-grid-column: 3;
+            }
+
             /*GridLayoutEnd*/
 
             .background-r {
@@ -39,17 +48,17 @@
             .background-g {
                 background: green;
             }
-            .background-y {
-                background: yellow;
-            }
 
         </style>
     </head>
     <body>
+        <div class="grid">
+            <div class="background-r e1 box"></div>
+            <div class="background-b e2 box"></div>
+            <div class="background-g e3 box"></div>
+        </div>
+        <div style="width:150px; height:150px;background-color:yellow;">
 
-        <div class="grid" style="background: grey">
-            <h1 id="asdf" class="header background-b">asd</h1>
-            <div class="other background-r"></div>
         </div>
     </body>
 </html>
