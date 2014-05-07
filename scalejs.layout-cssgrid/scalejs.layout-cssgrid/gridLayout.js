@@ -211,6 +211,19 @@ define([
         sizeTracks(rowTracks, gridElement.offsetHeight, HEIGHT);
         //console.log(width, height);
 
+        //message about errors
+        columnTracks.forEach(function (t) {
+            if (isNaN(t.pixels) || (t.pixels === undefined)) {
+                console.log('Unable to calculate column size for ', gridElement, t.index, t.type, t.size, t.pixels);
+            }
+        });
+        //message about errors
+        rowTracks.forEach(function (t) {
+            if (isNaN(t.pixels) || (t.pixels === undefined)) {
+                console.log('Unable to calculate row size for ', gridElement, t.index, t.type, t.size, t.pixels);
+            }
+        });
+
         //give computed track sizes to grid parent
         computedColumns = columnTracks.select(function (columnTrack) {
             return columnTrack.pixels + 'px';
@@ -265,8 +278,9 @@ define([
                 itemWidth,
                 itemHeight,
                 itemFrame,
-                parentPadding,
-                parentComputedStyle;
+                itemPadding,
+                parentComputedStyle,
+                parentPadding;
 
             item.element.setAttribute('data-grid-child', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
@@ -343,9 +357,10 @@ define([
             }
 
             left += parentPadding.left;
-            width -= parentPadding.left + parentPadding.right;
             top += parentPadding.top;
-            width -= parentPadding.top + parentPadding.bottom;
+
+            width -= itemPadding.left + itemPadding.right;
+            height -= itemPadding.top + itemPadding.bottom;
 
             utils.safeSetStyle(item.element, 'width', width + PX);
             utils.safeSetStyle(item.element, 'height', height + PX);

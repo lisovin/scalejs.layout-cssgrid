@@ -48,8 +48,8 @@
     <Content Include="Scripts\scalejs.functional-0.2.9.8.js" />
     <Content Include="Scripts\scalejs.functional-0.2.9.8.min.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.100.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.101.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.101.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.111.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.111.min.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.56.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.80.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.81.js" />

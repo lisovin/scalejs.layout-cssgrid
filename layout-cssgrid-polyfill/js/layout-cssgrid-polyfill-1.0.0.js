@@ -3772,6 +3772,19 @@ define('scalejs.layout-cssgrid/gridLayout',[
         sizeTracks(rowTracks, gridElement.offsetHeight, HEIGHT);
         //console.log(width, height);
 
+        //message about errors
+        columnTracks.forEach(function (t) {
+            if (isNaN(t.pixels) || (t.pixels === undefined)) {
+                console.log('Unable to calculate column size for ', gridElement, t.index, t.type, t.size, t.pixels);
+            }
+        });
+        //message about errors
+        rowTracks.forEach(function (t) {
+            if (isNaN(t.pixels) || (t.pixels === undefined)) {
+                console.log('Unable to calculate row size for ', gridElement, t.index, t.type, t.size, t.pixels);
+            }
+        });
+
         //give computed track sizes to grid parent
         computedColumns = columnTracks.select(function (columnTrack) {
             return columnTrack.pixels + 'px';
@@ -3825,9 +3838,10 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 itemComputedStyle,
                 itemWidth,
                 itemHeight,
-                itemMargins,
-                frameWidth,
-                frameHeight;
+                itemFrame,
+                itemPadding,
+                parentComputedStyle,
+                parentPadding;
 
             item.element.setAttribute('data-grid-child', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
@@ -3851,22 +3865,35 @@ define('scalejs.layout-cssgrid/gridLayout',[
             itemComputedStyle = window.getComputedStyle(item.element);
             itemWidth = parseInt(itemComputedStyle.width, 10);
             itemHeight = parseInt(itemComputedStyle.height, 10);
-            itemMargins = {
-                top: parseInt(itemComputedStyle['margin-top'], 10),
-                right: parseInt(itemComputedStyle['margin-right'], 10),
-                bottom: parseInt(itemComputedStyle['margin-bottom'], 10),
-                left: parseInt(itemComputedStyle['margin-left'], 10)
+            itemFrame = {
+                top: (parseInt(itemComputedStyle['margin-top'], 10) || 0) + (parseInt(itemComputedStyle['border-top-width'], 10) || 0),
+                right: (parseInt(itemComputedStyle['margin-right'], 10) || 0) + (parseInt(itemComputedStyle['border-right-width'], 10) || 0),
+                bottom: (parseInt(itemComputedStyle['margin-bottom'], 10) || 0) + (parseInt(itemComputedStyle['border-bottom-width'], 10) || 0),
+                left: (parseInt(itemComputedStyle['margin-left'], 10) || 0) + (parseInt(itemComputedStyle['border-left-width'], 10) || 0)
+            };
+            itemPadding = {
+                top: (parseInt(itemComputedStyle['padding-top'], 10) || 0),
+                right: (parseInt(itemComputedStyle['padding-right'], 10) || 0),
+                bottom: (parseInt(itemComputedStyle['padding-bottom'], 10) || 0),
+                left: (parseInt(itemComputedStyle['padding-left'], 10) || 0)
+            };
+            parentComputedStyle = window.getComputedStyle(gridElement);
+            parentPadding = {
+                top: (parseInt(parentComputedStyle['padding-top'], 10) || 0),
+                right: (parseInt(parentComputedStyle['padding-right'], 10) || 0),
+                bottom: (parseInt(parentComputedStyle['padding-bottom'], 10) || 0),
+                left: (parseInt(parentComputedStyle['padding-left'], 10) || 0)
             };
 
             if (item.styles.properties['grid-row-align'] === 'stretch') {
-                height = trackHeight;
+                height = trackHeight - (itemFrame.top + itemFrame.bottom);
                 top = trackTop;
             } else if (item.styles.properties['grid-row-align'] === 'start') {
                 height = itemHeight;
-                top = trackTop + itemMargins.top;
+                top = trackTop + itemFrame.top;
             } else if (item.styles.properties['grid-row-align'] === 'end') {
                 height = itemHeight;
-                top = trackTop + trackHeight - height - (itemMargins.bottom + itemMargins.top);
+                top = trackTop + trackHeight - height - (itemFrame.bottom + itemFrame.top);
             } else if (item.styles.properties['grid-row-align'] === 'center') {
                 height = itemHeight;
                 top = trackTop + (trackHeight - height) / 2;
@@ -3875,14 +3902,14 @@ define('scalejs.layout-cssgrid/gridLayout',[
             }
 
             if (item.styles.properties['grid-column-align'] === 'stretch') {
-                width = trackWidth;
+                width = trackWidth - (itemFrame.left + itemFrame.right);
                 left = trackLeft;
             } else if (item.styles.properties['grid-column-align'] === 'start') {
                 width = itemWidth;
-                left = trackLeft + itemMargins.left;
+                left = trackLeft + itemFrame.left;
             } else if (item.styles.properties['grid-column-align'] === 'end') {
                 width = itemWidth;
-                left = trackLeft + trackWidth - width - (itemMargins.right + itemMargins.left);
+                left = trackLeft + trackWidth - width - (itemFrame.right + itemFrame.left);
             } else if (item.styles.properties['grid-column-align'] === 'center') {
                 width = itemWidth;
                 left = trackLeft + (trackWidth - width) / 2;
@@ -3890,11 +3917,11 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 console.log('invalid -ms-grid-column-align property for ', item);
             }
 
-            //frameWidth = frameSize(item.element, WIDTH);
-            //frameHeight = frameSize(item.element, HEIGHT);
-            //width -= frameWidth;
-            //height -= frameHeight;
+            left += parentPadding.left;
+            top += parentPadding.top;
 
+            width -= itemPadding.left + itemPadding.right;
+            height -= itemPadding.top + itemPadding.bottom;
 
             utils.safeSetStyle(item.element, 'width', width + PX);
             utils.safeSetStyle(item.element, 'height', height + PX);
