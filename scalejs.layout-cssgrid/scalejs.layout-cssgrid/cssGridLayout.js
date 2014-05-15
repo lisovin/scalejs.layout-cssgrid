@@ -73,10 +73,22 @@ define([
             var override,
                 matchedRules = cssGridSelectors
                     .filter(function (rule) {
-                        return utils.toArray(document.querySelectorAll(rule.selector))
-                            .any(function (match) {
-                                return gridElement === match;
-                            });
+
+                        if (gridElement.matches) {
+                            return gridElement.matches(rule.selector);
+                        } else if (gridElement.mozMatchesSelector) {
+                            return gridElement.mozMatchesSelector(rule.selector);
+                        } else if (gridElement.webkitMatchesSelector) {
+                            return gridElement.webkitMatchesSelector(rule.selector);
+                        } else if (gridElement.msMatchesSelector) {
+                            return gridElement.msMatchesSelector(rule.selector);
+                        } else {
+                            return utils.toArray(document.querySelectorAll(rule.selector))
+                                .any(function (match) {
+                                    return gridElement === match;
+                                });
+                        }
+
                     });
 
             override = createOverride(function (property) {
@@ -113,10 +125,22 @@ define([
                     })*/
                     // filter to rules that match gridItemElement
                     .filter(function (rule) {
-                        var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
-                        return matchedElements.any(function (match) {
-                            return gridItemElement === match;
-                        });
+
+                        if (gridItemElement.matches) {
+                            return gridItemElement.matches(rule.selector);
+                        } else if (gridItemElement.mozMatchesSelector) {
+                            return gridItemElement.mozMatchesSelector(rule.selector);
+                        } else if (gridItemElement.webkitMatchesSelector) {
+                            return gridItemElement.webkitMatchesSelector(rule.selector);
+                        } else if (gridItemElement.msMatchesSelector) {
+                            return gridItemElement.msMatchesSelector(rule.selector);
+                        } else {
+                            return utils.toArray(document.querySelectorAll(rule.selector))
+                                .any(function (match) {
+                                    return gridItemElement === match;
+                                });
+                        }
+
                     });
 
 

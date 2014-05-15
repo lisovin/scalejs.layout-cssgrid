@@ -105,8 +105,20 @@ define([
     }
 
     function autoTracks(tracks, dimension) {
-        return tracks
-            .filter(function (track) { return track.type === KEYWORD && track.size === AUTO && track.items; })
+        var autoSizeSum = 0,
+            autoTracks = tracks
+            .filter(function (track) { return track.type === KEYWORD && track.size === AUTO });
+
+        // tracks without items/elements need size zero;
+        autoTracks
+            .filter(function (track) { return track.items === undefined })
+            .forEach(function (track) {
+                track.pixels = 0;
+            });
+
+        //tracks with elements take largest element in track
+        autoSizeSum += autoTracks
+            .filter(function (track) { return track.items; })
             .reduce(function (size, track) {
                 var noFrItems,
                     trackSize,
@@ -119,23 +131,9 @@ define([
                     return item[tracksProperty].reduce(function (r, tr) {
                         return r && tr.type !== FR;
                     }, true);
-                });
+                })
 
-                /* MATCHES FIRST ELEMENT IN AUTO TRACK
-                noFrItem = noFrItems[0]; 
-                if (noFrItem) {
-                    //trackSize = getMeasureValue(noFrItem.element, dimension) + frameSize(noFrItem.element, dimension);
-                    trackSize = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)) + frameSize(noFrItem.element, dimension);
-                    if (isNaN(trackSize)) {
-                        noFrItem.element.style[dimension] = '';
-                        trackSize = noFrItem.element[offsetProperty];
-                    }
-                    // set it to 0 so that reduce would properly calculate
-                    track.pixels = 0;
-                    track.pixels = noFrItem[tracksProperty].reduce(function (r, tr) { return r - tr.pixels; }, trackSize);
-                } else {
-                    track.pixels = 0;
-                }*/
+
 
                 trackSizes = noFrItems
                     .filter(function (noFrItem) {
@@ -169,6 +167,8 @@ define([
 
                 return size + track.pixels;
             }, 0);
+
+        return autoSizeSum;
     }
 
     function frTracks(tracks, size) {
@@ -213,13 +213,13 @@ define([
 
         //message about errors
         columnTracks.forEach(function (t) {
-            if (isNaN(t.pixels) || (t.pixels === undefined)) {
+            if ((t.pixels === undefined) || isNaN(t.pixels)) {
                 console.log('Unable to calculate column size for ', gridElement, t.index, t.type, t.size, t.pixels);
             }
         });
         //message about errors
         rowTracks.forEach(function (t) {
-            if (isNaN(t.pixels) || (t.pixels === undefined)) {
+            if ((t.pixels === undefined) || isNaN(t.pixels)) {
                 console.log('Unable to calculate row size for ', gridElement, t.index, t.type, t.size, t.pixels);
             }
         });

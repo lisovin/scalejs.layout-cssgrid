@@ -4005,10 +4005,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             var override,
                 matchedRules = cssGridSelectors
                     .filter(function (rule) {
-                        return utils.toArray(document.querySelectorAll(rule.selector))
-                            .any(function (match) {
-                                return gridElement === match;
-                            });
+                        return gridElement.matches(rule.selector);
                     });
 
             override = createOverride(function (property) {

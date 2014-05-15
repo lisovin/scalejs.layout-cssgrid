@@ -4,12 +4,14 @@ define([
     'scalejs!core',
     './scalejs.layout-cssgrid/cssGridLayout',
     'CSS.supports',
-    './scalejs.layout-cssgrid/utils'
+    './scalejs.layout-cssgrid/utils',
+    './scalejs.layout-cssgrid/gridTemplate'
 ], function (
     core,
     cssGridLayout,
     css,
-    utils
+    utils,
+    gridTemplate
 ) {
     'use strict';
 
@@ -53,7 +55,8 @@ define([
                 safeGetStyle: utils.safeGetStyle,
                 getTrackSize: utils.getTrackSize,
                 getCalculatedTrackSize: utils.getCalculatedTrackSize,
-                setTrackSize: utils.setTrackSize
+                setTrackSize: utils.setTrackSize,
+                gridTemplate: gridTemplate
             }
         }
     });
