@@ -1,6 +1,10 @@
 ﻿/*GridLayoutStart*/
+.gridTemplate {
+    position: absolute;
+}
 #simpleGrid {
     display: -ms-grid;
+    position: absolute;
     -ms-grid-rows: 1fr;
     -ms-grid-columns: 1fr 1fr;
     width: 400px;
@@ -18,6 +22,7 @@
 
 #rowGrid {
     display: -ms-grid;
+    position: absolute;
     -ms-grid-rows: 1fr 2fr 1fr;
     -ms-grid-columns: 1fr;
     width: 300px;
@@ -34,6 +39,98 @@
     #rowGrid__three {
         -ms-grid-row: 3;
         -ms-grid-column: 1;
+    }
+}
+
+#columnGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 1fr;
+    -ms-grid-columns: 1fr 2fr 1fr;
+    width: 400px;
+    height: 300px;
+
+    #columnGrid__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #columnGrid__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+    #columnGrid__three {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+    }
+}
+
+#rowGridPx {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 200px 100px;
+    -ms-grid-columns: 300px;
+    width: 300px;
+    height: 400px;
+
+    #rowGridPx__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #rowGridPx__two {
+        -ms-grid-row: 2;
+        -ms-grid-column: 1;
+    }
+    #rowGridPx__three {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+    }
+}
+
+#columnGridPx {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 300px;
+    -ms-grid-columns: 100px 200px 100px;
+    width: 400px;
+    height: 300px;
+
+    #columnGridPx__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #columnGridPx__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+    #columnGridPx__three {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+    }
+}
+
+#mixedFrPxGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 50px 1fr 2fr 50px;
+    -ms-grid-columns: 2fr 100px 1fr;
+    width: 400px;
+    height: 400px;
+
+    #mixedFrPx__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+    }
+    #mixedFrPx__two {
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
+    }
+    #mixedFrPx__three {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+    }
+    #mixedFrPx__four {
+        -ms-grid-row: 4;
+        -ms-grid-column: 2;
     }
 }
 /*GridLayoutEnd*/

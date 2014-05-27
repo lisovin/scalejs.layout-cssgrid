@@ -44,20 +44,22 @@ define([
         });
     });
 
-    describe('Elements can be placed and sized correctly in rows', function () {
+    describe('Elements can be placed and sized correctly in rows using fr', function () {
         beforeEach(function () {
+            var done = true;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
+                done = false;
             });
 
-            waits(200);
+            waitsFor(function () { return done; });
         });
 
         afterEach(function () {
 
         });
 
-        it('correctly places its first element', function () {
+        it('correctly places the top element', function () {
             helper.expectGridElement('rowGrid__one', {
                 left: '0px',
                 top: '0px',
@@ -65,7 +67,7 @@ define([
                 height: '100px'
             });
         });
-        it('correctly places its second element', function () {
+        it('correctly places the middle element', function () {
             helper.expectGridElement('rowGrid__two', {
                 left: '0px',
                 top: '100px',
@@ -73,7 +75,7 @@ define([
                 height: '200px'
             });
         });
-        it('correctly places its third element', function () {
+        it('correctly places the bottom element', function () {
             helper.expectGridElement('rowGrid__three', {
                 left: '0px',
                 top: '300px',
@@ -83,6 +85,177 @@ define([
         });
     });
 
+    describe('Elements can be placed and sized correctly in columns using fr', function () {
+        beforeEach(function () {
+            var done = true;
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+                done = false;
+            });
+
+            waitsFor(function () { return done; });
+        });
+
+        afterEach(function () {
+
+        });
+
+        it('correctly places the left element', function () {
+            helper.expectGridElement('columnGrid__one', {
+                left: '0px',
+                top: '0px',
+                width: '100px',
+                height: '300px'
+            });
+        });
+        it('correctly places the middle element', function () {
+            helper.expectGridElement('columnGrid__two', {
+                left: '100px',
+                top: '0px',
+                width: '200px',
+                height: '300px'
+            });
+        });
+        it('correctly places the right element', function () {
+            helper.expectGridElement('columnGrid__three', {
+                left: '300px',
+                top: '0px',
+                width: '100px',
+                height: '300px'
+            });
+        });
+    });
+
+    describe('Elements can be placed and sized correctly in rows using px', function () {
+        beforeEach(function () {
+            var done = true;
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+                done = false;
+            });
+
+            waitsFor(function () { return done; });
+        });
+
+        afterEach(function () {
+
+        });
+
+        it('correctly places the top element', function () {
+            helper.expectGridElement('rowGridPx__one', {
+                left: '0px',
+                top: '0px',
+                width: '300px',
+                height: '100px'
+            });
+        });
+        it('correctly places the middle element', function () {
+            helper.expectGridElement('rowGridPx__two', {
+                left: '0px',
+                top: '100px',
+                width: '300px',
+                height: '200px'
+            });
+        });
+        it('correctly places the bottom element', function () {
+            helper.expectGridElement('rowGridPx__three', {
+                left: '0px',
+                top: '300px',
+                width: '300px',
+                height: '100px'
+            });
+        });
+    });
+
+    describe('Elements can be placed and sized correctly in columns using px', function () {
+        beforeEach(function () {
+            var done = true;
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+                done = false;
+            });
+
+            waitsFor(function () { return done; });
+        });
+
+        afterEach(function () {
+
+        });
+
+        it('correctly places the left element', function () {
+            helper.expectGridElement('columnGridPx__one', {
+                left: '0px',
+                top: '0px',
+                width: '100px',
+                height: '300px'
+            });
+        });
+        it('correctly places the middle element', function () {
+            helper.expectGridElement('columnGridPx__two', {
+                left: '100px',
+                top: '0px',
+                width: '200px',
+                height: '300px'
+            });
+        });
+        it('correctly places the right element', function () {
+            helper.expectGridElement('columnGridPx__three', {
+                left: '300px',
+                top: '0px',
+                width: '100px',
+                height: '300px'
+            });
+        });
+    });
+
+    describe('A grid with mixed uses of px and fr with rows and columns', function () {
+        beforeEach(function () {
+            var done = true;
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+                done = false;
+            });
+
+            waitsFor(function () { return done; });
+        });
+
+        afterEach(function () {
+
+        });
+
+        it('correctly places the first element', function () {
+            helper.expectGridElement('mixedFrPx__one', {
+                left: '300px',
+                top: '0px',
+                width: '100px',
+                height: '50px'
+            });
+        });
+        it('correctly places the second element', function () {
+            helper.expectGridElement('mixedFrPx__two', {
+                left: '200px',
+                top: '50px',
+                width: '100px',
+                height: '100px'
+            });
+        });
+        it('correctly places the third element', function () {
+            helper.expectGridElement('mixedFrPx__three', {
+                left: '0px',
+                top: '150px',
+                width: '200px',
+                height: '200px'
+            });
+        });
+        it('correctly places the fourth element', function () {
+            helper.expectGridElement('mixedFrPx__four', {
+                left: '200px',
+                top: '350px',
+                width: '100px',
+                height: '50px'
+            });
+        });
+    });
 
     /*
     describe('A simple grid', function () {
