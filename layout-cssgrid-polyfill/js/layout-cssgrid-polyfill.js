@@ -3666,8 +3666,20 @@ define('scalejs.layout-cssgrid/gridLayout',[
     }
 
     function autoTracks(tracks, dimension) {
-        return tracks
-            .filter(function (track) { return track.type === KEYWORD && track.size === AUTO && track.items; })
+        var autoSizeSum = 0,
+            autoTracks = tracks
+            .filter(function (track) { return track.type === KEYWORD && track.size === AUTO });
+
+        // tracks without items/elements need size zero;
+        autoTracks
+            .filter(function (track) { return track.items === undefined })
+            .forEach(function (track) {
+                track.pixels = 0;
+            });
+
+        //tracks with elements take largest element in track
+        autoSizeSum += autoTracks
+            .filter(function (track) { return track.items; })
             .reduce(function (size, track) {
                 var noFrItems,
                     trackSize,
@@ -3680,23 +3692,9 @@ define('scalejs.layout-cssgrid/gridLayout',[
                     return item[tracksProperty].reduce(function (r, tr) {
                         return r && tr.type !== FR;
                     }, true);
-                });
+                })
 
-                /* MATCHES FIRST ELEMENT IN AUTO TRACK
-                noFrItem = noFrItems[0]; 
-                if (noFrItem) {
-                    //trackSize = getMeasureValue(noFrItem.element, dimension) + frameSize(noFrItem.element, dimension);
-                    trackSize = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)) + frameSize(noFrItem.element, dimension);
-                    if (isNaN(trackSize)) {
-                        noFrItem.element.style[dimension] = '';
-                        trackSize = noFrItem.element[offsetProperty];
-                    }
-                    // set it to 0 so that reduce would properly calculate
-                    track.pixels = 0;
-                    track.pixels = noFrItem[tracksProperty].reduce(function (r, tr) { return r - tr.pixels; }, trackSize);
-                } else {
-                    track.pixels = 0;
-                }*/
+
 
                 trackSizes = noFrItems
                     .filter(function (noFrItem) {
@@ -3730,6 +3728,8 @@ define('scalejs.layout-cssgrid/gridLayout',[
 
                 return size + track.pixels;
             }, 0);
+
+        return autoSizeSum;
     }
 
     function frTracks(tracks, size) {
@@ -3771,6 +3771,19 @@ define('scalejs.layout-cssgrid/gridLayout',[
         sizeTracks(columnTracks, gridElement.offsetWidth, WIDTH);
         sizeTracks(rowTracks, gridElement.offsetHeight, HEIGHT);
         //console.log(width, height);
+
+        //message about errors
+        columnTracks.forEach(function (t) {
+            if ((t.pixels === undefined) || isNaN(t.pixels)) {
+                console.log('Unable to calculate column size for ', gridElement, t.index, t.type, t.size, t.pixels);
+            }
+        });
+        //message about errors
+        rowTracks.forEach(function (t) {
+            if ((t.pixels === undefined) || isNaN(t.pixels)) {
+                console.log('Unable to calculate row size for ', gridElement, t.index, t.type, t.size, t.pixels);
+            }
+        });
 
         //give computed track sizes to grid parent
         computedColumns = columnTracks.select(function (columnTrack) {
@@ -3874,7 +3887,7 @@ define('scalejs.layout-cssgrid/gridLayout',[
 
             if (item.styles.properties['grid-row-align'] === 'stretch') {
                 height = trackHeight - (itemFrame.top + itemFrame.bottom);
-                top = trackTop + itemFrame.top;
+                top = trackTop;
             } else if (item.styles.properties['grid-row-align'] === 'start') {
                 height = itemHeight;
                 top = trackTop + itemFrame.top;
@@ -3890,7 +3903,7 @@ define('scalejs.layout-cssgrid/gridLayout',[
 
             if (item.styles.properties['grid-column-align'] === 'stretch') {
                 width = trackWidth - (itemFrame.left + itemFrame.right);
-                left = trackLeft + itemFrame.left;
+                left = trackLeft;
             } else if (item.styles.properties['grid-column-align'] === 'start') {
                 width = itemWidth;
                 left = trackLeft + itemFrame.left;
@@ -3992,10 +4005,22 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             var override,
                 matchedRules = cssGridSelectors
                     .filter(function (rule) {
-                        return utils.toArray(document.querySelectorAll(rule.selector))
-                            .any(function (match) {
-                                return gridElement === match;
-                            });
+
+                        if (gridElement.matches) {
+                            return gridElement.matches(rule.selector);
+                        } else if (gridElement.mozMatchesSelector) {
+                            return gridElement.mozMatchesSelector(rule.selector);
+                        } else if (gridElement.webkitMatchesSelector) {
+                            return gridElement.webkitMatchesSelector(rule.selector);
+                        } else if (gridElement.msMatchesSelector) {
+                            return gridElement.msMatchesSelector(rule.selector);
+                        } else {
+                            return utils.toArray(document.querySelectorAll(rule.selector))
+                                .any(function (match) {
+                                    return gridElement === match;
+                                });
+                        }
+
                     });
 
             override = createOverride(function (property) {
@@ -4032,10 +4057,22 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
                     })*/
                     // filter to rules that match gridItemElement
                     .filter(function (rule) {
-                        var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
-                        return matchedElements.any(function (match) {
-                            return gridItemElement === match;
-                        });
+
+                        if (gridItemElement.matches) {
+                            return gridItemElement.matches(rule.selector);
+                        } else if (gridItemElement.mozMatchesSelector) {
+                            return gridItemElement.mozMatchesSelector(rule.selector);
+                        } else if (gridItemElement.webkitMatchesSelector) {
+                            return gridItemElement.webkitMatchesSelector(rule.selector);
+                        } else if (gridItemElement.msMatchesSelector) {
+                            return gridItemElement.msMatchesSelector(rule.selector);
+                        } else {
+                            return utils.toArray(document.querySelectorAll(rule.selector))
+                                .any(function (match) {
+                                    return gridItemElement === match;
+                                });
+                        }
+
                     });
 
 
@@ -4233,27 +4270,78 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
         });
     }
 
+    function dumpParsedRules() {
+        console.log("----- GRIDLAYOUT DEBUG ----- \ncssGridRules:\n");
+        console.log(cssGridRules);
+        console.log("cssGridSelectors:\n");
+        console.log(cssGridSelectors);
+    }
+
     return {
         doLayout: doLayout,
         parseGridStyles: parseGridStyles,
         invalidate: invalidate,
         onLayoutDone: onLayoutDone,
-        notifyLayoutDone: notifyLayoutDone
+        notifyLayoutDone: notifyLayoutDone,
+        dumpParsedRules: dumpParsedRules
     };
 });
 
+/*global define, require, document, console, window, clearTimeout, setTimeout */
+define('scalejs.layout-cssgrid/gridTemplate',[
+    './cssGridLayout',
+    './utils',
+], function (
+    cssGridLayout,
+    utils
+) {
+    
+
+    /// Template generator for use with knockout.js
+    /// Creates a template with a custom afterRender function, specifically for calling invalidate as the template is rendered
+    /// If you wish elements to be invisible before they are layed out, 
+
+
+    return function (template_name, template_data) {
+        var result = {
+                name: template_name
+            },
+            unwrapped_data = (typeof template_data === 'function')?(template_data()):(template_data);
+
+        function invalidateAfterRender(elements) {
+            elements.forEach(function (element) {
+                if (!(element.nodeName === '#text' || element.nodeName === '#comment')) {
+                    cssGridLayout.invalidate({ container: element.parentNode });
+                    utils.safeSetStyle(element, 'visibility', 'visible');
+                }
+            });
+        };
+
+        result.afterRender = invalidateAfterRender;
+
+        if (Array.isArray(unwrapped_data)) {
+            result.foreach = template_data;
+        } else {
+            result.data = template_data;
+        }
+
+        return result;
+    }
+});
 /*global define */
 /*global window */
 define('scalejs.layout-cssgrid',[
     'scalejs!core',
     './scalejs.layout-cssgrid/cssGridLayout',
     'CSS.supports',
-    './scalejs.layout-cssgrid/utils'
+    './scalejs.layout-cssgrid/utils',
+    './scalejs.layout-cssgrid/gridTemplate'
 ], function (
     core,
     cssGridLayout,
     css,
-    utils
+    utils,
+    gridTemplate
 ) {
     
 
@@ -4296,8 +4384,12 @@ define('scalejs.layout-cssgrid',[
                 safeSetStyle: utils.safeSetStyle,
                 safeGetStyle: utils.safeGetStyle,
                 getTrackSize: utils.getTrackSize,
-                getCalculatedTrackSize: utils.getCalculatedTrackSize,
-                setTrackSize: utils.setTrackSize
+                getComputedTrackSize: utils.getComputedTrackSize,
+                setTrackSize: utils.setTrackSize,
+                gridTemplate: gridTemplate
+            },
+            debug: {
+                dumpParsedRules: cssGridLayout.dumpParsedRules
             }
         }
     });

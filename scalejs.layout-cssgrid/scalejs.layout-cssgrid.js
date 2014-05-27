@@ -54,9 +54,12 @@ define([
                 safeSetStyle: utils.safeSetStyle,
                 safeGetStyle: utils.safeGetStyle,
                 getTrackSize: utils.getTrackSize,
-                getCalculatedTrackSize: utils.getCalculatedTrackSize,
+                getComputedTrackSize: utils.getComputedTrackSize,
                 setTrackSize: utils.setTrackSize,
                 gridTemplate: gridTemplate
+            },
+            debug: {
+                dumpParsedRules: cssGridLayout.dumpParsedRules
             }
         }
     });

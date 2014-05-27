@@ -3,6 +3,7 @@
 /// <reference path="../Scripts/jasmine.js"/>
 define([
     'scalejs!core',
+    'scalejs!application',
     './gridTestHelper',
     'scalejs.layout-cssgrid',
     'jasmine-html'

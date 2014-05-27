@@ -338,11 +338,19 @@ define([
         });
     }
 
+    function dumpParsedRules() {
+        console.log("----- GRIDLAYOUT DEBUG ----- \ncssGridRules:\n");
+        console.log(cssGridRules);
+        console.log("cssGridSelectors:\n");
+        console.log(cssGridSelectors);
+    }
+
     return {
         doLayout: doLayout,
         parseGridStyles: parseGridStyles,
         invalidate: invalidate,
         onLayoutDone: onLayoutDone,
-        notifyLayoutDone: notifyLayoutDone
+        notifyLayoutDone: notifyLayoutDone,
+        dumpParsedRules: dumpParsedRules
     };
 });

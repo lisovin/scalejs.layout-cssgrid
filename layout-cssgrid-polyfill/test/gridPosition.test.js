@@ -4,12 +4,48 @@
 define([
     './gridTestHelper',
     'scalejs!core',
+    'knockout',
     'scalejs.layout-cssgrid',
     'jasmine-html'
 ], function (
     helper,
-    core
+    core,
+    ko
 ) {
+    describe('A grid loaded from a template', function () {
+
+        beforeEach(function () {
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+            });
+
+            waits(200);
+        });
+
+        afterEach(function () {
+
+        });
+
+        it('correctly places its first element', function () {
+            helper.expectGridElement('simpleGrid__left', {
+                left: '0px',
+                top: '0px',
+                width: '200px',
+                height: '300px'
+            });
+        });
+        it('correctly places its second element', function () {
+            helper.expectGridElement('simpleGrid__right', {
+                left: '200px',
+                top: '0px',
+                width: '200px',
+                height: '300px'
+            });
+        });
+    });
+
+
+    /*
     describe('A simple grid', function () {
         var currentGrid;
 
@@ -30,9 +66,13 @@ define([
 
             helper.addGrid(currentGrid);
 
-            core.layout.invalidate({ reparse: true });
+            core.layout.debug.dumpParsedRules();
+            core.layout.parseGridStyles(function () {
+                core.layout.debug.dumpParsedRules();
+                core.layout.invalidate();
+            });
 
-            waits(75);
+            waits(300);
         });
 
         afterEach(function () {
@@ -1138,5 +1178,5 @@ define([
                 width: '10px'
             });
         });
-    });
+    });*/
 });
