@@ -15,11 +15,13 @@ define([
     describe('A grid loaded from a template', function () {
 
         beforeEach(function () {
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
+                done = true;
             });
 
-            waits(200);
+            waitsFor(function () { return done; });
         });
 
         afterEach(function () {
@@ -46,10 +48,10 @@ define([
 
     describe('Elements can be placed and sized correctly in rows using fr', function () {
         beforeEach(function () {
-            var done = true;
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
-                done = false;
+                done = true;
             });
 
             waitsFor(function () { return done; });
@@ -87,10 +89,10 @@ define([
 
     describe('Elements can be placed and sized correctly in columns using fr', function () {
         beforeEach(function () {
-            var done = true;
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
-                done = false;
+                done = true;
             });
 
             waitsFor(function () { return done; });
@@ -128,10 +130,10 @@ define([
 
     describe('Elements can be placed and sized correctly in rows using px', function () {
         beforeEach(function () {
-            var done = true;
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
-                done = false;
+                done = true;
             });
 
             waitsFor(function () { return done; });
@@ -169,10 +171,10 @@ define([
 
     describe('Elements can be placed and sized correctly in columns using px', function () {
         beforeEach(function () {
-            var done = true;
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
-                done = false;
+                done = true;
             });
 
             waitsFor(function () { return done; });
@@ -210,10 +212,10 @@ define([
 
     describe('A grid with mixed uses of px and fr with rows and columns', function () {
         beforeEach(function () {
-            var done = true;
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
-                done = false;
+                done = true;
             });
 
             waitsFor(function () { return done; });
@@ -253,6 +255,56 @@ define([
                 top: '350px',
                 width: '100px',
                 height: '50px'
+            });
+        });
+    });
+
+    describe('A grid with overlapping contents', function () {
+        beforeEach(function () {
+            var done = false;
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+                done = true;
+            });
+
+            waitsFor(function () { return done; });
+        });
+
+        afterEach(function () {
+
+        });
+
+        it('correctly places the first element', function () {
+            helper.expectGridElement('overlap__one', {
+                left: '100px',
+                top: '100px',
+                width: '100px',
+                height: '100px'
+            });
+        });
+
+        it('correctly places the second element', function () {
+            helper.expectGridElement('overlap__two', {
+                left: '100px',
+                top: '0px',
+                width: '100px',
+                height: '200px'
+            });
+        });
+        it('correctly places the third element', function () {
+            helper.expectGridElement('overlap__three', {
+                left: '0px',
+                top: '0px',
+                width: '300px',
+                height: '300px'
+            });
+        });
+        it('correctly places the fourth element', function () {
+            helper.expectGridElement('overlap__four', {
+                left: '200px',
+                top: '200px',
+                width: '100px',
+                height: '100px'
             });
         });
     });
