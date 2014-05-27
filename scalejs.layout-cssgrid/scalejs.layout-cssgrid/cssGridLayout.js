@@ -280,7 +280,9 @@ define([
                     if (rule.type !== 'style' || !declarations) { return false; }
 
                     return Object.keys(declarations).some(function (property) {
-                        return property.indexOf('-ms-grid') === 0;
+                        var is_ms_prop = property.indexOf('-ms-grid') === 0,
+                            is_dis_grid = (property === 'display') && (declarations[property] === '-ms-grid');
+                        return is_ms_prop || is_dis_grid;
                     });
                 })
                 .map(function (rule) {
