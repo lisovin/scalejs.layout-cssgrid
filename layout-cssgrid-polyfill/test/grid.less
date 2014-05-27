@@ -1,6 +1,7 @@
-﻿    //SINGLE TEST FR
-/*GridLayoutStart*/
-#grid_single_fr {
+﻿/*GridLayoutStart*/
+
+    //SINGLE TEST FR
+#single__grid--fr {
     height: 400px;
     width: 400px;
     display: -ms-grid;
@@ -8,16 +9,15 @@
     -ms-grid-rows: 1fr;
 }
 
-#single_fr {
+#single__cell--fr {
     -ms-grid-row: 1;
     -ms-grid-column: 1;
     background: blue;
 }
-/*GridLayoutEnd*/
+
 
     //SINGLE TEST AUTO
-/*GridLayoutStart*/
-#grid_single_auto {
+#single__grid--auto {
     height: 400px;
     width: 400px;
     display: -ms-grid;
@@ -25,9 +25,93 @@
     -ms-grid-rows: auto;
 }
 
-#single_auto {
+#single__cell--auto {
     -ms-grid-row: 1;
     -ms-grid-column: 1;
     background: blue;
+}
+
+    //SINGLE TEST PX
+#single__grid--px {
+    height: 400px;
+    width: 400px;
+    display: -ms-grid;
+    -ms-grid-columns: 100px;
+    -ms-grid-rows: 100px;
+}
+
+#single__cell--px {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    background: blue;
+}
+
+    //NESTED GRID TEST (separate inner div for inner grid)
+#outer__grid {
+    height: 800px;
+    width: 800px;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 300px 1fr; 
+}
+
+#inner__grid {
+    height: 100%;
+    width: 100%;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr 250px;
+}
+
+#inner__top {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#inner__bottom {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+}
+
+#outer__top {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#outer__bottom {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+}
+
+    //NESTED GRID TEST 2 (c-combined, bottom cell is grid)
+#outer__grid--c {
+    height: 800px;
+    width: 800px;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 300px 1fr; 
+}
+
+#inner__top--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#inner__bottom--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+}
+
+#outer__top--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#outer__bottom-grid--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr 250px;
 }
 /*GridLayoutEnd*/
