@@ -12,21 +12,19 @@ define([
     core,
     ko
 ) {
+    beforeEach(function () {
+        console.log('internisland ftw');
+        var done = false;
+        core.layout.parseGridStyles(function () {
+            core.layout.invalidate();
+            done = true;
+        });
+
+        waitsFor(function () { return done; });
+    });
+
     describe('A grid loaded from a template', function () {
 
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
-
-            waitsFor(function () { return done; });
-        });
-
-        afterEach(function () {
-
-        });
 
         it('correctly places its first element', function () {
             helper.expectGridElement('simpleGrid__left', {
@@ -47,19 +45,6 @@ define([
     });
 
     describe('Elements can be placed and sized correctly in rows using fr', function () {
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
-
-            waitsFor(function () { return done; });
-        });
-
-        afterEach(function () {
-
-        });
 
         it('correctly places the top element', function () {
             helper.expectGridElement('rowGrid__one', {
@@ -88,19 +73,7 @@ define([
     });
 
     describe('Elements can be placed and sized correctly in columns using fr', function () {
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
 
-            waitsFor(function () { return done; });
-        });
-
-        afterEach(function () {
-
-        });
 
         it('correctly places the left element', function () {
             helper.expectGridElement('columnGrid__one', {
@@ -129,19 +102,7 @@ define([
     });
 
     describe('Elements can be placed and sized correctly in rows using px', function () {
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
 
-            waitsFor(function () { return done; });
-        });
-
-        afterEach(function () {
-
-        });
 
         it('correctly places the top element', function () {
             helper.expectGridElement('rowGridPx__one', {
@@ -170,19 +131,7 @@ define([
     });
 
     describe('Elements can be placed and sized correctly in columns using px', function () {
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
 
-            waitsFor(function () { return done; });
-        });
-
-        afterEach(function () {
-
-        });
 
         it('correctly places the left element', function () {
             helper.expectGridElement('columnGridPx__one', {
@@ -211,19 +160,7 @@ define([
     });
 
     describe('A grid with mixed uses of px and fr with rows and columns', function () {
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
 
-            waitsFor(function () { return done; });
-        });
-
-        afterEach(function () {
-
-        });
 
         it('correctly places the first element', function () {
             helper.expectGridElement('mixedFrPx__one', {
@@ -260,19 +197,6 @@ define([
     });
 
     describe('A grid with overlapping contents', function () {
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
-
-            waitsFor(function () { return done; });
-        });
-
-        afterEach(function () {
-
-        });
 
         it('correctly places the first element', function () {
             helper.expectGridElement('overlap__one', {
