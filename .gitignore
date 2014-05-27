@@ -7,3 +7,5 @@
 /.nuget/*.exe
 
 /scalejs.layout-cssgrid/js
+
+/layout-cssgrid-polyfill/js

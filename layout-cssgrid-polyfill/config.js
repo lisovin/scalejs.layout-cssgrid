@@ -15,10 +15,10 @@ var require = {
         "jasmine":  "Scripts/jasmine",
         "jasmine-html":  "Scripts/jasmine-html",
         "knockout":  "Scripts/knockout-3.0.0.debug",
-        "knockout.mapping": "Scripts/knockout.mapping-latest.debug",
-        "less": "Scripts/less",
-        "less-builder": "Scripts/less-builder",
-        "lessc": "Scripts/lessc",
+        "knockout.mapping":  "Scripts/knockout.mapping-latest.debug",
+        "less":  "Scripts/less",
+        "less-builder":  "Scripts/less-builder",
+        "lessc":  "Scripts/lessc",
         "linqjs":  "Scripts/linq.min",
         "normalize":  "Scripts/normalize",
         "sandbox":  "Scripts/scalejs.sandbox",
@@ -36,6 +36,7 @@ var require = {
     "scalejs":  {
         "extensions":  [
             "scalejs.functional",
+            "scalejs.layout-cssgrid",
             "scalejs.layout-cssgrid",
             "scalejs.linq-linqjs",
             "scalejs.mvvm",
