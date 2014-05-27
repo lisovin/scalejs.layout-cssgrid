@@ -32,7 +32,7 @@ define([
                 height: '400px'
             });
         });
-
+        
         it('correctly places and sizes the only element with auto', function () {
             helper.expectGridElement('single__cell--auto', {
                 left: '0px',
@@ -132,6 +132,34 @@ define([
                 top: '550px',
                 width: '800px',
                 height: '250px'
+            });
+        });
+    });
+
+    describe('A grid with css loaded by href', function () {
+
+        //initial setup
+        beforeEach(function () {
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+            });
+
+            waits(200) //give time to snap into place
+        });
+
+        it('is displayed correctly', function () {
+            helper.expectGridElement('href__left', {
+                left: '0px',
+                top: '0px',
+                width: '100px',
+                height: '200px'
+            });
+
+            helper.expectGridElement('href__right', {
+                left: '100px',
+                top: '0px',
+                width: '300px',
+                height: '200px'
             });
         });
     });
