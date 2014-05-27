@@ -14,20 +14,20 @@ define([
         element_rect = element.getBoundingClientRect();
         parent_rect = element.parentElement.getBoundingClientRect();
 
-        if (expected['left'] !== undefined) {
-            expect((element_rect.left - parent_rect.left) + 'px').toBe(expected['left']);
+        if (expected.left !== undefined) {
+            expect((element_rect.left - parent_rect.left) + 'px').toBe(expected.left);
         }
         
-        if (expected['top'] !== undefined) {
-            expect((element_rect.top - parent_rect.top) + 'px').toBe(expected['top']);
+        if (expected.top !== undefined) {
+            expect((element_rect.top - parent_rect.top) + 'px').toBe(expected.top);
         }
         
-        if (expected['width'] !== undefined) {
-            expect(element_rect.width.toString() + 'px').toBe(expected['width']);
+        if (expected.width !== undefined) {
+            expect(element_rect.width.toString() + 'px').toBe(expected.width);
         }
 
-        if (expected['height'] !== undefined) {
-            expect(element_rect.height.toString() + 'px').toBe(expected['height']);
+        if (expected.height !== undefined) {
+            expect(element_rect.height.toString() + 'px').toBe(expected.height);
         }
     }
 

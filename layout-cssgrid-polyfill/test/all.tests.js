@@ -6,7 +6,6 @@ define([
     'jasmine-html',
     './gridExtensionRegistered.test',
     './gridPosition.test',
-    './gridCssSources.test',
 ], function (
     core,
     templates

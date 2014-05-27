@@ -97,13 +97,6 @@ define([
             styleNode.parentNode.removeChild(styleNode);
         });
 
-        it('works', function () {
-
-            var parent = document.getElementById('parent');
-            expect(safeGetStyle(parent, '-ms-grid-row')).toBe('2');
-            expect(safeGetStyle(parent, '-ms-grid-column')).toBe('2');
-        });
-
     });
 
 

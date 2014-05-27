@@ -7,3 +7,4 @@
 /.nuget/*.exe
 
 /scalejs.layout-cssgrid/js
+JSLintOptions.xml

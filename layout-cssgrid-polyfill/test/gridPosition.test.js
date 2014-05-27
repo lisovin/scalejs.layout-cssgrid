@@ -44,6 +44,45 @@ define([
         });
     });
 
+    describe('Elements can be placed and sized correctly in rows', function () {
+        beforeEach(function () {
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+            });
+
+            waits(200);
+        });
+
+        afterEach(function () {
+
+        });
+
+        it('correctly places its first element', function () {
+            helper.expectGridElement('rowGrid__one', {
+                left: '0px',
+                top: '0px',
+                width: '300px',
+                height: '100px'
+            });
+        });
+        it('correctly places its second element', function () {
+            helper.expectGridElement('rowGrid__two', {
+                left: '0px',
+                top: '100px',
+                width: '300px',
+                height: '200px'
+            });
+        });
+        it('correctly places its third element', function () {
+            helper.expectGridElement('rowGrid__three', {
+                left: '0px',
+                top: '300px',
+                width: '300px',
+                height: '100px'
+            });
+        });
+    });
+
 
     /*
     describe('A simple grid', function () {
