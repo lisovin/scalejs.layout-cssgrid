@@ -13,7 +13,6 @@ define([
     ko
 ) {
     beforeEach(function () {
-        console.log('internisland ftw');
         var done = false;
         core.layout.parseGridStyles(function () {
             core.layout.invalidate();
@@ -197,6 +196,41 @@ define([
     });
 
     describe('A grid with overlapping contents', function () {
+        it('correctly places the first element', function () {
+            helper.expectGridElement('span__one', {
+                left: '0px',
+                top: '0px',
+                width: '200px',
+                height: '200px'
+            });
+        });
+        it('correctly places the second element', function () {
+            helper.expectGridElement('span__two', {
+                left: '200px',
+                top: '0px',
+                width: '100px',
+                height: '200px'
+            });
+        });
+        it('correctly places the third element', function () {
+            helper.expectGridElement('span__three', {
+                left: '0px',
+                top: '200px',
+                width: '200px',
+                height: '100px'
+            });
+        });
+        it('correctly places the fourth element', function () {
+            helper.expectGridElement('span__four', {
+                left: '200px',
+                top: '200px',
+                width: '100px',
+                height: '100px'
+            });
+        });
+    });
+
+    describe('A grid with overlapping contents', function () {
 
         it('correctly places the first element', function () {
             helper.expectGridElement('overlap__one', {
@@ -231,6 +265,19 @@ define([
                 height: '100px'
             });
         });
+    });
+
+    describe('A simple grid for testing default values', function () {
+
+        it('correctly places an element with no values given', function () {
+            helper.expectGridElement('defaultValueTest__one', {
+                left: '0px',
+                top: '0px',
+                width: '100px',
+                height: '100px'
+            });
+        });
+
     });
 
     /*

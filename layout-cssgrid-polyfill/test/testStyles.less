@@ -165,4 +165,46 @@
         -ms-grid-column-span: 3;
     }
 }
+
+#defaultValueTestGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px;
+    -ms-grid-columns: 100px 100px;
+    width: 200px;
+    height: 200px;
+}
+
+#spanGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px 100px;
+    -ms-grid-columns: 100px 100px 100px;
+    width: 300px;
+    height: 300px;
+
+    #span__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        -ms-grid-row-span: 2;
+        -ms-grid-column-span: 2;
+    }
+    #span__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+        -ms-grid-row-span: 2;
+
+    }
+    #span__three {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+        -ms-grid-column-span: 2;
+    }
+    #span__four {
+        -ms-grid-row: 3;
+        -ms-grid-column: 3;
+        -ms-grid-row-span: 3;
+        -ms-grid-column-span: 3;
+    }
+}
 /*GridLayoutEnd*/
