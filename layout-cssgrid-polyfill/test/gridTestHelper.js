@@ -10,6 +10,7 @@ define([
             style;
 
         element = document.getElementById(element_id);
+        console.log(element);
 
         element_rect = element.getBoundingClientRect();
         parent_rect = element.parentElement.getBoundingClientRect();

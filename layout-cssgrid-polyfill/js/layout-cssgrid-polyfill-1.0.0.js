@@ -1,4 +1,3 @@
-
 /**
  * almond 0.2.6 Copyright (c) 2011-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -1191,6 +1190,7 @@ define('scalejs/application',[
         exit: exit
     };
 });
+
 
 /**
  * @license RequireJS domReady 2.0.1 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
@@ -4270,12 +4270,20 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
         });
     }
 
+    function dumpParsedRules() {
+        console.log("----- GRIDLAYOUT DEBUG ----- \ncssGridRules:\n");
+        console.log(cssGridRules);
+        console.log("cssGridSelectors:\n");
+        console.log(cssGridSelectors);
+    }
+
     return {
         doLayout: doLayout,
         parseGridStyles: parseGridStyles,
         invalidate: invalidate,
         onLayoutDone: onLayoutDone,
-        notifyLayoutDone: notifyLayoutDone
+        notifyLayoutDone: notifyLayoutDone,
+        dumpParsedRules: dumpParsedRules
     };
 });
 
@@ -4379,6 +4387,9 @@ define('scalejs.layout-cssgrid',[
                 getComputedTrackSize: utils.getComputedTrackSize,
                 setTrackSize: utils.setTrackSize,
                 gridTemplate: gridTemplate
+            },
+            debug: {
+                dumpParsedRules: cssGridLayout.dumpParsedRules
             }
         }
     });
@@ -4409,3 +4420,4 @@ require([
 
 
 define("app/app", function(){});
+

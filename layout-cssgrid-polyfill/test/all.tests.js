@@ -2,14 +2,17 @@
 define([
     'scalejs!core',
     'text!test/testTemplates.html',
+    'text!test/grid.html',
     'styles!test/testStyles',
+    'styles!test/grid',
     'jasmine-html',
     './gridExtensionRegistered.test',
     './gridPosition.test',
-    './gridCssSources.test',
+    './grid.test'
 ], function (
     core,
-    templates
+    template,
+    template0
 ) {
     'use strict';
 
@@ -23,8 +26,15 @@ define([
         return htmlReporter.specFilter(spec);
     };
 
+    //repeat for all of mine
     var templateNode = document.createElement('div');
-    templateNode.innerHTML = templates;
+    templateNode.innerHTML = template;
+    templateNode.style.visibility = 'hidden';
+    templateNode.style.position = 'absolute';
+    document.body.appendChild(templateNode);
+
+    var templateNode = document.createElement('div');
+    templateNode.innerHTML = template0;
     templateNode.style.visibility = 'hidden';
     templateNode.style.position = 'absolute';
     document.body.appendChild(templateNode);
