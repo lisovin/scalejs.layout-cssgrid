@@ -12,6 +12,23 @@ define([
     core,
     ko
 ) {
+
+    var fs = (function () {
+        var oldlog = console.log.bind(console);
+        var setCustomLog = function () {
+            console.log = function (i) {
+                oldlog('FIRING' + i);
+                }
+            }
+        var revertLog = function () {
+            console.log = oldlog;
+        }
+        return {
+            setCustomLog: setCustomLog,
+            revertLog: revertLog
+        };
+    })();
+
     beforeEach(function () {
         var done = false;
         core.layout.parseGridStyles(function () {
@@ -20,6 +37,12 @@ define([
         });
 
         waitsFor(function () { return done; });
+        fs.setCustomLog();
+
+    });
+
+    afterEach(function () {
+        fs.revertLog();
     });
 
     describe('A grid loaded from a template', function () {
@@ -277,6 +300,22 @@ define([
                 height: '100px'
             });
         });
+
+    });
+
+    describe('A grid with split css rules', function () {
+
+
+        it('correctly places the first element', function () {
+            helper.expectGridElement('splitCSS__one', {
+                left: '100px',
+                top: '100px',
+                width: '100px',
+                height: '100px'
+            });
+        });
+
+        console.log('olo');
 
     });
 
