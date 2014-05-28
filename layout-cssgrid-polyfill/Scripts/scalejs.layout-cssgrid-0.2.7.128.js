@@ -1252,7 +1252,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
     
 
     var cssGridRules = [],
-        cssGridSelectors = [], //grid rules that contain display: grid
+        cssGridSelectors = [],
         merge = core.object.merge,
         listeners = [];
 
@@ -1307,7 +1307,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
         function createCssGridOverride(gridElement, propertyNames) {
             // save rules that match the gridElement (parent grid rules only)
             var override,
-                matchedRules = cssGridSelectors
+                matchedRules = cssGridRules
                     .filter(function (rule) {
 
                         if (gridElement.matches) {
