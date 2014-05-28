@@ -8,6 +8,7 @@ define([
     'styles!test/grid',
     'styles!test/chrome',
     'jasmine-html',
+    './gridExtensionRegistered.test',
     './gridPosition.test',
     './chrome.test',
     './grid.test'
