@@ -32,6 +32,25 @@ define([
         }
     }
 
+    /*
+    * Gets the properties of the element with given element_id.
+    * @param element_id -- id of the target element
+    * @param parsedRuleDump -- cssGridRules from dumpParsedStyles
+    * Preconditions: element_id is the valid id of an element,
+    *                parsedRuleDump contains the cssGridRules from
+    *                dumpParsedStyles
+    * Postconditions: properties of the element are returned
+    */
+    function getParsedProperties(element_id, parsedRuleDump) {
+        var i, j;
+        
+        for (i in parsedRuleDump) {
+            if (parsedRuleDump[i].selector.indexOf(element_id) > -1) {
+                return parsedRuleDump[i].properties;
+            }
+        }
+    }
+
 
     
     /*
@@ -76,6 +95,7 @@ define([
 
     return {
         expectGridElement: expectGridElement,
-        expectInnerGridElement: expectInnerGridElement
+        expectInnerGridElement: expectInnerGridElement,
+        getParsedProperties: getParsedProperties
     };
 });

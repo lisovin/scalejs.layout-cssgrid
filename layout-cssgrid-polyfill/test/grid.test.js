@@ -12,17 +12,17 @@ define([
     core,
     ko
 ) {
-    //NOT USED
     var wrapLog = function () {
-        var old = console.log.bind(console);
+        var log = console.log.bind(console);
 
         var revert = function () {
-            console.log = old;
+            console.log = log;
         }
 
         var register = function () {
             console.log = function (i) {
-                old("old <<< " + i);
+                //fun stuff
+                log("function: " + i);
             }
         }
 
@@ -253,8 +253,43 @@ define([
             waits(200) //give time to snap into place
         });
 
-        it('properly describes the size', function () {
+        it('properly describes the size of an element', function () {
+            var info = new Array(),
+                props;
 
+            var extractLog = function () {
+                var log = console.log.bind(console);
+
+                var register = function () {
+                    console.log = function (obj) {
+                        if (typeof (obj) === 'object') {
+                            info.push(obj);
+                            //TODO
+                            log(obj);
+                        }
+                    }
+                }
+
+                var revert = function () {
+                    console.log = log;
+                }
+
+                return {
+                    register: register,
+                    revert: revert
+                }
+            }();
+            
+            //collect rules
+            extractLog.register();
+            core.layout.debug.dumpParsedRules();
+            extractLog.revert();
+
+            props = helper.getParsedProperties('width__grid', info[0]);
+            
+            //expectations
+            expect(props.width).toBe('400px');
+            expect(props.height).toBe('100px');
         });
     });
 });
