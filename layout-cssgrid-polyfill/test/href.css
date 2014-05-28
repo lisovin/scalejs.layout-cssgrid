@@ -1,0 +1,19 @@
+﻿/*GridLayoutStart*/
+#href__grid {
+    display: -ms-grid;
+    width: 400px;
+    height: 200px;
+    -ms-grid-columns: 100px 1fr;
+    -ms-grid-rows: 1fr;
+}
+
+#href__left {
+   -ms-grid-row: 1;
+   -ms-grid-column: 1; 
+}
+
+#href__right {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+}
+/*GridLayoutEnd*/

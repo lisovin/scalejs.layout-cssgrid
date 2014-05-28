@@ -165,8 +165,6 @@ define([
             });
 
             waits(200) //give time to snap into place
-
-            wrapLog.register();
         });
 
         it('is displayed correctly', function () {
@@ -177,8 +175,6 @@ define([
                 height: '200px'
             });
 
-            console.log('dicks');
-
             helper.expectGridElement('href__right', {
                 left: '100px',
                 top: '0px',
@@ -187,10 +183,6 @@ define([
             });
         });
 
-        afterEach(function () {
-            wrapLog.revert();
-            console.log("whaddup");
-        });
     });
 
     describe('A grid with multiple elements in a track', function () {
@@ -248,6 +240,21 @@ define([
                 width: '100px',
                 height: '100px'
             });
+        });
+    });
+
+    describe('The dumpParsedRules debugging function', function () {
+        //initial setup
+        beforeEach(function () {
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+            });
+
+            waits(200) //give time to snap into place
+        });
+
+        it('properly describes the size', function () {
+
         });
     });
 });
