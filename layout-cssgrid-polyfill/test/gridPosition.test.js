@@ -69,7 +69,7 @@ define([
         });
     });
 
-    describe('Elements can be placed and sized correctly in rows using fr', function () {
+    describe('A grid with rows placed using fr', function () {
 
         it('correctly places the top element', function () {
             helper.expectGridElement('rowGrid__one', {
@@ -97,7 +97,7 @@ define([
         });
     });
 
-    describe('Elements can be placed and sized correctly in columns using fr', function () {
+    describe('A grid with columns placed using fr', function () {
 
 
         it('correctly places the left element', function () {
@@ -126,7 +126,7 @@ define([
         });
     });
 
-    describe('Elements can be placed and sized correctly in rows using px', function () {
+    describe('A grid with rows placed using px', function () {
 
 
         it('correctly places the top element', function () {
@@ -155,7 +155,7 @@ define([
         });
     });
 
-    describe('Elements can be placed and sized correctly in columns using px', function () {
+    describe('A grid with columns placed using px', function () {
 
 
         it('correctly places the left element', function () {
