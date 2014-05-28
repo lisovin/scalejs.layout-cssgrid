@@ -71,7 +71,7 @@ define([
         function createCssGridOverride(gridElement, propertyNames) {
             // save rules that match the gridElement (parent grid rules only)
             var override,
-                matchedRules = cssGridSelectors
+                matchedRules = cssGridRules
                     .filter(function (rule) {
 
                         if (gridElement.matches) {
