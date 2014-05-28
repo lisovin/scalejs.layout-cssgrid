@@ -9,8 +9,8 @@ define([
     'styles!test/chrome',
     'jasmine-html',
     './gridPosition.test',
-    './grid.test',
-    './chrome.test'
+    './chrome.test',
+    './grid.test'
 ], function (
     core,
     template,
@@ -47,6 +47,6 @@ define([
     templateNode.style.visibility = 'hidden';
     templateNode.style.position = 'absolute';
     document.body.appendChild(templateNode);
-
+    
     jasmineEnv.execute();
 });
