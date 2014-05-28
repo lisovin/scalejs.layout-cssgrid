@@ -221,7 +221,7 @@ define([
         });
     });
 
-    describe('A grid with overlapping contents', function () {
+    describe('A grid with contents that span', function () {
         it('correctly places the first element', function () {
             helper.expectGridElement('span__one', {
                 left: '0px',
@@ -331,6 +331,20 @@ define([
             });
         });
 
+        it('correctly resizes the div when the parent changes', function () {
+
+            core.layout.utils.safeSetStyle(document.getElementById('resizeGrid'), 'width', '600px');
+            core.layout.utils.safeSetStyle(document.getElementById('resizeGrid'), 'height', '600px');
+
+            core.layout.invalidate({ immediate: true });
+
+            helper.expectGridElement('resize__one', {
+                left: '200px',
+                top: '200px',
+                width: '400px',
+                height: '400px'
+            });
+        });
 
 
     });
