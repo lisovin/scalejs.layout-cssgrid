@@ -17,7 +17,8 @@ define([
         var oldlog = console.log.bind(console);
         var setCustomLog = function () {
             console.log = function (i) {
-                oldlog('FIRING' + i);
+                // do cool stuff here for testing
+                oldlog(i);
                 }
             }
         var revertLog = function () {
@@ -37,10 +38,12 @@ define([
         });
 
         waitsFor(function () { return done; });
+
+
         fs.setCustomLog();
 
     });
-
+    
     afterEach(function () {
         fs.revertLog();
     });
@@ -314,8 +317,6 @@ define([
                 height: '100px'
             });
         });
-
-        console.log('olo');
 
     });
 
