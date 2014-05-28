@@ -320,6 +320,21 @@ define([
 
     });
 
+    describe('A grid that resizes its parent div', function () {
+
+        it('correctly places the first element', function () {
+            helper.expectGridElement('resize__one', {
+                left: '100px',
+                top: '100px',
+                width: '200px',
+                height: '200px'
+            });
+        });
+
+
+
+    });
+
     /*
     describe('A simple grid', function () {
         var currentGrid;
