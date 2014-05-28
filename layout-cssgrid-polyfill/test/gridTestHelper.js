@@ -57,9 +57,6 @@ define([
 
         ancestor_rect = ancestor.getBoundingClientRect();
 
-        console.log(element_id + "  " + element_rect.left + " " + element_rect.top + " " + element_rect.height + " " + element_rect.width);
-        console.log("gr: " + ancestor_rect.left + " " + ancestor_rect.top + " " + ancestor_rect.height + " " + ancestor_rect.width);
-
         if (expected['left'] !== undefined) {
             expect((element_rect.left - ancestor_rect.left) + 'px').toBe(expected['left']);
         }

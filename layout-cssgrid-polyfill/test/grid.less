@@ -1,5 +1,9 @@
 ﻿/*GridLayoutStart*/
-
+div {
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+}
     //SINGLE TEST FR
 #single__grid--fr {
     height: 400px;
@@ -113,5 +117,90 @@
     display: -ms-grid;
     -ms-grid-columns: 1fr;
     -ms-grid-rows: 1fr 250px;
+}
+
+    //auto multiple element HEIGHT TEST
+#multi__grid--height {
+    height: 400px;
+    width: 400px;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: auto
+}
+
+#multi__cell--height {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#multi__div1--height {
+   height: 100px;
+}
+
+#multi__div2--height {
+    height: 150px;
+}
+
+//auto multiple element WIDTH TEST
+#multi__grid--width {
+    height: 300px;
+    width: 300px;
+    display: -ms-grid;
+    -ms-grid-columns: auto;
+    -ms-grid-rows: 1fr; 
+}
+
+#multi__cell--width {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#multi__div1--width {
+   height: 300px;
+   width: 100px;
+   float: left;
+}
+
+#multi__div2--width {
+    height: 300px;
+    width: 80px;
+    float: left;
+}
+
+    //auto heights determined by fixed-height content TEST
+#height__grid {
+    display: -ms-grid;
+    width: 100px;
+    height: 400px;
+    -ms-grid-rows: auto;
+    -ms-grid-columns: 1fr;
+}
+
+#height__cell {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#height__div {
+    height: 150px;
+}
+
+    //auto widths determined by fixed-width content
+#width__grid {
+    display: -ms-grid;
+    width: 400px;
+    height: 100px;
+    -ms-grid-columns: auto;
+    -ms-grid-rows: 1fr;
+}
+
+#width__cell {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#width__div {
+    width: 100px;
+    height: 100px;
 }
 /*GridLayoutEnd*/

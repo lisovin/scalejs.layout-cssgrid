@@ -12,6 +12,26 @@ define([
     core,
     ko
 ) {
+    //NOT USED
+    var wrapLog = function () {
+        var old = console.log.bind(console);
+
+        var revert = function () {
+            console.log = old;
+        }
+
+        var register = function () {
+            console.log = function (i) {
+                old("old <<< " + i);
+            }
+        }
+
+        return {
+            revert: revert,
+            register: register
+        }
+    }();
+
     //TESTS HERE:
     describe('A grid loaded from a template with a single cell', function () {
 
@@ -32,7 +52,7 @@ define([
                 height: '400px'
             });
         });
-        
+
         it('correctly places and sizes the only element with auto', function () {
             helper.expectGridElement('single__cell--auto', {
                 left: '0px',
@@ -145,6 +165,8 @@ define([
             });
 
             waits(200) //give time to snap into place
+
+            wrapLog.register();
         });
 
         it('is displayed correctly', function () {
@@ -155,11 +177,76 @@ define([
                 height: '200px'
             });
 
+            console.log('dicks');
+
             helper.expectGridElement('href__right', {
                 left: '100px',
                 top: '0px',
                 width: '300px',
                 height: '200px'
+            });
+        });
+
+        afterEach(function () {
+            wrapLog.revert();
+            console.log("whaddup");
+        });
+    });
+
+    describe('A grid with multiple elements in a track', function () {
+        //initial setup
+        beforeEach(function () {
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+            });
+
+            waits(200) //give time to snap into place
+        });
+
+        it('has the auto height determined by the elements', function () {
+            helper.expectGridElement('multi__cell--height', {
+                left: '0px',
+                top: '0px',
+                width: '400px',
+                height: '250px'
+            });
+        });
+
+        it('has the auto width determined by the elements', function () {
+            helper.expectGridElement('multi__cell--width', {
+                left: '0px',
+                top: '0px',
+                width: '180px',
+                height: '300px'
+            });
+        });
+    });
+
+    describe('A grid loaded from a template with static fixed-size content', function () {
+        //initial setup
+        beforeEach(function () {
+            core.layout.parseGridStyles(function () {
+                core.layout.invalidate();
+            });
+
+            waits(200) //give time to snap into place
+        });
+
+        it('has auto height determined correctly', function () {
+            helper.expectGridElement('height__cell', {
+                left: '0px',
+                top: '0px',
+                width: '100px',
+                height: '150px'
+            });
+        });
+
+        it('has auto width determined correctly', function () {
+            helper.expectGridElement('width__cell', {
+                left: '0px',
+                top: '0px',
+                width: '100px',
+                height: '100px'
             });
         });
     });

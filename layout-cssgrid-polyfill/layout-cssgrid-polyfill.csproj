@@ -84,6 +84,7 @@
     <Content Include="Properties\layout-cssgrid-polyfill.nuspec">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="test\href.css" />
     <Content Include="test\testTemplates.html" />
   </ItemGroup>
   <ItemGroup>
