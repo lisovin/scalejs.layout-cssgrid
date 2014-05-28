@@ -74,6 +74,8 @@
     <Content Include="app\app.js" />
     <Content Include="Scripts\_scalejs.intellisense.js" />
     <Content Include="test\all.tests.js" />
+    <Content Include="test\grid.html" />
+    <Content Include="test\grid.test.js" />
     <Content Include="test\gridCssSources.test.js" />
     <Content Include="test\gridTestHelper.js" />
     <Content Include="test\gridPosition.test.js" />
@@ -82,11 +84,13 @@
     <Content Include="Properties\layout-cssgrid-polyfill.nuspec">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="test\href.css" />
     <Content Include="test\testTemplates.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="test\gridExtensionRegistered.test.js" />
+    <None Include="test\grid.less" />
     <None Include="test\testStyles.less" />
   </ItemGroup>
   <PropertyGroup>
