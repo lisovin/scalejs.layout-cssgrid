@@ -1558,17 +1558,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             container = undefined;
         }
 
-        if (options && options.immediate) {
-
-            doLayout(container);
-
-        } else {
-
-            setTimeout(function () {
-                doLayout(container);
-            }, 0);
-
-        }
+        doLayout(container);
     }
     function parseGridStyles(callback) {
         parseAllStyles(function () {
