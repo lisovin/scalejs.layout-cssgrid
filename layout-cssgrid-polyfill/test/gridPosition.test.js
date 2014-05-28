@@ -336,7 +336,7 @@ define([
             core.layout.utils.safeSetStyle(document.getElementById('resizeGrid'), 'width', '600px');
             core.layout.utils.safeSetStyle(document.getElementById('resizeGrid'), 'height', '600px');
 
-            core.layout.invalidate({ immediate: true });
+            core.layout.invalidate();
 
             helper.expectGridElement('resize__one', {
                 left: '200px',
