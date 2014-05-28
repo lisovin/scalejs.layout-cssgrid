@@ -4003,7 +4003,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
         function createCssGridOverride(gridElement, propertyNames) {
             // save rules that match the gridElement (parent grid rules only)
             var override,
-                matchedRules = cssGridSelectors
+                matchedRules = cssGridRules
                     .filter(function (rule) {
 
                         if (gridElement.matches) {
@@ -4212,7 +4212,9 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
                     if (rule.type !== 'style' || !declarations) { return false; }
 
                     return Object.keys(declarations).some(function (property) {
-                        return property.indexOf('-ms-grid') === 0;
+                        var is_ms_prop = property.indexOf('-ms-grid') === 0,
+                            is_dis_grid = (property === 'display') && (declarations[property] === '-ms-grid');
+                        return is_ms_prop || is_dis_grid;
                     });
                 })
                 .map(function (rule) {
@@ -4252,17 +4254,7 @@ define('scalejs.layout-cssgrid/cssGridLayout',[
             container = undefined;
         }
 
-        if (options && options.immediate) {
-
-            doLayout(container);
-
-        } else {
-
-            setTimeout(function () {
-                doLayout(container);
-            }, 0);
-
-        }
+        doLayout(container);
     }
     function parseGridStyles(callback) {
         parseAllStyles(function () {
