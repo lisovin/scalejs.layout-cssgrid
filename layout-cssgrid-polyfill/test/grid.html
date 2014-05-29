@@ -79,3 +79,94 @@
         </div>
     </div>
 </div>
+
+<!--external and internal-->
+<style>
+    #inher__grid {
+        display: -ms-grid;
+        width: 100px;
+        height: 100px;
+        -ms-grid-rows: 1fr;
+        -ms-grid-columns: 30px 1fr;
+    }
+
+    #inher__left {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+
+    #inher__right {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+</style>
+<div id="inher_template">
+    <div id="inher__grid">
+        <div id="inher__left"></div>
+        <div id="inher__right"></div>
+    </div>
+</div>
+
+
+<!--internal and inline-->
+<style>
+    #inher__grid--in {
+        display: -ms-grid;
+        width: 100px;
+        height: 100px;
+        -ms-grid-rows: 1fr;
+        -ms-grid-columns: 30px 1fr;
+    }
+
+    #inher__left--in {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+
+    #inher__right--in {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+</style>
+<div id="inher_template--in">
+    <div id="inher__grid--in" style="display: -ms-grid; width: 400px; height: 400px; -ms-grid-rows: 1fr; -ms-grid-columns: 1fr 1fr">
+        <div id="inher__left--in" style="-ms-grid-row: 1; -ms-grid-column: 1;"></div>
+        <div id="inher__right--in" style="-ms-grid-row: 1; -ms-grid-column: 2;"></div>
+    </div>
+</div>
+
+<!--external and inline-->
+<div id="inher_template--exinl">
+    <div id="inher__grid--exinl" style="display: -ms-grid; width: 400px; height: 400px; -ms-grid-rows: 1fr; -ms-grid-columns: 1fr 1fr">
+        <div id="inher__left--exinl" style="-ms-grid-row: 1; -ms-grid-column: 1;"></div>
+        <div id="inher__right--exinl" style="-ms-grid-row: 1; -ms-grid-column: 2;"></div>
+    </div>
+</div>
+
+<!--external, internal, and inline-->
+<style>
+    #inher__grid--all {
+        display: -ms-grid;
+        width: 100px;
+        height: 100px;
+        -ms-grid-rows: 1fr;
+        -ms-grid-columns: 30px 1fr;
+    }
+
+    #inher__left--all {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+
+    #inher__right--all {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+</style>
+<div id="inher_template--all">
+    <div id="inher__grid--all" style="display: -ms-grid; width: 400px; height: 400px; -ms-grid-rows: 1fr; -ms-grid-columns: 1fr 1fr">
+        <div id="inher__left--all" style="-ms-grid-row: 1; -ms-grid-column: 1;"></div>
+        <div id="inher__right--all" style="-ms-grid-row: 1; -ms-grid-column: 2;"></div>
+    </div>
+</div>
+

@@ -201,4 +201,67 @@ define([
             });
         });
     });
+
+    describe('A grid loaded from a template', function () {
+        
+        it('follows proper css inheritance using an external stylesheet and internal stylesheet', function () {
+            helper.expectGridElement('inher__left', {
+                left: '0px',
+                top: '0px',
+                width: '30px',
+                height: '100px'
+            });
+            helper.expectGridElement('inher__right', {
+                left: '30px',
+                top: '0px',
+                width: '70px',
+                height: '100px'
+            });
+        });
+
+        it('follows proper css inheritance using an internal stylesheet and inline styles', function () {
+            helper.expectGridElement('inher__left--in', {
+                left: '0px',
+                top: '0px',
+                width: '200px',
+                height: '400px'
+            });
+            helper.expectGridElement('inher__right--in', {
+                left: '200px',
+                top: '0px',
+                width: '200px',
+                height: '400px'
+            });
+        });
+
+        it('follows proper css inheritance using an external stylesheet and inline styles', function () {
+            helper.expectGridElement('inher__left--exinl', {
+                left: '0px',
+                top: '0px',
+                width: '200px',
+                height: '400px'
+            });
+            helper.expectGridElement('inher__right--exinl', {
+                left: '200px',
+                top: '0px',
+                width: '200px',
+                height: '400px'
+            });
+        });
+
+        it('follows proper css inheritance using an external stylesheet, an internal stylesheet, and inline styles', function () {
+            helper.expectGridElement('inher__left--all', {
+                left: '0px',
+                top: '0px',
+                width: '200px',
+                height: '400px'
+            });
+            helper.expectGridElement('inher__right--all', {
+                left: '200px',
+                top: '0px',
+                width: '200px',
+                height: '400px'
+            });
+        });
+    });
 });
