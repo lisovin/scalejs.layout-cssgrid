@@ -39,6 +39,7 @@ define([
 
     var templateNode = document.createElement('div');
     templateNode.innerHTML = grid;
+    //templateNode.style.visibility = 'visible';
     templateNode.style.visibility = 'hidden';
     templateNode.style.position = 'absolute';
     document.body.appendChild(templateNode);

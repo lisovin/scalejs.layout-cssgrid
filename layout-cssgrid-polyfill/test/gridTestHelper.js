@@ -36,6 +36,7 @@ define([
     * Gets the properties of the element with given element_id.
     * @param element_id -- id of the target element
     * @param parsedRuleDump -- cssGridRules from dumpParsedStyles
+    * @author Jeremy
     * Preconditions: element_id is the valid id of an element,
     *                parsedRuleDump contains the cssGridRules from
     *                dumpParsedStyles

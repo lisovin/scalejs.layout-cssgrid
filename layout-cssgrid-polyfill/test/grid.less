@@ -205,16 +205,53 @@ div {
 }
 
     //auto track determined by text width
+p {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    font-style: normal;
+    font-family: monospace;
+    font-size: 12px;
+}
+
 #text__grid--width {
     display: -ms-grid;
     width: 300px;
     height: 200px;
-    -ms-grid-columns: 1fr;
-    -ms-grid-rows: auto;
+    -ms-grid-columns: auto 1fr;
+    -ms-grid-rows: 1fr;
 }
 
-#text__cell--width {
+#text__left--width {
     -ms-grid-row: 1;
     -ms-grid-column: 1;
+    background: red;
+}
+
+#text__right--width {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+    background: blue;
+}
+
+    //auto track determined by text height
+#text__grid--height {
+    display: -ms-grid;
+    width: 300px;
+    height: 200px;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: auto 1fr;
+}
+
+#text__left--height {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    background: red;
+}
+
+#text__right--height {
+    -ms-grid-row: 2;
+    -ms-grid-column: 1;
+    background: blue;
 }
 /*GridLayoutEnd*/

@@ -12,26 +12,6 @@ define([
     core,
     ko
 ) {
-    var wrapLog = function () {
-        var log = console.log.bind(console);
-
-        var revert = function () {
-            console.log = log;
-        }
-
-        var register = function () {
-            console.log = function (i) {
-                //fun stuff
-                log("function: " + i);
-            }
-        }
-
-        return {
-            revert: revert,
-            register: register
-        }
-    }();
-
     //initial setup 
     beforeEach(function () {
         var done = false;
@@ -262,6 +242,24 @@ define([
                 width: '200px',
                 height: '400px'
             });
+        });
+    });
+
+    describe('a grid loaded from a template with a text node', function () {
+        it('has the auto-track width determined by the text width', function () {
+            var element = document.getElementById('text__left--width'),
+                text = document.getElementById('t--width');
+
+            //expect size to differ by no more than 1 pixel
+            expect(element.offsetWidth - text.offsetWidth).toBeLessThan(1);
+        });
+
+        it('has the auto-track height determined by the text height', function () {
+            var element = document.getElementById('text__left--height'),
+                text = document.getElementById('t--height');
+
+            //expect size to differ by no more than 1 pixel
+            expect(element.offsetHeight - text.offsetHeight).toBeLessThan(1);
         });
     });
 });
