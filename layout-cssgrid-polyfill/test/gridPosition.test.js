@@ -391,4 +391,43 @@ define([
             });
         });
     });
+
+    describe('A grid with alligned spanning elements', function () {
+
+
+        it('correctly places the first element', function () {
+            helper.expectGridElement('alignSpan__one', {
+                left: '250px',
+                top: '125px',
+                width: '50px',
+                height: '50px'
+            });
+        });
+        it('correctly places the second element', function () {
+            helper.expectGridElement('alignSpan__two', {
+                left: '100px',
+                top: '275px',
+                width: '50px',
+                height: '50px'
+            });
+        });
+        it('correctly places the third element', function () {
+            helper.expectGridElement('alignSpan__three', {
+                left: '100px',
+                top: '300px',
+                //This will fail in the extention since in IE stretch doesn't override width settings,
+                //but in the extention, this is not practical to emulate. Extension overrides default 50px to 200px
+                width: '50px',
+                height: '50px'
+            });
+        });
+        it('correctly places the fourth element', function () {
+            helper.expectGridElement('alignSpan__four', {
+                left: '175px',
+                top: '175px',
+                width: '50px',
+                height: '50px'
+            });
+        });
+    });
 });
