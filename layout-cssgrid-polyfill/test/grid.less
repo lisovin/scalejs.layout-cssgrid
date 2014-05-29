@@ -254,4 +254,43 @@ p {
     -ms-grid-column: 1;
     background: blue;
 }
+
+    //margin, border, padding TESTS
+#align__grid {
+    display: -ms-grid;
+    width: 200px;
+    height: 200px;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr; 
+}
+
+#align__cell {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    margin: 10px;
+    border: 5px solid gray;
+    padding: 20px;
+    background: green;
+}
+
+#align__grid--inner {
+    display: -ms-grid;
+    width: 200px;
+    height: 200px;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr; 
+}
+
+#align__cell--inner {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#align__content--inner {
+    margin: 10px;
+    border: 5px solid gray;
+    padding: 20px;
+    height: 130px;
+    background: yellow;
+}
 /*GridLayoutEnd*/

@@ -262,4 +262,32 @@ define([
             expect(element.offsetHeight - text.offsetHeight).toBeLessThan(1);
         });
     });
+
+    //Note:
+    // - margin is not included in with, but border and padding are
+    describe('A grid loaded from a template', function () {
+        it('has correct alignment with padding, margin, and border values when they are applied to a separate inner div', function () {
+            var style = window.getComputedStyle(document.getElementById('align__content--inner'));
+            expect(style.getPropertyValue('width')).toBe('130px');
+            expect(style.getPropertyValue('height')).toBe('130px');
+            helper.expectGridElement('align__content--inner', {
+                left: '10px',
+                top: '10px',
+                width: '180px',
+                height: '180px'
+            });
+        });
+
+        it('has correct alignment with padding, margin, and border values when they are applied to the cell div', function () {
+            var style = window.getComputedStyle(document.getElementById('align__content--inner'));
+            expect(style.getPropertyValue('width')).toBe('130px');
+            expect(style.getPropertyValue('height')).toBe('130px');
+            helper.expectGridElement('align__cell', {
+                left: '10px',
+                top: '10px',
+                width: '180px',
+                height: '180px'
+            });
+        });
+    });
 });
