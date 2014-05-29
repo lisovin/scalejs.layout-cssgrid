@@ -1,4 +1,4 @@
-﻿/*global define,describe,expect,it,beforeEach,afterEach,document,waits,window */
+﻿/*global define,describe,expect,it,beforeEach,afterEach,document,waits,window,console,waitsFor */
 /*jslint sloppy: true*/
 /// <reference path="../Scripts/jasmine.js"/>
 define([
@@ -9,26 +9,25 @@ define([
     'jasmine-html'
 ], function (
     helper,
-    core,
-    ko
+    core
 ) {
 
     var fs = (function () {
-        var oldlog = console.log.bind(console);
-        var setCustomLog = function () {
-            console.log = function (i) {
-                // do cool stuff here for testing
-                oldlog(i);
-                }
-            }
-        var revertLog = function () {
-            console.log = oldlog;
-        }
+        var oldlog = console.log.bind(console),
+            setCustomLog = function () {
+                console.log = function (i) {
+                    // do cool stuff here for testing
+                    oldlog(i);
+                };
+            },
+            revertLog = function () {
+                console.log = oldlog;
+            };
         return {
             setCustomLog: setCustomLog,
             revertLog: revertLog
         };
-    })();
+    }());
 
     beforeEach(function () {
         var done = false;
@@ -43,7 +42,7 @@ define([
         fs.setCustomLog();
 
     });
-    
+
     afterEach(function () {
         fs.revertLog();
     });
@@ -353,30 +352,29 @@ define([
 
         it('correctly places elements with every possible align combination', function () {
             var styles = ['start', 'end', 'center', 'stretch'];
-        
-
-
-
             styles.forEach(function (element) {
                 core.layout.utils.safeSetStyle(document.getElementById('align__one'), 'width', '50px');
                 core.layout.utils.safeSetStyle(document.getElementById('align__one'), 'height', '50px');
                 core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-row-align', element);
                 styles.forEach(function (insideElement) {
                     core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-column-align', insideElement);
-                    if (core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-column-align') !== insideElement) { console.log('ERROR');}
 
                     core.layout.invalidate();
 
-                    var rowStyle = core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-row-align');
-                    var columnStyle = insideElement;
-                    var expectedVertSize = (rowStyle === 'stretch') ? '100px' : '50px';
-                    var expectedHorizontalSize = (columnStyle === 'stretch') ? '100px' : '50px';
-                    var expectedLeftOffset;
+                    var rowStyle = core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-row-align'),
+                        columnStyle = insideElement,
+                        expectedVertSize = (rowStyle === 'stretch') ? '100px' : '50px',
+                        expectedHorizontalSize = (columnStyle === 'stretch') ? '100px' : '50px',
+                        expectedLeftOffset,
+                        expectedTopOffset;
+
+                    //set expectedleftoffset
                     if (columnStyle === 'start') { expectedLeftOffset = '0px'; }
                     if (columnStyle === 'center') { expectedLeftOffset = '25px'; }
                     if (columnStyle === 'end') { expectedLeftOffset = '50px'; }
                     if (columnStyle === 'stretch') { expectedLeftOffset = '0px'; }
-                    var expectedTopOffset;
+
+                    //set expectedtopoffset
                     if (rowStyle === 'start') { expectedTopOffset = '0px'; }
                     if (rowStyle === 'center') { expectedTopOffset = '25px'; }
                     if (rowStyle === 'end') { expectedTopOffset = '50px'; }
