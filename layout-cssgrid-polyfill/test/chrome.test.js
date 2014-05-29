@@ -64,4 +64,25 @@ define([
             expect(props.height).toBe('100px');
         });
     });
+
+    describe('A function defined set with onLayoutDone', function () {
+
+        var foo;
+
+        beforeEach(function () {
+            foo = {
+                bar: function () { }
+            }
+
+            spyOn(foo, 'bar');
+
+            core.layout.onLayoutDone(foo.bar);
+
+        });
+
+        it('is called when invalidate finishes', function () {
+            core.layout.invalidate();
+            expect(foo.bar).toHaveBeenCalled();
+        });
+    });
 });
