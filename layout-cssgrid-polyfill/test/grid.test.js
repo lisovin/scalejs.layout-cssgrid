@@ -32,19 +32,19 @@ define([
         }
     }();
 
+    //initial setup 
+    beforeEach(function () {
+        var done = false;
+        core.layout.parseGridStyles(function () {
+            core.layout.invalidate();
+            done = true;
+        });
+
+        waitsFor(function () { return done; });
+    });
+
     //TESTS HERE:
     describe('A grid loaded from a template with a single cell', function () {
-
-        //initial setup 
-        beforeEach(function () {
-            var done = false;
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-                done = true;
-            });
-
-            waitsFor(function () { return done; });
-        });
 
         it('correctly places and sizes the only element with fr', function () {
             helper.expectGridElement('single__cell--fr', {
@@ -75,15 +75,6 @@ define([
     });
 
     describe('A nested grid loaded from a template with a separate inner div for the inner grid', function () {
-
-        //initial setup
-        beforeEach(function () {
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-            });
-
-            waits(200) //give time to snap into place
-        });
 
         it('correctly sets up outer grid', function () {
             helper.expectGridElement('outer__top', {
@@ -118,15 +109,6 @@ define([
 
     describe('A nested grid loaded from a template with the bottom cell as the inner grid', function () {
 
-        //initial setup
-        beforeEach(function () {
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-            });
-
-            waits(200) //give time to snap into place
-        });
-
         it('correctly sets up outer grid', function () {
             helper.expectGridElement('outer__top--c', {
                 left: '0px',
@@ -160,15 +142,6 @@ define([
 
     describe('A grid with css loaded by href', function () {
 
-        //initial setup
-        beforeEach(function () {
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-            });
-
-            waits(200) //give time to snap into place
-        });
-
         it('is displayed correctly', function () {
             helper.expectGridElement('href__left', {
                 left: '0px',
@@ -188,14 +161,6 @@ define([
     });
 
     describe('A grid with multiple elements in a track', function () {
-        //initial setup
-        beforeEach(function () {
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-            });
-
-            waits(200) //give time to snap into place
-        });
 
         it('has the auto height determined by the elements', function () {
             helper.expectGridElement('multi__cell--height', {
@@ -217,14 +182,6 @@ define([
     });
 
     describe('A grid loaded from a template with static fixed-size content', function () {
-        //initial setup
-        beforeEach(function () {
-            core.layout.parseGridStyles(function () {
-                core.layout.invalidate();
-            });
-
-            waits(200) //give time to snap into place
-        });
 
         it('has auto height determined correctly', function () {
             helper.expectGridElement('height__cell', {
