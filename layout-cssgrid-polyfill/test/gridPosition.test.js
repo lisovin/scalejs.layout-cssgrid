@@ -12,24 +12,6 @@ define([
     core,
     ko
 ) {
-
-    var fs = (function () {
-        var oldlog = console.log.bind(console);
-        var setCustomLog = function () {
-            console.log = function (i) {
-                // do cool stuff here for testing
-                oldlog(i);
-                }
-            }
-        var revertLog = function () {
-            console.log = oldlog;
-        }
-        return {
-            setCustomLog: setCustomLog,
-            revertLog: revertLog
-        };
-    })();
-
     beforeEach(function () {
         var done = false;
         core.layout.parseGridStyles(function () {
@@ -38,14 +20,6 @@ define([
         });
 
         waitsFor(function () { return done; });
-
-
-        fs.setCustomLog();
-
-    });
-    
-    afterEach(function () {
-        fs.revertLog();
     });
 
     describe('A grid loaded from a template', function () {

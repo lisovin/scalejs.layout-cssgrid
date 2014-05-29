@@ -12,6 +12,35 @@ define([
     core,
     ko
 ) {
+    //prepare the warning logger to capture the WARNING, and then
+    var warnings = new Array();
+
+    var extractLog = function () {
+        var log = console.log.bind(console);
+
+        var register = function () {
+            console.log = function (obj) {
+                if (String(obj).indexOf('WARNING') > -1) {
+                    warnings.push(obj);
+                    revert();
+                }
+            }
+        }
+
+        var revert = function () {
+            console.log = log;
+        }
+
+        return {
+            register: register,
+            revert: revert,
+        }
+    }();
+
+    extractLog.register();
+
+    //BEGIN tests
+
     describe('The dumpParsedRules debugging function', function () {
         //initial setup
         beforeEach(function () {
@@ -62,6 +91,12 @@ define([
             //expectations
             expect(props.width).toBe('400px');
             expect(props.height).toBe('100px');
+        });
+    });
+
+    describe('The extension', function () {
+        it('logs errors if duplicate rules are matched to one element (parent or child)', function () {
+            expect(warnings.length).toBeGreaterThan(0);
         });
     });
 });
