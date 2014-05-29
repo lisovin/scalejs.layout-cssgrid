@@ -37,11 +37,13 @@ define([
 
         //initial setup 
         beforeEach(function () {
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
+                done = true;
             });
 
-            waits(200) //give time to snap into place
+            waitsFor(function () { return done; });
         });
 
         it('correctly places and sizes the only element with fr', function () {
