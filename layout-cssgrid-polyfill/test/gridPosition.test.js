@@ -358,13 +358,14 @@ define([
 
 
             styles.forEach(function (element) {
+                core.layout.utils.safeSetStyle(document.getElementById('align__one'), 'width', '50px');
+                core.layout.utils.safeSetStyle(document.getElementById('align__one'), 'height', '50px');
                 core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-row-align', element);
                 styles.forEach(function (insideElement) {
                     core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-column-align', insideElement);
                     if (core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-column-align') !== insideElement) { console.log('ERROR');}
-                    console.log('before' + document.getElementById('align__one').outerHTML);
+
                     core.layout.invalidate();
-                    console.log('after' + document.getElementById('align__one').outerHTML);
 
                     var rowStyle = core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-row-align');
                     var columnStyle = insideElement;
