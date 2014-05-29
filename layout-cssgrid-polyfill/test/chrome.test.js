@@ -15,11 +15,14 @@ define([
     describe('The dumpParsedRules debugging function', function () {
         //initial setup
         beforeEach(function () {
+            var done = false;
             core.layout.parseGridStyles(function () {
                 core.layout.invalidate();
+                done = true;
             });
 
-            waits(200) //give time to snap into place
+            waitsFor(function () { return done; });
+
         });
 
         it('properly describes the size of an element', function () {
