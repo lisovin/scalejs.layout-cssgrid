@@ -271,4 +271,65 @@
     }
 }
 
+#alignGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px;
+    -ms-grid-columns: 100px 100px 100px;
+    width: 300px;
+    height: 300px;
+
+    #align__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        height: 50px;
+        width: 50px;
+    }
+
+    #align__test {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        height: 50px;
+        width: 50px;
+        -ms-grid-column-align: stretch;
+        -ms-grid-row-align: center;
+    }
+/*
+    #align__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        -ms-grid-column-align: start;
+        -ms-grid-row-align: center;
+    }
+    #align__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+        -ms-grid-column-align: center;
+        -ms-grid-row-align: center;
+
+    }
+    #align__three {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+        -ms-grid-column-align: center;
+        -ms-grid-row-align: end;
+    }
+    #align__four {
+        -ms-grid-row: 2;
+        -ms-grid-column: 1;
+
+    }
+    #align__ {
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
+        -ms-grid-column-align: stretch;
+    }
+    #align__ {
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
+        -ms-grid-row-align: stretch;
+        -ms-grid-column-align: stretch;
+    }*/
+}
+
 /*GridLayoutEnd*/

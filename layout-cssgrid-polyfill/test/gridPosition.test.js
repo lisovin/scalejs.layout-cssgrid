@@ -348,4 +348,46 @@ define([
 
 
     });
+
+    describe('A grid with aligned elements', function () {
+
+        it('correctly places elements with every possible align combination', function () {
+            var styles = ['start', 'end', 'center', 'stretch'];
+        
+
+
+
+            styles.forEach(function (element) {
+                core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-row-align', element);
+                styles.forEach(function (insideElement) {
+                    core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-column-align', insideElement);
+                    if (core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-column-align') !== insideElement) { console.log('ERROR');}
+                    console.log('before' + document.getElementById('align__one').outerHTML);
+                    core.layout.invalidate();
+                    console.log('after' + document.getElementById('align__one').outerHTML);
+
+                    var rowStyle = core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-row-align');
+                    var columnStyle = insideElement;
+                    var expectedVertSize = (rowStyle === 'stretch') ? '100px' : '50px';
+                    var expectedHorizontalSize = (columnStyle === 'stretch') ? '100px' : '50px';
+                    var expectedLeftOffset;
+                    if (columnStyle === 'start') { expectedLeftOffset = '0px'; }
+                    if (columnStyle === 'center') { expectedLeftOffset = '25px'; }
+                    if (columnStyle === 'end') { expectedLeftOffset = '50px'; }
+                    if (columnStyle === 'stretch') { expectedLeftOffset = '0px'; }
+                    var expectedTopOffset;
+                    if (rowStyle === 'start') { expectedTopOffset = '0px'; }
+                    if (rowStyle === 'center') { expectedTopOffset = '25px'; }
+                    if (rowStyle === 'end') { expectedTopOffset = '50px'; }
+                    if (rowStyle === 'stretch') { expectedTopOffset = '0px'; }
+                    helper.expectGridElement('align__one', {
+                        left: expectedLeftOffset,
+                        top: expectedTopOffset,
+                        width: expectedHorizontalSize,
+                        height: expectedVertSize
+                    });
+                });
+            });
+        });
+    });
 });
