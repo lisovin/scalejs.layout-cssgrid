@@ -1,4 +1,4 @@
-﻿/*global define,describe,expect,it,beforeEach,afterEach,document,waits,window */
+﻿/*global define,describe,expect,it,beforeEach,afterEach,document,waits,window,console,waitsFor */
 /*jslint sloppy: true*/
 /// <reference path="../Scripts/jasmine.js"/>
 define([
@@ -9,8 +9,7 @@ define([
     'jasmine-html'
 ], function (
     helper,
-    core,
-    ko
+    core
 ) {
     beforeEach(function () {
         var done = false;
@@ -321,5 +320,86 @@ define([
         });
 
 
+    });
+
+    describe('A grid with aligned elements', function () {
+
+        it('correctly places elements with every possible align combination', function () {
+            var styles = ['start', 'end', 'center', 'stretch'];
+            styles.forEach(function (element) {
+                core.layout.utils.safeSetStyle(document.getElementById('align__one'), 'width', '50px');
+                core.layout.utils.safeSetStyle(document.getElementById('align__one'), 'height', '50px');
+                core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-row-align', element);
+                styles.forEach(function (insideElement) {
+                    core.layout.utils.safeSetStyle(document.getElementById('align__one'), '-ms-grid-column-align', insideElement);
+
+                    core.layout.invalidate();
+
+                    var rowStyle = core.layout.utils.safeGetStyle(document.getElementById('align__one'), '-ms-grid-row-align'),
+                        columnStyle = insideElement,
+                        expectedVertSize = (rowStyle === 'stretch') ? '100px' : '50px',
+                        expectedHorizontalSize = (columnStyle === 'stretch') ? '100px' : '50px',
+                        expectedLeftOffset,
+                        expectedTopOffset;
+
+                    //set expectedleftoffset
+                    if (columnStyle === 'start') { expectedLeftOffset = '0px'; }
+                    if (columnStyle === 'center') { expectedLeftOffset = '25px'; }
+                    if (columnStyle === 'end') { expectedLeftOffset = '50px'; }
+                    if (columnStyle === 'stretch') { expectedLeftOffset = '0px'; }
+
+                    //set expectedtopoffset
+                    if (rowStyle === 'start') { expectedTopOffset = '0px'; }
+                    if (rowStyle === 'center') { expectedTopOffset = '25px'; }
+                    if (rowStyle === 'end') { expectedTopOffset = '50px'; }
+                    if (rowStyle === 'stretch') { expectedTopOffset = '0px'; }
+                    helper.expectGridElement('align__one', {
+                        left: expectedLeftOffset,
+                        top: expectedTopOffset,
+                        width: expectedHorizontalSize,
+                        height: expectedVertSize
+                    });
+                });
+            });
+        });
+    });
+
+    describe('A grid with alligned spanning elements', function () {
+
+
+        it('correctly places the first element', function () {
+            helper.expectGridElement('alignSpan__one', {
+                left: '250px',
+                top: '125px',
+                width: '50px',
+                height: '50px'
+            });
+        });
+        it('correctly places the second element', function () {
+            helper.expectGridElement('alignSpan__two', {
+                left: '100px',
+                top: '275px',
+                width: '50px',
+                height: '50px'
+            });
+        });
+        it('correctly places the third element', function () {
+            helper.expectGridElement('alignSpan__three', {
+                left: '100px',
+                top: '300px',
+                //This will fail in the extention since in IE stretch doesn't override width settings,
+                //but in the extention, this is not practical to emulate. Extension overrides default 50px to 200px
+                width: '50px',
+                height: '50px'
+            });
+        });
+        it('correctly places the fourth element', function () {
+            helper.expectGridElement('alignSpan__four', {
+                left: '175px',
+                top: '175px',
+                width: '50px',
+                height: '50px'
+            });
+        });
     });
 });

@@ -94,6 +94,27 @@ define([
         });
     });
 
+    describe('A function defined set with onLayoutDone', function () {
+
+        var foo;
+
+        beforeEach(function () {
+            foo = {
+                bar: function () { }
+            }
+
+            spyOn(foo, 'bar');
+
+            core.layout.onLayoutDone(foo.bar);
+
+        });
+
+        it('is called when invalidate finishes', function () {
+            core.layout.invalidate();
+            expect(foo.bar).toHaveBeenCalled();
+        });
+    });
+
     describe('The extension', function () {
         it('logs errors if duplicate rules are matched to one element (parent or child)', function () {
             expect(warnings.length).toBeGreaterThan(0);
