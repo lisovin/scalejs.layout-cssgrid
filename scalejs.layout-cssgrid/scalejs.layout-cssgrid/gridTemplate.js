@@ -15,8 +15,8 @@ define([
 
     return function (template_name, template_data) {
         var result = {
-                name: template_name
-            },
+            name: template_name
+        },
             unwrapped_data = (typeof template_data === 'function')?(template_data()):(template_data);
 
         function invalidateAfterRender(elements) {
@@ -36,6 +36,8 @@ define([
             result.data = template_data;
         }
 
-        return result;
+        return {
+            template: result
+        }
     }
 });
