@@ -74,6 +74,8 @@
     <Content Include="app\app.js" />
     <Content Include="Scripts\_scalejs.intellisense.js" />
     <Content Include="test\all.tests.js" />
+    <Content Include="test\auto.html" />
+    <Content Include="test\auto.test.js" />
     <Content Include="test\chrome.html" />
     <Content Include="test\chrome.test.js" />
     <Content Include="test\grid.html" />
@@ -92,7 +94,9 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="test\gridExtensionRegistered.test.js" />
+    <None Include="test\auto.less" />
     <None Include="test\chrome.less" />
+    <None Include="test\error.less" />
     <None Include="test\grid.less" />
     <None Include="test\testStyles.less" />
   </ItemGroup>
