@@ -1,3 +1,4 @@
+
 /**
  * almond 0.2.6 Copyright (c) 2011-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -1190,7 +1191,6 @@ define('scalejs/application',[
         exit: exit
     };
 });
-
 
 /**
  * @license RequireJS domReady 2.0.1 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
@@ -4412,4 +4412,3 @@ require([
 
 
 define("app/app", function(){});
-
