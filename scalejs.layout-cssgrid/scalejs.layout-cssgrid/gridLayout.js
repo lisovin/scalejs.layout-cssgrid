@@ -282,9 +282,11 @@ define([
                 parentComputedStyle,
                 parentPadding;
 
+            //set attributes for identifying children
             item.element.setAttribute('data-grid-child', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
 
+            //get track size
             trackWidth = columnTracks
                 .filter(function (track) { return track.index >= item.column && track.index < item.column + item.columnSpan; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
@@ -301,6 +303,7 @@ define([
                 .filter(function (track) { return track.index < item.row; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
+            //get required info and then calculate padding/margin/borders for element
             itemComputedStyle = window.getComputedStyle(item.element);
             itemWidth = parseInt(itemComputedStyle.width, 10);
             itemHeight = parseInt(itemComputedStyle.height, 10);
@@ -324,18 +327,19 @@ define([
                 left: (parseInt(parentComputedStyle['padding-left'], 10) || 0)
             };
 
+            //get offset+size based on alignment
             if (item.styles.properties['grid-row-align'] === 'stretch') {
                 height = trackHeight - (itemFrame.top + itemFrame.bottom);
                 top = trackTop;
             } else if (item.styles.properties['grid-row-align'] === 'start') {
-                height = itemHeight;
+                height = undefined; //gridlayout wont overwrite the size
                 top = trackTop + itemFrame.top;
             } else if (item.styles.properties['grid-row-align'] === 'end') {
-                height = itemHeight;
-                top = trackTop + trackHeight - height - (itemFrame.bottom + itemFrame.top);
+                height = undefined; //gridlayout wont overwrite the size
+                top = trackTop + trackHeight - itemHeight - (itemFrame.bottom + itemFrame.top);
             } else if (item.styles.properties['grid-row-align'] === 'center') {
-                height = itemHeight;
-                top = trackTop + (trackHeight - height) / 2;
+                height = undefined; //gridlayout wont overwrite the size
+                top = trackTop + (trackHeight - itemHeight) / 2;
             } else {
                 console.log('invalid -ms-grid-row-align property for ', item);
             }
@@ -344,26 +348,29 @@ define([
                 width = trackWidth - (itemFrame.left + itemFrame.right);
                 left = trackLeft;
             } else if (item.styles.properties['grid-column-align'] === 'start') {
-                width = itemWidth;
+                width = undefined; //gridlayout wont overwrite the size
                 left = trackLeft + itemFrame.left;
             } else if (item.styles.properties['grid-column-align'] === 'end') {
-                width = itemWidth;
-                left = trackLeft + trackWidth - width - (itemFrame.right + itemFrame.left);
+                width = undefined; //gridlayout wont overwrite the size
+                left = trackLeft + trackWidth - itemWidth - (itemFrame.right + itemFrame.left);
             } else if (item.styles.properties['grid-column-align'] === 'center') {
-                width = itemWidth;
-                left = trackLeft + (trackWidth - width) / 2;
+                width = undefined; //gridlayout wont overwrite the size
+                left = trackLeft + (trackWidth - itemWidth) / 2;
             } else {
                 console.log('invalid -ms-grid-column-align property for ', item);
             }
 
+            //offset by parent padding
             left += parentPadding.left;
             top += parentPadding.top;
 
-            width -= itemPadding.left + itemPadding.right;
-            height -= itemPadding.top + itemPadding.bottom;
+            //if grid layout is setting width/height (varies based on alignment) , set w/h now
+            if (width !== undefined) width -= itemPadding.left + itemPadding.right;
+            if (height !== undefined) height -= itemPadding.top + itemPadding.bottom;
 
-            utils.safeSetStyle(item.element, 'width', width + PX);
-            utils.safeSetStyle(item.element, 'height', height + PX);
+
+            if (width !== undefined) utils.safeSetStyle(item.element, 'width', width + PX);
+            if (height !== undefined) utils.safeSetStyle(item.element, 'height', height + PX);
             utils.safeSetStyle(item.element, 'left', left + PX);
             utils.safeSetStyle(item.element, 'top', top + PX);
         });
