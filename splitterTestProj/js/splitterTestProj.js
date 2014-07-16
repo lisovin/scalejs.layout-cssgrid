@@ -2362,12 +2362,13 @@ var lexer = {
 EOF:1,
 
 parseError:function parseError(str, hash) {
-        if (this.yy.parser) {
-            this.yy.parser.parseError(str, hash);
-        } else {
-            throw new Error(str);
-        }
-    },
+    if (this.yy.parser) {
+        //parse errors will produce a 'undefined is not a function' here since we removed their error catching function
+        this.yy.parser.parseError(str, hash);
+    } else {
+        throw new Error(str);
+    }
+},
 
 // resets the lexer, sets new input
 setInput:function (input) {
@@ -4384,9 +4385,11 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 parentComputedStyle,
                 parentPadding;
 
+            //set attributes for identifying children
             item.element.setAttribute('data-grid-child', 'true');
             utils.safeSetStyle(item.element, 'position', 'absolute');
 
+            //get track size
             trackWidth = columnTracks
                 .filter(function (track) { return track.index >= item.column && track.index < item.column + item.columnSpan; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
@@ -4403,6 +4406,7 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 .filter(function (track) { return track.index < item.row; })
                 .reduce(function (sum, track) { return sum + track.pixels; }, 0);
 
+            //get required info and then calculate padding/margin/borders for element
             itemComputedStyle = window.getComputedStyle(item.element);
             itemWidth = parseInt(itemComputedStyle.width, 10);
             itemHeight = parseInt(itemComputedStyle.height, 10);
@@ -4426,6 +4430,7 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 left: (parseInt(parentComputedStyle['padding-left'], 10) || 0)
             };
 
+            //get offset+size based on alignment
             if (item.styles.properties['grid-row-align'] === 'stretch') {
                 height = trackHeight - (itemFrame.top + itemFrame.bottom);
                 top = trackTop;
@@ -4458,11 +4463,20 @@ define('scalejs.layout-cssgrid/gridLayout',[
                 console.log('invalid -ms-grid-column-align property for ', item);
             }
 
+            //offset by parent padding
             left += parentPadding.left;
             top += parentPadding.top;
 
+            //if grid layout is setting width/height (varies based on alignment) , set w/h now
             if (width !== undefined) width -= itemPadding.left + itemPadding.right;
             if (height !== undefined) height -= itemPadding.top + itemPadding.bottom;
+
+            if (width !== undefined && item.columnTracks[0].type === 'keyword' && item.columnTracks[0].size === 'auto') {
+                console.log('auto');
+            } else {
+                console.log('not auto');
+            }
+
 
             if (width !== undefined) utils.safeSetStyle(item.element, 'width', width + PX);
             if (height !== undefined) utils.safeSetStyle(item.element, 'height', height + PX);
@@ -11397,7 +11411,7 @@ define('scalejs.layout-cssgrid-splitter/splitter', [
                     var value = /(\d+)/.exec(measure),
                         changed_measure;
                     if (value) {
-                        changed_measure = (Math.max(parseInt(value, 10) + delta, 0)) + 'px';
+                        changed_measure = (Math.max(parseInt(value, 10) + Math.floor(delta), 0)) + 'px';
 
                         if (mode === 'final') {
                             var dir;
@@ -11518,18 +11532,29 @@ define('scalejs.layout-cssgrid-splitter/splitter', [
         }
 
         return function (e) {
+            
+
 
             switch (e.type) {
                 case 'touch':
                     bgCol = getComputedStyle(element).getPropertyValue('background-color');
                     break;
                 case 'dragstart':
+                    if (e.gesture === undefined) {
+                        break;
+                    }
                     resizer = startResizing(e);
                     break;
                 case 'drag':
+                    if (e.gesture === undefined) {
+                        break;
+                    }
                     resizer.resize(e);
                     break;
                 case 'dragend':
+                    if (e.gesture === undefined) {
+                        break;
+                    }
                     resizer.stop(e);
                     break;
             }
@@ -15546,4 +15571,4 @@ require([
 define("app/app", function(){});
 
 (function(c){var d=document,a='appendChild',i='styleSheet',s=d.createElement('style');s.type='text/css';d.getElementsByTagName('head')[0][a](s);s[i]?s[i].cssText=c:s[a](d.createTextNode(c));})
-('html,\nbody {\n  height: 100%;\n}\n/*GridLayoutStart*/\n.mainGrid {\n  height: 100%;\n  display: -ms-grid;\n  -ms-grid-columns: 400px auto 1fr;\n  -ms-grid-rows: 1fr;\n}\n.mainGrid .e1 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 1;\n}\n.mainGrid .e2 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 2;\n  border: 2px solid red;\n  width: 5px;\n}\n.mainGrid .e3 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 3;\n}\n.otherGrid {\n  height: 100%;\n  display: -ms-grid;\n  -ms-grid-columns: 1fr;\n  -ms-grid-rows: 400px auto 1fr;\n}\n.otherGrid .f1 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 1;\n}\n.otherGrid .f2 {\n  -ms-grid-row: 2;\n  -ms-grid-column: 1;\n  border: 2px solid green;\n  height: 5px;\n}\n.otherGrid .f3 {\n  -ms-grid-row: 3;\n  -ms-grid-column: 1;\n}\n/*GridLayoutEnd*/\n');
+('html,\nbody {\n  height: 100%;\n  margin: 0px;\n}\n/*GridLayoutStart*/\n.mainGrid {\n  height: 100%;\n  display: -ms-grid;\n  -ms-grid-columns: 400px auto 1fr;\n  -ms-grid-rows: 1fr;\n}\n.mainGrid .e1 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 1;\n}\n.mainGrid .e2 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 2;\n  border: 2px solid red;\n  width: 5px;\n}\n.mainGrid .e3 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 3;\n}\n.otherGrid {\n  height: 100%;\n  display: -ms-grid;\n  -ms-grid-columns: 1fr;\n  -ms-grid-rows: 400px auto 1fr;\n}\n.otherGrid .f1 {\n  -ms-grid-row: 1;\n  -ms-grid-column: 1;\n}\n.otherGrid .f2 {\n  -ms-grid-row: 2;\n  -ms-grid-column: 1;\n  border: 2px solid green;\n  height: 5px;\n}\n.otherGrid .f3 {\n  -ms-grid-row: 3;\n  -ms-grid-column: 1;\n}\n/*GridLayoutEnd*/\n');

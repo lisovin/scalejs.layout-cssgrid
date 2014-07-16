@@ -37,6 +37,7 @@ var require = {
         "extensions":  [
             "scalejs.functional",
             "scalejs.layout-cssgrid",
+            "scalejs.layout-cssgrid",
             "scalejs.linq-linqjs",
             "scalejs.mvvm",
             "scalejs.statechart-scion"

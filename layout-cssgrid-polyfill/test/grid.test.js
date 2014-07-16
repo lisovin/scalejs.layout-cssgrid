@@ -264,7 +264,7 @@ define([
     });
 
     //Note:
-    // - margin is not included in with, but border and padding are
+    // - margin is not included in width, but border and padding are
     describe('A grid loaded from a template', function () {
         it('has correct alignment with padding, margin, and border values when they are applied to a separate inner div', function () {
             var style = window.getComputedStyle(document.getElementById('align__content--inner'));

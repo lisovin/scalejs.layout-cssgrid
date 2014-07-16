@@ -75,7 +75,7 @@ define('scalejs.layout-cssgrid-splitter/splitter', [
                     var value = /(\d+)/.exec(measure),
                         changed_measure;
                     if (value) {
-                        changed_measure = (Math.max(parseInt(value, 10) + delta, 0)) + 'px';
+                        changed_measure = (Math.max(parseInt(value, 10) + Math.floor(delta), 0)) + 'px';
 
                         if (mode === 'final') {
                             var dir;
@@ -196,18 +196,29 @@ define('scalejs.layout-cssgrid-splitter/splitter', [
         }
 
         return function (e) {
+            
+
 
             switch (e.type) {
                 case 'touch':
                     bgCol = getComputedStyle(element).getPropertyValue('background-color');
                     break;
                 case 'dragstart':
+                    if (e.gesture === undefined) {
+                        break;
+                    }
                     resizer = startResizing(e);
                     break;
                 case 'drag':
+                    if (e.gesture === undefined) {
+                        break;
+                    }
                     resizer.resize(e);
                     break;
                 case 'dragend':
+                    if (e.gesture === undefined) {
+                        break;
+                    }
                     resizer.stop(e);
                     break;
             }

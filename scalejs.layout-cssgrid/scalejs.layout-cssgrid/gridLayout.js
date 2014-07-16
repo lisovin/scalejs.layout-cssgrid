@@ -94,6 +94,19 @@ define([
 
         return size;
     }
+    function frameSizeMarginOnly(element, dimension) {
+        // for use with offsetWidth and offsetHeight, since they include padding and border already
+
+        var sides = dimension === WIDTH ? [RIGHT, LEFT] : [TOP, BOTTOM],
+            size;
+
+        size = sides.reduce(function (result, side) {
+            return result +
+                getMeasureValue(element, MARGIN + HYPHEN + side)
+        }, 0);
+
+        return size;
+    }
 
     function pxTracks(tracks) {
         return tracks
@@ -142,21 +155,22 @@ define([
                     })
                     .select(function (noFrItem) {
                         var ceil = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)),
-                            frameSz = frameSize(noFrItem.element, dimension),
-                            track_pixels;
+                                frameSz = frameSize(noFrItem.element, dimension),
+                                track_pixels;
                         trackSize = ceil + frameSz;
+                        //ceil can be NaN when no width/height is defined
                         if (isNaN(trackSize)) {
                             noFrItem.element.style[dimension] = '';
                             ceil = noFrItem.element[offsetProperty];
-                            frameSz = frameSize(noFrItem.element, dimension);
+                            frameSz = frameSizeMarginOnly(noFrItem.element, dimension);
                             trackSize = ceil + frameSz;
                         }
-                            // set it to 0 so that reduce would properly calculate
+
+                        // set it to 0 so that reduce would properly calculate
                         track_pixels = 0;
                         track_pixels = noFrItem[tracksProperty].reduce(function (r, tr) { return r - ((tr.pixels !== undefined) ? (tr.pixels) : (0)); }, trackSize);
 
                         return track_pixels;
-
                     }).toArray();
 
                 if (trackSizes !== undefined && trackSizes.length > 0) {
