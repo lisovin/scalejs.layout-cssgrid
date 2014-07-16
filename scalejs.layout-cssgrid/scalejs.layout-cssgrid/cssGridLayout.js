@@ -76,18 +76,21 @@ define([
 
                         if (gridElement.matches) {
                             return gridElement.matches(rule.selector);
-                        } else if (gridElement.mozMatchesSelector) {
-                            return gridElement.mozMatchesSelector(rule.selector);
-                        } else if (gridElement.webkitMatchesSelector) {
-                            return gridElement.webkitMatchesSelector(rule.selector);
-                        } else if (gridElement.msMatchesSelector) {
-                            return gridElement.msMatchesSelector(rule.selector);
-                        } else {
-                            return utils.toArray(document.querySelectorAll(rule.selector))
-                                .any(function (match) {
-                                    return gridElement === match;
-                                });
                         }
+                        if (gridElement.mozMatchesSelector) {
+                            return gridElement.mozMatchesSelector(rule.selector);
+                        }
+                        if (gridElement.webkitMatchesSelector) {
+                            return gridElement.webkitMatchesSelector(rule.selector);
+                        }
+                        if (gridElement.msMatchesSelector) {
+                            return gridElement.msMatchesSelector(rule.selector);
+                        }
+
+                        return utils.toArray(document.querySelectorAll(rule.selector))
+                            .any(function (match) {
+                                return gridElement === match;
+                            });
 
                     });
 
@@ -128,19 +131,20 @@ define([
 
                         if (gridItemElement.matches) {
                             return gridItemElement.matches(rule.selector);
-                        } else if (gridItemElement.mozMatchesSelector) {
-                            return gridItemElement.mozMatchesSelector(rule.selector);
-                        } else if (gridItemElement.webkitMatchesSelector) {
-                            return gridItemElement.webkitMatchesSelector(rule.selector);
-                        } else if (gridItemElement.msMatchesSelector) {
-                            return gridItemElement.msMatchesSelector(rule.selector);
-                        } else {
-                            return utils.toArray(document.querySelectorAll(rule.selector))
-                                .any(function (match) {
-                                    return gridItemElement === match;
-                                });
                         }
-
+                        if (gridItemElement.mozMatchesSelector) {
+                            return gridItemElement.mozMatchesSelector(rule.selector);
+                        }
+                        if (gridItemElement.webkitMatchesSelector) {
+                            return gridItemElement.webkitMatchesSelector(rule.selector);
+                        }
+                        if (gridItemElement.msMatchesSelector) {
+                            return gridItemElement.msMatchesSelector(rule.selector);
+                        }
+                        return utils.toArray(document.querySelectorAll(rule.selector))
+                            .any(function (match) {
+                                return gridItemElement === match;
+                            });
                     });
 
 
@@ -210,9 +214,10 @@ define([
         function docDepth(e) {
             if (e.parentElement === document.body) {
                 return 1;
-            } else {
-                return 1 + docDepth(e.parentElement);
             }
+
+            return 1 + docDepth(e.parentElement);
+
         }
         gridElements = gridElements.orderBy(docDepth).toArray();
 

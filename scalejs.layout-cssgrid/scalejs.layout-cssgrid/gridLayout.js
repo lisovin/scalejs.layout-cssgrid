@@ -102,13 +102,13 @@ define([
 
         size = sides.reduce(function (result, side) {
             return result +
-                getMeasureValue(element, MARGIN + HYPHEN + side)
+                getMeasureValue(element, MARGIN + HYPHEN + side);
         }, 0);
 
         return size;
     }
 
-    function pxTracks(tracks) {
+    function doPxTracks(tracks) {
         return tracks
             .filter(function (track) { return track.type === PX; })
             .reduce(function (size, track) {
@@ -117,14 +117,14 @@ define([
             }, 0);
     }
 
-    function autoTracks(tracks, dimension) {
+    function doAutoTracks(tracks, dimension) {
         var autoSizeSum = 0,
             autoTracks = tracks
-            .filter(function (track) { return track.type === KEYWORD && track.size === AUTO });
+                .filter(function (track) { return track.type === KEYWORD && track.size === AUTO; });
 
         // tracks without items/elements need size zero;
         autoTracks
-            .filter(function (track) { return track.items === undefined })
+            .filter(function (track) { return track.items === undefined; })
             .forEach(function (track) {
                 track.pixels = 0;
             });
@@ -144,7 +144,7 @@ define([
                     return item[tracksProperty].reduce(function (r, tr) {
                         return r && tr.type !== FR;
                     }, true);
-                })
+                });
 
 
 
@@ -154,11 +154,11 @@ define([
                         return display !== 'none';
                     })
                     .select(function (noFrItem) {
-                        var ceil = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)),
-                                frameSz = frameSize(noFrItem.element, dimension),
-                                track_pixels;
-                        trackSize = ceil + frameSz;
                         //ceil can be NaN when no width/height is defined
+                        var ceil = Math.ceil(parseFloat(noFrItem.element.style[dimension], 10)),
+                            frameSz = frameSize(noFrItem.element, dimension),
+                            track_pixels;
+                        trackSize = ceil + frameSz;
                         if (isNaN(trackSize)) {
                             noFrItem.element.style[dimension] = '';
                             ceil = noFrItem.element[offsetProperty];
@@ -185,7 +185,7 @@ define([
         return autoSizeSum;
     }
 
-    function frTracks(tracks, size) {
+    function doFrTracks(tracks, size) {
         var frs,
             totalFRs;
 
@@ -199,10 +199,10 @@ define([
     }
 
     function sizeTracks(tracks, size, dimension) {
-        size -= pxTracks(tracks);
-        size -= autoTracks(tracks, dimension);
+        size -= doPxTracks(tracks);
+        size -= doAutoTracks(tracks, dimension);
 
-        frTracks(tracks, size);
+        doFrTracks(tracks, size);
     }
 
     /*jslint unparam:true*/
@@ -210,11 +210,8 @@ define([
         var columnTracks,
             rowTracks,
             mappedItems,
-            prevParentPos,
             computedColumns,
-            computedRows,
-            sumGridWidth,
-            sumGridHeight;
+            computedRows;
 
         columnTracks = gridTracksParser.parse(properties[GRIDCOLUMNS]);
         rowTracks = gridTracksParser.parse(properties[GRIDROWS]);
@@ -379,12 +376,20 @@ define([
             top += parentPadding.top;
 
             //if grid layout is setting width/height (varies based on alignment) , set w/h now
-            if (width !== undefined) width -= itemPadding.left + itemPadding.right;
-            if (height !== undefined) height -= itemPadding.top + itemPadding.bottom;
+            if (width !== undefined) {
+                width -= itemPadding.left + itemPadding.right;
+            }
+            if (height !== undefined) {
+                height -= itemPadding.top + itemPadding.bottom;
+            }
 
 
-            if (width !== undefined) utils.safeSetStyle(item.element, 'width', width + PX);
-            if (height !== undefined) utils.safeSetStyle(item.element, 'height', height + PX);
+            if (width !== undefined) {
+                utils.safeSetStyle(item.element, 'width', width + PX);
+            }
+            if (height !== undefined) {
+                utils.safeSetStyle(item.element, 'height', height + PX);
+            }
             utils.safeSetStyle(item.element, 'left', left + PX);
             utils.safeSetStyle(item.element, 'top', top + PX);
         });

@@ -15237,7 +15237,7 @@ define('text',['module'], function (module) {
     }
     return text;
 });
-define('text!app/main/views/main.html',[],function () { return '<div id="main_template">\n    <div class="mainGrid">\n        <div class="e1"></div>\n        <div class="e2" data-bind="splitter: {}"></div>\n        <div class="e3">\r\n            <div class="otherGrid">\r\n                <div class="f1"></div>\r\n                <div class="f2" data-bind="splitter: {}"></div>\r\n                <div class="f3"></div>\r\n            </div>\n        </div>\n    </div>\n</div>\n';});
+define('text!app/main/views/main.html',[],function () { return '<div id="main_template">\r\n    <div class="mainGrid">\r\n        <div class="e1"></div>\r\n        <div class="e2" data-bind="splitter: {}"></div>\r\n        <div class="e3">\r\n            <div class="otherGrid">\r\n                <div class="f1"></div>\r\n                <div class="f2" data-bind="splitter: {}"></div>\r\n                <div class="f3"></div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n';});
 
 /*global define*/
 /*jslint unparam:true*/
