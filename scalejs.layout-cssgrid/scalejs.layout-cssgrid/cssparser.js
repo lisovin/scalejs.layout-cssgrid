@@ -498,12 +498,13 @@ var lexer = {
 EOF:1,
 
 parseError:function parseError(str, hash) {
-        if (this.yy.parser) {
-            this.yy.parser.parseError(str, hash);
-        } else {
-            throw new Error(str);
-        }
-    },
+    if (this.yy.parser) {
+        //parse errors will produce a 'undefined is not a function' here since we removed their error catching function
+        this.yy.parser.parseError(str, hash);
+    } else {
+        throw new Error(str);
+    }
+},
 
 // resets the lexer, sets new input
 setInput:function (input) {

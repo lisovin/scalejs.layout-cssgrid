@@ -62,6 +62,64 @@ define(function () {
         return styleObj[name];
     }
 
+    function getTrackSize(element, rowOrColumn, gridIndex) {
+        //gridIndex is 1-based counting
+        var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
+            trackSizes;
+
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
+
+        if (trackSizes.length <= gridIndex - 1) {
+            return ('grid does not have that many ' + rowOrColumn + 's');
+        } else {
+            return trackSizes[gridIndex - 1];
+        }
+    }
+    function getComputedTrackSize(element, rowOrColumn, gridIndex) {
+        //gridIndex is 1-based counting
+        var trackRule = element.attributes['data-grid-computed-' + rowOrColumn + 's'].textContent,
+            trackSizes;
+
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
+
+
+        if (trackSizes.length <= gridIndex - 1) {
+            return ('grid does not have that many ' + rowOrColumn + 's');
+        } else {
+            return trackSizes[gridIndex - 1];
+        }
+    }
+    function setTrackSize(element, rowOrColumn, gridIndex, size) {
+        var trackRule = safeGetStyle(element, '-ms-grid-' + rowOrColumn + 's'),
+            trackSizes;
+
+        if (trackRule === undefined) {
+            console.log('Error: getTrackSize(', element, ', ', rowOrColumn, ', ', gridIndex, ') failed because element\'s style doesn\'t contain track definitions');
+            return;
+        }
+
+        trackSizes = trackRule.split(' ');
+        
+        if (trackSizes.length <= gridIndex - 1) {
+            return ('grid does not have a ' + rowOrColumn + ' with that index');
+        } else {
+            trackSizes[gridIndex - 1] = size;
+        }
+
+        safeSetStyle(element, '-ms-grid-' + rowOrColumn + 's', trackSizes.join(' '));
+    }
+
+
     function camelize(str) {
         var regex = /(-[a-z])/g,
             func = function (bit) {
@@ -134,6 +192,9 @@ define(function () {
         toArray: toArray,
         getUrl: getUrl,
         safeSetStyle: safeSetStyle,
-        safeGetStyle: safeGetStyle
+        safeGetStyle: safeGetStyle,
+        getTrackSize: getTrackSize,
+        getComputedTrackSize: getComputedTrackSize, 
+        setTrackSize: setTrackSize
     };
 });

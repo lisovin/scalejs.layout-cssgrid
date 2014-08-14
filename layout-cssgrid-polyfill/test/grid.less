@@ -1,0 +1,296 @@
+﻿/*GridLayoutStart*/
+div {
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+}
+    //SINGLE TEST FR
+#single__grid--fr {
+    height: 400px;
+    width: 400px;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr;
+}
+
+#single__cell--fr {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    background: blue;
+}
+
+
+    //SINGLE TEST AUTO
+#single__grid--auto {
+    height: 400px;
+    width: 400px;
+    display: -ms-grid;
+    -ms-grid-columns: auto;
+    -ms-grid-rows: auto;
+}
+
+#single__cell--auto {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    background: blue;
+}
+
+    //SINGLE TEST PX
+#single__grid--px {
+    height: 400px;
+    width: 400px;
+    display: -ms-grid;
+    -ms-grid-columns: 100px;
+    -ms-grid-rows: 100px;
+}
+
+#single__cell--px {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    background: blue;
+}
+
+    //NESTED GRID TEST (separate inner div for inner grid)
+#outer__grid {
+    height: 800px;
+    width: 800px;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 300px 1fr; 
+}
+
+#inner__grid {
+    height: 100%;
+    width: 100%;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr 250px;
+}
+
+#inner__top {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#inner__bottom {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+}
+
+#outer__top {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#outer__bottom {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+}
+
+    //NESTED GRID TEST 2 (c-combined, bottom cell is grid)
+#outer__grid--c {
+    height: 800px;
+    width: 800px;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 300px 1fr; 
+}
+
+#inner__top--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#inner__bottom--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+}
+
+#outer__top--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#outer__bottom-grid--c {
+    -ms-grid-column: 1;
+    -ms-grid-row: 2;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr 250px;
+}
+
+    //auto multiple element HEIGHT TEST
+#multi__grid--height {
+    height: 400px;
+    width: 400px;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: auto
+}
+
+#multi__cell--height {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#multi__div1--height {
+   height: 100px;
+}
+
+#multi__div2--height {
+    height: 150px;
+}
+
+//auto multiple element WIDTH TEST
+#multi__grid--width {
+    height: 300px;
+    width: 300px;
+    display: -ms-grid;
+    -ms-grid-columns: auto;
+    -ms-grid-rows: 1fr; 
+}
+
+#multi__cell--width {
+    -ms-grid-column: 1;
+    -ms-grid-row: 1;
+}
+
+#multi__div1--width {
+   height: 300px;
+   width: 100px;
+   float: left;
+}
+
+#multi__div2--width {
+    height: 300px;
+    width: 80px;
+    float: left;
+}
+
+    //auto heights determined by fixed-height content TEST
+#height__grid {
+    display: -ms-grid;
+    width: 100px;
+    height: 400px;
+    -ms-grid-rows: auto;
+    -ms-grid-columns: 1fr;
+}
+
+#height__cell {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#height__div {
+    height: 150px;
+}
+
+    //auto widths determined by fixed-width content
+#width__grid {
+    display: -ms-grid;
+    width: 400px;
+    height: 100px;
+    -ms-grid-columns: auto;
+    -ms-grid-rows: 1fr;
+}
+
+#width__cell {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#width__div {
+    width: 100px;
+    height: 100px;
+}
+
+    //auto track determined by text width
+p {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    font-style: normal;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+#text__grid--width {
+    display: -ms-grid;
+    width: 300px;
+    height: 200px;
+    -ms-grid-columns: auto 1fr;
+    -ms-grid-rows: 1fr;
+}
+
+#text__left--width {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    background: red;
+}
+
+#text__right--width {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+    background: blue;
+}
+
+    //auto track determined by text height
+#text__grid--height {
+    display: -ms-grid;
+    width: 300px;
+    height: 200px;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: auto 1fr;
+}
+
+#text__left--height {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    background: red;
+}
+
+#text__right--height {
+    -ms-grid-row: 2;
+    -ms-grid-column: 1;
+    background: blue;
+}
+
+    //margin, border, padding TESTS
+#align__grid {
+    display: -ms-grid;
+    width: 200px;
+    height: 200px;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr; 
+}
+
+#align__cell {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    margin: 10px;
+    border: 5px solid gray;
+    padding: 20px;
+    background: green;
+}
+
+#align__grid--inner {
+    display: -ms-grid;
+    width: 200px;
+    height: 200px;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 1fr; 
+}
+
+#align__cell--inner {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#align__content--inner {
+    margin: 10px;
+    border: 5px solid gray;
+    padding: 20px;
+    height: 130px;
+    background: yellow;
+}
+/*GridLayoutEnd*/

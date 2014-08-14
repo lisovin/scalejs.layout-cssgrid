@@ -4,16 +4,19 @@ define([
     'scalejs!core',
     './scalejs.layout-cssgrid/cssGridLayout',
     'CSS.supports',
-    './scalejs.layout-cssgrid/utils'
+    './scalejs.layout-cssgrid/utils',
+    './scalejs.layout-cssgrid/gridTemplate'
 ], function (
     core,
     cssGridLayout,
     css,
-    utils
+    utils,
+    gridTemplate
 ) {
     'use strict';
 
-    var exposed_invalidate;
+    var exposed_invalidate,
+        exposed_parseGridStyles;
 
 
     //console.log('is -ms-grid supported? ' + (css.supports('display', '-ms-grid') || false));
@@ -27,6 +30,7 @@ define([
         });
 
         exposed_invalidate = cssGridLayout.invalidate;
+        exposed_parseGridStyles = cssGridLayout.parseGridStyles;
 
     } else {
         window.addEventListener('resize', function () {
@@ -36,15 +40,26 @@ define([
         exposed_invalidate = function () {
             cssGridLayout.notifyLayoutDone();
         };
+        exposed_parseGridStyles = function (callback) {
+            callback();
+        }
     }
 
     core.registerExtension({
         layout: {
             invalidate: exposed_invalidate,
+            parseGridStyles: exposed_parseGridStyles,
             onLayoutDone: cssGridLayout.onLayoutDone,
             utils: {
                 safeSetStyle: utils.safeSetStyle,
-                safeGetStyle: utils.safeGetStyle
+                safeGetStyle: utils.safeGetStyle,
+                getTrackSize: utils.getTrackSize,
+                getComputedTrackSize: utils.getComputedTrackSize,
+                setTrackSize: utils.setTrackSize,
+                gridTemplate: gridTemplate
+            },
+            debug: {
+                dumpParsedRules: cssGridLayout.dumpParsedRules
             }
         }
     });

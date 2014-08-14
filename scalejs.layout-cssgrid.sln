@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "layout-cssgrid-polyfill", "layout-cssgrid-polyfill\layout-cssgrid-polyfill.csproj", "{D63D507C-CDD7-4133-8977-5EA8531FE2C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "splitterTestProj", "splitterTestProj\splitterTestProj.csproj", "{5ECEB1D3-0CC5-4DBE-9DEF-0978125E8ACF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{D63D507C-CDD7-4133-8977-5EA8531FE2C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D63D507C-CDD7-4133-8977-5EA8531FE2C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D63D507C-CDD7-4133-8977-5EA8531FE2C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ECEB1D3-0CC5-4DBE-9DEF-0978125E8ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ECEB1D3-0CC5-4DBE-9DEF-0978125E8ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ECEB1D3-0CC5-4DBE-9DEF-0978125E8ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ECEB1D3-0CC5-4DBE-9DEF-0978125E8ACF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

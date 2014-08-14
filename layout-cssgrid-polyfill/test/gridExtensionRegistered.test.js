@@ -13,14 +13,30 @@ define([
 ) {
 	describe('`extension registered`', function () {
 
-		it('core.layout is defined', function () {
-			expect(core.layout).toBeDefined();
-		});
-		it('core.layout.invalidate is defined', function () {
-			expect(core.layout.invalidate).toBeDefined();
-		});
-		it('core.layout.onLayoutDone is defined', function () {
-			expect(core.layout.onLayoutDone).toBeDefined();
-		});
+	    var exposed = [
+            'core.layout',
+            'core.layout.invalidate',
+            'core.layout.onLayoutDone',
+            'core.layout.parseGridStyles',
+            'core.layout.utils',
+            'core.layout.utils.safeSetStyle',
+            'core.layout.utils.safeGetStyle',
+	        'core.layout.utils.getTrackSize',
+            'core.layout.utils.getComputedTrackSize',
+	        'core.layout.utils.setTrackSize',
+	        'core.layout.utils.gridTemplate',
+            'core.layout.debug.dumpParsedRules'
+	    ];
+
+
+        exposed.forEach(function (e) {
+	        it(e + ' is defined', function () {
+	            expect(eval(e)).toBeDefined();
+	        });
+	    });
+
+
+
+		
 	});
 });

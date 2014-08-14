@@ -1,0 +1,340 @@
+﻿/*GridLayoutStart*/
+.gridTemplate {
+    position: absolute;
+}
+#simpleGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 1fr;
+    -ms-grid-columns: 1fr 1fr;
+    width: 400px;
+    height: 300px;
+
+    #simpleGrid__left {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #simpleGrid__right {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+}
+
+#rowGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 1fr 2fr 1fr;
+    -ms-grid-columns: 1fr;
+    width: 300px;
+    height: 400px;
+
+    #rowGrid__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #rowGrid__two {
+        -ms-grid-row: 2;
+        -ms-grid-column: 1;
+    }
+    #rowGrid__three {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+    }
+}
+
+#columnGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 1fr;
+    -ms-grid-columns: 1fr 2fr 1fr;
+    width: 400px;
+    height: 300px;
+
+    #columnGrid__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #columnGrid__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+    #columnGrid__three {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+    }
+}
+
+#rowGridPx {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 200px 100px;
+    -ms-grid-columns: 300px;
+    width: 300px;
+    height: 400px;
+
+    #rowGridPx__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #rowGridPx__two {
+        -ms-grid-row: 2;
+        -ms-grid-column: 1;
+    }
+    #rowGridPx__three {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+    }
+}
+
+#columnGridPx {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 300px;
+    -ms-grid-columns: 100px 200px 100px;
+    width: 400px;
+    height: 300px;
+
+    #columnGridPx__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    #columnGridPx__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+    #columnGridPx__three {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+    }
+}
+
+#mixedFrPxGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 50px 1fr 2fr 50px;
+    -ms-grid-columns: 2fr 100px 1fr;
+    width: 400px;
+    height: 400px;
+
+    #mixedFrPx__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+    }
+    #mixedFrPx__two {
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
+    }
+    #mixedFrPx__three {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+    }
+    #mixedFrPx__four {
+        -ms-grid-row: 4;
+        -ms-grid-column: 2;
+    }
+}
+
+#overlapGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px 100px;
+    -ms-grid-columns: 100px 100px 100px;
+    width: 300px;
+    height: 300px;
+
+    #overlap__one {
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
+    }
+    #overlap__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+        -ms-grid-row-span: 2;
+
+    }
+    #overlap__three {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        -ms-grid-row-span: 3;
+        -ms-grid-column-span: 3;
+    }
+    #overlap__four {
+        -ms-grid-row: 3;
+        -ms-grid-column: 3;
+        -ms-grid-row-span: 3;
+        -ms-grid-column-span: 3;
+    }
+}
+
+#defaultValueTestGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px;
+    -ms-grid-columns: 100px 100px;
+    width: 200px;
+    height: 200px;
+}
+
+#spanGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px 100px;
+    -ms-grid-columns: 100px 100px 100px;
+    width: 300px;
+    height: 300px;
+
+    #span__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        -ms-grid-row-span: 2;
+        -ms-grid-column-span: 2;
+    }
+    #span__two {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+        -ms-grid-row-span: 2;
+
+    }
+    #span__three {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+        -ms-grid-column-span: 2;
+    }
+    #span__four {
+        -ms-grid-row: 3;
+        -ms-grid-column: 3;
+        -ms-grid-row-span: 3;
+        -ms-grid-column-span: 3;
+    }
+}
+
+// Unfinished test, code to be used when testable behavior is written
+#invalidCoordGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px 100px;
+    -ms-grid-columns: 100px 100px 100px;
+    width: 300px;
+    height: 300px;
+
+    #invalidCoord__one {
+        -ms-grid-row: 3;
+        -ms-grid-column: 4;
+    }
+    #invalidCoord__two {
+        -ms-grid-row: 4;
+        -ms-grid-column: 3;
+    }
+    #invalidCoord__three {
+        -ms-grid-row: 6;
+        -ms-grid-column: 6;
+    }
+}
+
+#splitCSSGrid {
+    display: -ms-grid;
+    position: absolute;
+}
+
+.splitcss1 {
+    -ms-grid-rows: 100px 100px 100px;
+}
+
+.splitcss2 {
+    width: 300px;
+}
+
+.splitcss3 {
+    -ms-grid-columns: 100px 100px 100px;
+    height: 300px;
+}
+
+.splitcssdiv {
+    -ms-grid-row: 2;
+}
+
+#splitCSS__one {
+    -ms-grid-column: 2;
+}
+
+#resizeGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 1fr 2fr;
+    -ms-grid-columns: 1fr 2fr;
+    width: 300px;
+    height: 300px;
+
+    #resize__one {
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
+    }
+}
+
+#alignGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px;
+    -ms-grid-columns: 100px 100px 100px;
+    width: 300px;
+    height: 300px;
+
+    #align__one {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        height: 50px;
+        width: 50px;
+    }
+
+}
+
+#alignSpanGrid {
+    display: -ms-grid;
+    position: absolute;
+    -ms-grid-rows: 100px 100px 100px 100px;
+    -ms-grid-columns: 100px 100px 100px 100px;
+    width: 400px;
+    height: 400px;
+
+    div {
+        height: 50px;
+        width: 50px;
+    }
+
+    #alignSpan__one {
+        -ms-grid-row: 2;
+        -ms-grid-column: 2;
+        -ms-grid-column-span: 2;
+        -ms-grid-column-align: end;
+        -ms-grid-row-align: center;
+    }
+
+    #alignSpan__two {
+        -ms-grid-row: 3;
+        -ms-grid-column: 2;
+        -ms-grid-row-span: 3;
+        -ms-grid-column-align: start;
+        -ms-grid-row-align: center;
+    }
+
+    #alignSpan__three {
+        -ms-grid-row: 4;
+        -ms-grid-column: 2;
+        -ms-grid-column-span: 2;
+        -ms-grid-column-align: stretch;
+        -ms-grid-row-align: start;
+    }
+
+    #alignSpan__four {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+        -ms-grid-row-span: 4;
+        -ms-grid-column-span: 4;
+        -ms-grid-column-align: center;
+        -ms-grid-row-align: center;
+    }
+
+
+}
+
+/*GridLayoutEnd*/

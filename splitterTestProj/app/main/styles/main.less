@@ -1,0 +1,50 @@
+﻿html, body {
+    height: 100%;
+    margin: 0px;
+}
+
+/*GridLayoutStart*/
+.mainGrid {
+    height: 100%;
+    display: -ms-grid;
+    -ms-grid-columns: 400px auto 1fr;
+    -ms-grid-rows: 1fr;
+
+    .e1 {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    .e2 {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+        border: 2px solid red;
+        width: 5px;
+    }
+    .e3 {
+        -ms-grid-row: 1;
+        -ms-grid-column: 3;
+    }
+}
+
+.otherGrid {
+    height: 100%;
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: 400px auto 1fr;
+
+    .f1 {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+    .f2 {
+        -ms-grid-row: 2;
+        -ms-grid-column: 1;
+        border: 2px solid green;
+        height: 5px;
+    }
+    .f3 {
+        -ms-grid-row: 3;
+        -ms-grid-column: 1;
+    }
+}
+/*GridLayoutEnd*/

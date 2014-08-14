@@ -18,11 +18,6 @@
     <StartArguments>/site:layout-cssgrid-polyfill</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="app\main\bindings\mainBindings.js" />
-    <Content Include="app\main\mainModule.js" />
-    <Content Include="app\main\styles\main.css" />
-    <Content Include="app\main\viewmodels\mainViewModel.js" />
-    <Content Include="app\main\views\main.html" />
     <Content Include="css\jasmine.css" />
     <Content Include="README.txt" />
     <Content Include="index.debug.html" />
@@ -41,6 +36,9 @@
     <Content Include="Scripts\knockout-3.0.0.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
+    <Content Include="Scripts\less-builder.js" />
+    <Content Include="Scripts\less.js" />
+    <Content Include="Scripts\lessc.js" />
     <Content Include="Scripts\linq-vsdoc.js" />
     <Content Include="Scripts\linq.js" />
     <Content Include="Scripts\linq.js.d.ts" />
@@ -52,9 +50,16 @@
     <Content Include="Scripts\scalejs-0.3.3.min.js" />
     <Content Include="Scripts\scalejs.functional-0.2.9.8.js" />
     <Content Include="Scripts\scalejs.functional-0.2.9.8.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.100.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.126.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.126.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.129.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.129.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.148.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.148.min.js" />
     <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.56.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.59.js" />
-    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.59.min.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.80.js" />
+    <Content Include="Scripts\scalejs.layout-cssgrid-0.2.7.81.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.js" />
     <Content Include="Scripts\scalejs.linq-linqjs-3.0.3.1.min.js" />
     <Content Include="Scripts\scalejs.mvvm-0.3.4.4.js" />
@@ -71,16 +76,31 @@
     <Content Include="app\app.js" />
     <Content Include="Scripts\_scalejs.intellisense.js" />
     <Content Include="test\all.tests.js" />
+    <Content Include="test\auto.html" />
+    <Content Include="test\auto.test.js" />
+    <Content Include="test\chrome.html" />
+    <Content Include="test\chrome.test.js" />
+    <Content Include="test\grid.html" />
+    <Content Include="test\grid.test.js" />
     <Content Include="test\gridCssSources.test.js" />
     <Content Include="test\gridTestHelper.js" />
     <Content Include="test\gridPosition.test.js" />
     <Content Include="config.js" />
     <Content Include="Properties\build.rjs" />
-    <Content Include="Properties\layout-cssgrid-polyfill.nuspec" />
+    <Content Include="Properties\layout-cssgrid-polyfill.nuspec">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="test\href.css" />
+    <Content Include="test\testTemplates.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="test\gridExtensionRegistered.test.js" />
+    <None Include="test\auto.less" />
+    <None Include="test\chrome.less" />
+    <None Include="test\error.less" />
+    <None Include="test\grid.less" />
+    <None Include="test\testStyles.less" />
   </ItemGroup>
   <PropertyGroup>
     <ScalejsProjectType>Application</ScalejsProjectType>

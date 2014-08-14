@@ -15,8 +15,8 @@ define([
 ) {
     'use strict';
 
-    var cssGridRules,
-        cssGridSelectors,
+    var cssGridRules = [],
+        cssGridSelectors = [],
         merge = core.object.merge,
         listeners = [];
 
@@ -71,12 +71,27 @@ define([
         function createCssGridOverride(gridElement, propertyNames) {
             // save rules that match the gridElement (parent grid rules only)
             var override,
-                matchedRules = cssGridSelectors
+                matchedRules = cssGridRules
                     .filter(function (rule) {
+
+                        if (gridElement.matches) {
+                            return gridElement.matches(rule.selector);
+                        }
+                        if (gridElement.mozMatchesSelector) {
+                            return gridElement.mozMatchesSelector(rule.selector);
+                        }
+                        if (gridElement.webkitMatchesSelector) {
+                            return gridElement.webkitMatchesSelector(rule.selector);
+                        }
+                        if (gridElement.msMatchesSelector) {
+                            return gridElement.msMatchesSelector(rule.selector);
+                        }
+
                         return utils.toArray(document.querySelectorAll(rule.selector))
                             .any(function (match) {
                                 return gridElement === match;
                             });
+
                     });
 
             override = createOverride(function (property) {
@@ -113,10 +128,23 @@ define([
                     })*/
                     // filter to rules that match gridItemElement
                     .filter(function (rule) {
-                        var matchedElements = utils.toArray(document.querySelectorAll(rule.selector));
-                        return matchedElements.any(function (match) {
-                            return gridItemElement === match;
-                        });
+
+                        if (gridItemElement.matches) {
+                            return gridItemElement.matches(rule.selector);
+                        }
+                        if (gridItemElement.mozMatchesSelector) {
+                            return gridItemElement.mozMatchesSelector(rule.selector);
+                        }
+                        if (gridItemElement.webkitMatchesSelector) {
+                            return gridItemElement.webkitMatchesSelector(rule.selector);
+                        }
+                        if (gridItemElement.msMatchesSelector) {
+                            return gridItemElement.msMatchesSelector(rule.selector);
+                        }
+                        return utils.toArray(document.querySelectorAll(rule.selector))
+                            .any(function (match) {
+                                return gridItemElement === match;
+                            });
                     });
 
 
@@ -168,6 +196,9 @@ define([
             return override;
         }
 
+        if (cssGridSelectors.length === 0) {
+            console.log('Invalidating layout with no rules loaded. Call parseGridStyles(callback) to load styles into the extension.');
+        }
 
        // get the list of unique grids (a grid can be matched to more than one style rule therefore distinct)
         gridElements = cssGridSelectors // if this is undefined, you need to call invalidate with reparse: true for the first time
@@ -179,7 +210,16 @@ define([
             .distinct()
             .toArray();
 
+        // order by depth in document so parents get calculated before children
+        function docDepth(e) {
+            if (e.parentElement === document.body) {
+                return 1;
+            }
 
+            return 1 + docDepth(e.parentElement);
+
+        }
+        gridElements = gridElements.orderBy(docDepth).toArray();
 
         // for each grid parent, properties from each source (style>data attribute>css<defaults)
         gridElements
@@ -245,7 +285,9 @@ define([
                     if (rule.type !== 'style' || !declarations) { return false; }
 
                     return Object.keys(declarations).some(function (property) {
-                        return property.indexOf('-ms-grid') === 0;
+                        var is_ms_prop = property.indexOf('-ms-grid') === 0,
+                            is_dis_grid = (property === 'display') && (declarations[property] === '-ms-grid');
+                        return is_ms_prop || is_dis_grid;
                     });
                 })
                 .map(function (rule) {
@@ -277,34 +319,35 @@ define([
     }
 
     function invalidate(options) {
-        var thing,
-            On;
+        var container;
 
         if (options && options.container) {
-            On = options.container;
+            container = options.container;
         } else {
-            On = undefined;
+            container = undefined;
         }
 
-        if (options && options.reparse && (options.reparse === true)) {
-            thing = function (on) {
-                parseAllStyles(function () {
-                    doLayout(on);
-                });
-            };
-        } else {
-            thing = function (on) {
-                doLayout(on);
-            };
-        }
+        doLayout(container);
+    }
+    function parseGridStyles(callback) {
+        parseAllStyles(function () {
+            callback();
+        });
+    }
 
-        thing(On);
+    function dumpParsedRules() {
+        console.log("----- GRIDLAYOUT DEBUG ----- \ncssGridRules:\n");
+        console.log(cssGridRules);
+        console.log("cssGridSelectors:\n");
+        console.log(cssGridSelectors);
     }
 
     return {
         doLayout: doLayout,
+        parseGridStyles: parseGridStyles,
         invalidate: invalidate,
         onLayoutDone: onLayoutDone,
-        notifyLayoutDone: notifyLayoutDone
+        notifyLayoutDone: notifyLayoutDone,
+        dumpParsedRules: dumpParsedRules
     };
 });

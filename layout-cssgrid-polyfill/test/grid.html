@@ -1,0 +1,205 @@
+﻿<div id="single--fr_template">
+    <div id="single__grid--fr">
+        <div id="single__cell--fr"></div>
+    </div>
+</div>
+
+<div id="single--auto_template">
+    <div id="single__grid--auto">
+        <div id="single__cell--auto"></div>
+    </div>
+</div>
+
+<div id="single--px_template">
+    <div id="single__grid--px">
+        <div id="single__cell--px"></div>
+    </div>
+</div>
+
+<div id="nested_template">
+    <div id="outer__grid">
+        <div id="outer__top"></div>
+        <div id="outer__bottom">
+            <div id="inner__grid">
+                <div id="inner__top"></div>
+                <div id="inner__bottom"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="nested--c_template">
+    <div id="outer__grid--c">
+        <div id="outer__top--c"></div>
+        <div id="outer__bottom-grid--c">
+            <div id="inner__top--c"></div>
+            <div id="inner__bottom--c"></div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="./test/href.css" />
+<div id="href_template">
+    <div id="href__grid">
+        <div id="href__left"></div>
+        <div id="href__right"></div>
+    </div>
+</div>
+
+<div id="multi--height_template">
+    <div id="multi__grid--height">
+        <div id="multi__cell--height">
+            <div id="multi__div1--height"></div>
+            <div id="multi__div2--height"></div>
+        </div>
+    </div>
+</div>
+
+<div id="multi--width_template">
+    <div id="multi__grid--width">
+        <div id="multi__cell--width">
+            <div id="multi__div1--width"></div>
+            <div id="multi__div2--width"></div>
+        </div>
+    </div>
+</div>
+
+<div id="height_template">
+    <div id="height__grid">
+        <div id="height__cell">
+            <div id="height__div"></div>
+        </div>
+    </div>
+</div>
+
+<div id="width_template">
+    <div id="width__grid">
+        <div id="width__cell">
+            <div id="width__div"></div>
+        </div>
+    </div>
+</div>
+
+<!--external and internal-->
+<style>
+    #inher__grid {
+        display: -ms-grid;
+        width: 100px;
+        height: 100px;
+        -ms-grid-rows: 1fr;
+        -ms-grid-columns: 30px 1fr;
+    }
+
+    #inher__left {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+
+    #inher__right {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+</style>
+<div id="inher_template">
+    <div id="inher__grid">
+        <div id="inher__left"></div>
+        <div id="inher__right"></div>
+    </div>
+</div>
+
+
+<!--internal and inline-->
+<style>
+    #inher__grid--in {
+        display: -ms-grid;
+        width: 100px;
+        height: 100px;
+        -ms-grid-rows: 1fr;
+        -ms-grid-columns: 30px 1fr;
+    }
+
+    #inher__left--in {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+
+    #inher__right--in {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+</style>
+<div id="inher_template--in">
+    <div id="inher__grid--in" style="display: -ms-grid; width: 400px; height: 400px; -ms-grid-rows: 1fr; -ms-grid-columns: 1fr 1fr">
+        <div id="inher__left--in" style="-ms-grid-row: 1; -ms-grid-column: 1;"></div>
+        <div id="inher__right--in" style="-ms-grid-row: 1; -ms-grid-column: 2;"></div>
+    </div>
+</div>
+
+<!--external and inline-->
+<div id="inher_template--exinl">
+    <div id="inher__grid--exinl" style="display: -ms-grid; width: 400px; height: 400px; -ms-grid-rows: 1fr; -ms-grid-columns: 1fr 1fr">
+        <div id="inher__left--exinl" style="-ms-grid-row: 1; -ms-grid-column: 1;"></div>
+        <div id="inher__right--exinl" style="-ms-grid-row: 1; -ms-grid-column: 2;"></div>
+    </div>
+</div>
+
+<!--external, internal, and inline-->
+<style>
+    #inher__grid--all {
+        display: -ms-grid;
+        width: 100px;
+        height: 100px;
+        -ms-grid-rows: 1fr;
+        -ms-grid-columns: 30px 1fr;
+    }
+
+    #inher__left--all {
+        -ms-grid-row: 1;
+        -ms-grid-column: 1;
+    }
+
+    #inher__right--all {
+        -ms-grid-row: 1;
+        -ms-grid-column: 2;
+    }
+</style>
+<div id="inher_template--all">
+    <div id="inher__grid--all" style="display: -ms-grid; width: 400px; height: 400px; -ms-grid-rows: 1fr; -ms-grid-columns: 1fr 1fr">
+        <div id="inher__left--all" style="-ms-grid-row: 1; -ms-grid-column: 1;"></div>
+        <div id="inher__right--all" style="-ms-grid-row: 1; -ms-grid-column: 2;"></div>
+    </div>
+</div>
+
+<!--auto track determined by text width/height-->
+<div id="text--width_template">
+    <div id="text__grid--width">
+        <div id="text__left--width">
+            <p id="t--width">magical text of the gods</p>
+        </div>
+        <div id="text__right--width"></div>
+    </div>
+</div>
+
+<div id="text--height_template">
+    <div id="text__grid--height">
+        <div id="text__left--height">
+            <p id="t--height">looking in the mirror say wassup, in your | town say wassup</p>
+        </div>
+        <div id="text__right--height"></div>
+    </div>
+</div>
+
+<div id="align_template">
+    <div id="align__grid">
+        <div id="align__cell">
+        </div>
+    </div>
+</div>
+
+<div id="align--inner_template">
+    <div id="align__grid--inner">
+        <div id="align__cell--inner">
+            <div id="align__content--inner"></div>
+        </div>
+    </div>
+</div>

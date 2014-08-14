@@ -14,6 +14,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="scalejs.layout-cssgrid.js" />
+    <Content Include="scalejs.layout-cssgrid\gridTemplate.js" />
     <Content Include="scalejs.layout-cssgrid\utils.js" />
     <Content Include="scalejs.layout-cssgrid\cssparser.js" />
     <Content Include="scalejs.layout-cssgrid\gridTracksParser.js" />

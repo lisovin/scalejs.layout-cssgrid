@@ -1,0 +1,78 @@
+﻿/*GridLayoutStart*/
+#href__grid {
+    display: -ms-grid;
+    width: 400px;
+    height: 200px;
+    -ms-grid-columns: 100px 1fr;
+    -ms-grid-rows: 1fr;
+}
+
+#href__left {
+   -ms-grid-row: 1;
+   -ms-grid-column: 1; 
+}
+
+#href__right {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+}
+
+   
+    /*INHERITANCE TESTING*/ 
+#inher__grid {
+    display: -ms-grid;
+    width: 200px;
+    height: 300px;
+    -ms-grid-rows: 1fr;
+    -ms-grid-columns: 1fr 5px;
+
+}
+
+#inher__left {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#inher__right {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+}
+
+#inher__grid--exinl {
+    display: -ms-grid;
+    width: 200px;
+    height: 300px;
+    -ms-grid-rows: 1fr;
+    -ms-grid-columns: 1fr 50px;
+
+}
+
+#inher__left--exinl {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#inher__right--exinl {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+}
+
+#inher__grid--all {
+    display: -ms-grid;
+    width: 200px;
+    height: 300px;
+    -ms-grid-rows: 1fr;
+    -ms-grid-columns: 1fr 50px;
+
+}
+
+#inher__left--all {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+}
+
+#inher__right--all {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+}
+/*GridLayoutEnd*/
