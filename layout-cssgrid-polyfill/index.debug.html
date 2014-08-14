@@ -15,13 +15,27 @@
             }
 
             /*GridLayoutStart*/
+            @media (max-width: 600px) {
+                .grid {
+                    display: -ms-grid;
+                    -ms-grid-rows: 100px 100px 100px;
+                    -ms-grid-columns: 100px 100px 100px;
+                }
+            }
+            @media (min-width: 600px) {
+                .grid {
+                    display: -ms-grid;
+                    -ms-grid-rows: 150px 150px 150px;
+                    -ms-grid-columns: 150px 150px 150px;
+                }
+            }
             .grid {
                 display: -ms-grid;
                 -ms-grid-rows: 150px 150px 150px;
                 -ms-grid-columns: 150px 150px 150px;
+                font-size: 15px;
             }
-            .box {
-            }
+
             .e1 {
                 -ms-grid-row: 1;
                 -ms-grid-column: 1;

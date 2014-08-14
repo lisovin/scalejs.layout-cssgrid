@@ -1,9 +1,9 @@
 ﻿/*global define, require, document, console, window, clearTimeout, setTimeout */
 define([
-    './cssGridLayout',
+    'scalejs!core',
     './utils',
 ], function (
-    cssGridLayout,
+    core,
     utils
 ) {
     'use strict';
@@ -22,7 +22,7 @@ define([
         function invalidateAfterRender(elements) {
             elements.forEach(function (element) {
                 if (!(element.nodeName === '#text' || element.nodeName === '#comment')) {
-                    cssGridLayout.invalidate({ container: element.parentNode });
+                    core.layout.invalidate({ container: element.parentNode });
                     utils.safeSetStyle(element, 'visibility', 'visible');
                 }
             });
